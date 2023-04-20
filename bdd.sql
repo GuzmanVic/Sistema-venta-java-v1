@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.33, for Win64 (x86_64)
 --
 -- Host: localhost    Database: db_tienda
 -- ------------------------------------------------------
--- Server version	8.0.32
+-- Server version	8.0.33
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -1618,19 +1618,16 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `nuevoEmpleado`(
-IN u_nombre varchar(30),
-IN u_apellidoP varchar(30),
-IN u_apellidoM varchar(30),
-IN u_curp varchar(18),
-IN u_direccion varchar(100),
-IN u_idUsuario varchar(30)
-)
+ IN u_nombre varchar(30),
+ IN u_apellidoP varchar(30),
+ IN u_apellidoM varchar(30),
+ IN u_curp varchar(18),
+ IN u_direccion varchar(100)
+ )
 BEGIN
-    UPDATE usuarios 
-	SET acceso='Empleado' WHERE idUsuario=u_idUsuario;
-	INSERT INTO empleados(nombre,apellidoP,apellidoM,curp,direccion,idUsuario)
-    VALUES(u_nombre,u_apellidoP,u_apellidoM,u_curp,u_direccion,u_idUsuario);
-END ;;
+ 	INSERT INTO empleados(nombre,apellidoP,apellidoM,curp,direccion,idUsuario)
+     VALUES(u_nombre,u_apellidoP,u_apellidoM,u_curp,u_direccion,u_idUsuario);
+ END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1771,4 +1768,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-20 13:32:01
+-- Dump completed on 2023-04-20 15:08:14

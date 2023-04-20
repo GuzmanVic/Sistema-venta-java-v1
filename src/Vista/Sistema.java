@@ -1704,7 +1704,7 @@ public final class Sistema extends javax.swing.JFrame {
     }//GEN-LAST:event_txtCorreoEmpleadoActionPerformed
 
     private void btnIniciar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciar1ActionPerformed
-        method.registrarEmpleado(txtCorreoEmpleado,txtNombreEmpleado,txtApellidosEmpleado,txtTelefonoEmpleado,txtPassEmpleado,comboRol);
+        method.registrarEmpleado(txtCorreoEmpleado,txtNombreEmpleado,txtApellidosEmpleado,txtTelefonoEmpledo,txtPassEmpleado,comboRol);
     }//GEN-LAST:event_btnIniciar1ActionPerformed
 
     private void btnEmpleadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmpleadosActionPerformed
