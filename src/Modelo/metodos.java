@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
@@ -297,6 +298,17 @@ public class metodos {
             txtTelefonoInfo.setText(rs.getString("telefono"));
             txtWebInfo.setText(rs.getString("web"));
         }
+    }
+
+    public void registrarEmpleado(JTextField correo, JTextField nombre, JTextField apellidos,JTextField telefono, JPasswordField contraseña, JComboBox<String> comboRol) {
+        if(enviarCorreo(correo.getText())){
+            ArrayList<String> apellidosS = separarApellidos(apellidos.getText());//Ejecuta un metodo para separar apellidos y los almacena en un array
+            empleado.registrarEmpleado(correo.getText(),nombre.getText(),apellidosS.get(0),apellidosS.get(1),telefono,contraseña,comboRol.getSelectedItem().toString());
+        }
+    }
+
+    private boolean enviarCorreo(String correo) {
+    return true;
     }
 
 }
