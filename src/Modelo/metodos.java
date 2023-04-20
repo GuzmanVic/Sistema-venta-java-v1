@@ -300,15 +300,16 @@ public class metodos {
         }
     }
 
-    public void registrarEmpleado(JTextField correo, JTextField nombre, JTextField apellidos,JTextField telefono, JPasswordField contraseña, JComboBox<String> comboRol) {
-        if(enviarCorreo(correo.getText())){
+    public void registrarEmpleado(JTextField correo, JTextField nombre, JTextField apellidos, JTextField curp, JTextField telefono, JTextField direccion, JPasswordField contraseña, JComboBox<String> comboRol) throws SQLException {
+        if (enviarCorreo(correo.getText())) {
             ArrayList<String> apellidosS = separarApellidos(apellidos.getText());//Ejecuta un metodo para separar apellidos y los almacena en un array
-            empleado.registrarEmpleado(correo.getText(),nombre.getText(),apellidosS.get(0),apellidosS.get(1),telefono,contraseña,comboRol.getSelectedItem().toString());
+            usuario.registrar(correo.getText(), nombre.getText(), apellidosS.get(0), apellidosS.get(1), telefono.getText(), contraseña.getText(), comboRol.getSelectedItem().toString());
+            empleado.registrarEmpleado(nombre.getText(), apellidosS.get(0), apellidosS.get(1), curp.getText(), direccion.getText());
         }
     }
 
     private boolean enviarCorreo(String correo) {
-    return true;
+        return true;
     }
 
 }

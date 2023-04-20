@@ -22,9 +22,16 @@ public class EmpleadoDao {
         return rs;
     }
 
+    /*
     void registrarEmpleado(String correo, String nombre, String apellidoP, String apellidoM, JTextField telefono, JPasswordField contraseña, String acceso) throws SQLException {
+
+    }
+
+     */
+
+    void registrarEmpleado(String nombre, String apellidoP, String apellidoM, String curp, String direccion) throws SQLException {
         Connection con = cn.getConnection();
-        CallableStatement cstmt = con.prepareCall("{CALL nuevoEmpleado(?, ?, ? ?, ?, ?)}");
+        CallableStatement cstmt = con.prepareCall("{CALL nuevoEmpleado(?, ?, ?, ?, ?)}");
         cstmt.setString(1, nombre);
         cstmt.setString(2, apellidoP);
         cstmt.setString(3, apellidoM);
