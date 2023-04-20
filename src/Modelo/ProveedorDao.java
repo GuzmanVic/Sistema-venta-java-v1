@@ -33,7 +33,7 @@ public class ProveedorDao {
     }
 
     public void EliminarProveedor(int id) throws SQLException {
-            Connection con = cn.getConnection();
+        Connection con = cn.getConnection();
         CallableStatement cstmt = con.prepareCall("{CALL eliminarProveedor(?)}");
         cstmt.setInt(1, id);
         cstmt.execute();

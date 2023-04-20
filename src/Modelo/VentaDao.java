@@ -18,6 +18,7 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -50,7 +51,7 @@ public class VentaDao {
         }
         return id;
     }
-    
+  /*  
     public int RegistrarVenta(Venta v){
         String sql = "INSERT INTO ventas (cliente, vendedor, total, fecha) VALUES (?,?,?,?)";
         try {
@@ -72,7 +73,6 @@ public class VentaDao {
         }
         return r;
     }
-    
     public int RegistrarDetalle(Detalle Dv){
        String sql = "INSERT INTO detalle (id_pro, cantidad, precio, id_venta) VALUES (?,?,?,?)";
         try {
@@ -94,6 +94,7 @@ public class VentaDao {
         }
         return r;
     }
+    */
     
     public boolean ActualizarStock(int cant, int id){
         String sql = "UPDATE productos SET stock = ? WHERE id = ?";
@@ -110,27 +111,13 @@ public class VentaDao {
         }
     }
     
-    public List Listarventas(){
-       List<Venta> ListaVenta = new ArrayList();
-       String sql = "SELECT c.id AS id_cli, c.nombre, v.* FROM clientes c INNER JOIN ventas v ON c.id = v.cliente";
-       try {
-           con = cn.getConnection();
-           ps = con.prepareStatement(sql);
-           rs = ps.executeQuery();
-           while (rs.next()) {               
-               Venta vent = new Venta();
-               vent.setId(rs.getInt("id"));
-               vent.setNombre_cli(rs.getString("nombre"));
-               vent.setVendedor(rs.getString("vendedor"));
-               vent.setTotal(rs.getDouble("total"));
-               ListaVenta.add(vent);
-           }
-       } catch (SQLException e) {
-           System.out.println(e.toString());
-       }
-       return ListaVenta;
+    public ResultSet Listarventas() throws SQLException{
+        con = cn.getConnection();
+        CallableStatement cstmt = con.prepareCall("{ CALL listarVentas() }");
+        ResultSet rs = cstmt.executeQuery();
+        return rs;
    }
-    public Venta BuscarVenta(int id){
+/*    public Venta BuscarVenta(int id){
         Venta cl = new Venta();
         String sql = "SELECT * FROM ventas WHERE id = ?";
         try {
@@ -150,7 +137,8 @@ public class VentaDao {
         }
         return cl;
     }
-    public void pdfV(int idventa, int Cliente, double total, String usuario) {
+*/  
+public void pdfV(int idventa, int Cliente, double total, String usuario) {
         try {
             Date date = new Date();
             FileOutputStream archivo;

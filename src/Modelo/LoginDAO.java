@@ -54,11 +54,6 @@ public class LoginDAO {
             rs = ps.executeQuery();
             while (rs.next()) {
                 login lg = new login();
-                lg.setId(rs.getInt("id"));
-                lg.setNombre(rs.getString("nombre"));
-                lg.setCorreo(rs.getString("correo"));
-                lg.setRol(rs.getString("rol"));
-                Lista.add(lg);
             }
         } catch (SQLException e) {
             System.out.println(e.toString());

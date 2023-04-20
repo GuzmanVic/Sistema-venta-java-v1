@@ -66,7 +66,7 @@ public class ClienteDao {
         cstmt.execute();
         con.close();
     }
-
+/*
     public Cliente Buscarcliente(int dni) {
         Cliente cl = new Cliente();
         String sql = "SELECT * FROM clientes WHERE dni = ?";
@@ -86,5 +86,5 @@ public class ClienteDao {
         }
         return cl;
     }
-
+*/
 }
