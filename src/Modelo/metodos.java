@@ -13,6 +13,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.toedter.calendar.JDateChooser;
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -539,5 +540,17 @@ public class metodos {
         } // Se crea un objeto Document que representa el documento PDF
         Desktop.getDesktop().open(file);//Se abre el documento automaticamente
 
+    }
+
+    public void generarVenta(JTable TablaVenta, JTextField txtNombreClienteventa, JTextField txtCurpVenta, JLabel LabelTotal) {
+        if (TablaVenta.getRowCount() > 0) {
+                RegistrarVenta();
+                RegistrarDetalle();
+                ActualizarStock();
+                LimpiarTableVenta();
+                LimpiarClienteventa();
+        } else {
+            JOptionPane.showMessageDialog(null, "Noy productos en la venta");
+        }
     }
 }

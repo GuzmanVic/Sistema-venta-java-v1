@@ -1646,20 +1646,7 @@ public final class Sistema extends javax.swing.JFrame {
     }//GEN-LAST:event_btnGraficarActionPerformed
 
     private void btnGenerarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarVentaActionPerformed
-        // TODO add your handling code here:
-        if (TablaVenta.getRowCount() > 0) {
-            if (!"".equals(txtNombreClienteventa.getText())) {
-                RegistrarVenta();
-                RegistrarDetalle();
-                ActualizarStock();
-                LimpiarTableVenta();
-                LimpiarClienteventa();
-            } else {
-                JOptionPane.showMessageDialog(null, "Debes buscar un cliente");
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "Noy productos en la venta");
-        }
+        method.generarVenta(TablaVenta,txtNombreClienteventa,txtCurpVenta,LabelTotal);
 
     }//GEN-LAST:event_btnGenerarVentaActionPerformed
     /**/
@@ -1956,17 +1943,7 @@ public final class Sistema extends javax.swing.JFrame {
 //        Vdao.pdfV(id, cliente, Totalpagar, LabelVendedor.getText());
     }
 
-    private void ActualizarStock() {
-        for (int i = 0; i < TablaVenta.getRowCount(); i++) {
-            int id = Integer.parseInt(TablaVenta.getValueAt(i, 0).toString());
-            int cant = Integer.parseInt(TablaVenta.getValueAt(i, 2).toString());
-//            pro = proDao.BuscarId(id);
-            //          int StockActual = pro.getStock() - cant;
-//            Vdao.ActualizarStock(StockActual, id);
-
-        }
-    }
-
+    
     private void LimpiarTableVenta() {
         tmp = (DefaultTableModel) TablaVenta.getModel();
         int fila = TablaVenta.getRowCount();
