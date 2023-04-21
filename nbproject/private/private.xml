@@ -2,6 +2,17 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/Users/vguzm/OneDrive/Documentos/GitHub/Sistema-venta-java-v1/src/Vista/Login.java</file>
+            <file>file:/C:/Users/vguzm/OneDrive/Documentos/GitHub/Sistema-venta-java-v1/src/Modelo/LoginDAO.java</file>
+            <file>file:/C:/Users/vguzm/OneDrive/Documentos/GitHub/Sistema-venta-java-v1/src/Vista/Sistema.java</file>
+            <file>file:/C:/Users/vguzm/OneDrive/Documentos/GitHub/Sistema-venta-java-v1/src/Modelo/ProveedorDao.java</file>
+            <file>file:/C:/Users/vguzm/OneDrive/Documentos/GitHub/Sistema-venta-java-v1/src/Modelo/login.java</file>
+            <file>file:/C:/Users/vguzm/OneDrive/Documentos/GitHub/Sistema-venta-java-v1/src/Modelo/UsuarioDao.java</file>
+            <file>file:/C:/Users/vguzm/OneDrive/Documentos/GitHub/Sistema-venta-java-v1/src/Modelo/metodos.java</file>
+            <file>file:/C:/Users/vguzm/OneDrive/Documentos/GitHub/Sistema-venta-java-v1/src/Modelo/EmpleadoDao.java</file>
+            <file>file:/C:/Users/vguzm/OneDrive/Documentos/GitHub/Sistema-venta-java-v1/src/Modelo/ProductosDao.java</file>
+            <file>file:/C:/Users/vguzm/OneDrive/Documentos/GitHub/Sistema-venta-java-v1/src/Modelo/VentaDao.java</file>
+        </group>
     </open-files>
 </project-private>

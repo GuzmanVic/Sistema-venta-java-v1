@@ -61,18 +61,17 @@ public class ProductosDao {
         con.close();
     }
 
-    public void BuscarPro(String cod) {
-        String sql = "SELECT * FROM productos WHERE codigo = ?";
-        try {
-            con = cn.getConnection();
-            ps = con.prepareStatement(sql);
-            ps.setString(1, cod);
-            rs = ps.executeQuery();
-            if (rs.next()) {
-            }
-        } catch (SQLException e) {
-            System.out.println(e.toString());
+    public ResultSet BuscarProd(String parametro, String busqueda) throws SQLException {
+        con = cn.getConnection();
+        CallableStatement cstmt = null;
+        if (parametro.equalsIgnoreCase("codigos")) {
+            cstmt = con.prepareCall("{ CALL buscarProdID(?) }");
+        } else {
+            cstmt = con.prepareCall("{ CALL buscarProdNombre(?) }");
         }
+        cstmt.setString(1, busqueda);
+        ResultSet rs = cstmt.executeQuery(); // ejecutar el procedimiento almacenado
+        return rs;
     }
 
     public void BuscarId(int id) {
@@ -103,36 +102,23 @@ public class ProductosDao {
         }
     }
 
-    public ConfigDao BuscarDatos() {
-        ConfigDao conf = new ConfigDao();
-        String sql = "SELECT * FROM config";
-        try {
-            con = cn.getConnection();
-            ps = con.prepareStatement(sql);
-            rs = ps.executeQuery();
-            if (rs.next()) {
-            }
-        } catch (SQLException e) {
-            System.out.println(e.toString());
-        }
-        return conf;
+    public void addProdVenta(String codigo, int cantidad) throws SQLException {
+        Connection con = cn.getConnection();
+        CallableStatement cstmt = con.prepareCall("{CALL restarProd(?,?)}");
+        cstmt.setString(1, codigo);
+        cstmt.setInt(2, cantidad);
+        cstmt.execute();
+        con.close();
     }
 
-    public boolean ModificarDatos(ConfigDao conf) {
-        String sql = "UPDATE config SET ruc=?, nombre=?, telefono=?, direccion=?, mensaje=? WHERE id=?";
-        try {
-            ps = con.prepareStatement(sql);
-            ps.execute();
-            return true;
-        } catch (SQLException e) {
-            System.out.println(e.toString());
-            return false;
-        } finally {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                System.out.println(e.toString());
-            }
-        }
+    public void sumarProd(String codigo, int cantidad) throws SQLException {
+        Connection con = cn.getConnection();
+        CallableStatement cstmt = con.prepareCall("{CALL sumarProd(?,?)}");
+        cstmt.setString(1, codigo);
+        cstmt.setInt(2, cantidad);
+        cstmt.execute();
+        con.close();
+
     }
+
 }

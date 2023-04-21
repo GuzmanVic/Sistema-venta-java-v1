@@ -28,7 +28,6 @@ public class EmpleadoDao {
     }
 
      */
-
     void registrarEmpleado(String nombre, String apellidoP, String apellidoM, String curp, String direccion) throws SQLException {
         Connection con = cn.getConnection();
         CallableStatement cstmt = con.prepareCall("{CALL nuevoEmpleado(?, ?, ?, ?, ?)}");
@@ -37,7 +36,17 @@ public class EmpleadoDao {
         cstmt.setString(3, apellidoM);
         cstmt.setString(4, curp);
         cstmt.setString(5, direccion);
-        cstmt.setString(6, apellidoM);
+        cstmt.execute();
+        con.close();
+    }
+
+    void modificar(int id, String curp, String telefono, String direccion) throws SQLException {
+        Connection con = cn.getConnection();
+        CallableStatement cstmt = con.prepareCall("{CALL actualizarEmpleado(?, ?, ?, ?)}");
+        cstmt.setInt(1, id);
+        cstmt.setString(2, curp);
+        cstmt.setString(3, telefono);
+        cstmt.setString(4, direccion);
         cstmt.execute();
         con.close();
     }

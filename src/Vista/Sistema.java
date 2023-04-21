@@ -11,6 +11,8 @@ import Modelo.VentaDao;
 import Modelo.login;
 import Modelo.metodos;
 import Reportes.Grafico;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -20,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -38,7 +41,6 @@ public final class Sistema extends javax.swing.JFrame {
     int item;
     double Totalpagar = 0.00;
     metodos method = new metodos();
-    int fila = -1;
 
     public Sistema() throws SQLException {
         initComponents();
@@ -50,8 +52,12 @@ public final class Sistema extends javax.swing.JFrame {
         TablaVentas.setName("Ventas");
         TablaUsuarios.setName("Usuarios");
         TablaEmpleados.setName("Empleados");
+        comboCodProd.setName("Codigos");
+        comboNombreProd.setName("Nombres");
         //Importa los datos de la BDD para llenar todas las tablas al iniciar el sistema
-        method.llenarCombos(comboProveedor, comboCategoria);
+        method.llenarCombos(comboProveedor, comboCategoria, comboCodProd, comboNombreProd);
+        method.comboListener(comboCodProd, comboNombreProd, txtPrecioVenta, txtStock);
+        method.comboListener(comboNombreProd, comboCodProd, txtPrecioVenta, txtStock);
     }
 
     @SuppressWarnings("unchecked")
@@ -76,11 +82,9 @@ public final class Sistema extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        txtCodigoVenta = new javax.swing.JTextField();
-        txtDescripcionVenta = new javax.swing.JTextField();
         txtCantidadVenta = new javax.swing.JTextField();
         txtPrecioVenta = new javax.swing.JTextField();
-        txtStockDisponible = new javax.swing.JTextField();
+        txtStock = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaVenta = new javax.swing.JTable();
         btnEliminarventa = new javax.swing.JButton();
@@ -90,12 +94,12 @@ public final class Sistema extends javax.swing.JFrame {
         btnGenerarVenta = new javax.swing.JButton();
         jLabel10 = new javax.swing.JLabel();
         LabelTotal = new javax.swing.JLabel();
-        txtIdCV = new javax.swing.JTextField();
-        txtIdPro = new javax.swing.JTextField();
         btnGraficar = new javax.swing.JButton();
         Midate = new com.toedter.calendar.JDateChooser();
         jLabel11 = new javax.swing.JLabel();
         txtCurpVenta = new javax.swing.JTextField();
+        comboCodProd = new javax.swing.JComboBox<>();
+        comboNombreProd = new javax.swing.JComboBox<>();
         panelCliente = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tablaClientes = new javax.swing.JTable();
@@ -386,23 +390,11 @@ public final class Sistema extends javax.swing.JFrame {
         jLabel7.setText("Stock Disponible");
         panelVenta.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 120, -1, -1));
 
-        txtCodigoVenta.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                txtCodigoVentaKeyPressed(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtCodigoVentaKeyTyped(evt);
+        txtCantidadVenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCantidadVentaActionPerformed(evt);
             }
         });
-        panelVenta.add(txtCodigoVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 102, 30));
-
-        txtDescripcionVenta.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtDescripcionVentaKeyTyped(evt);
-            }
-        });
-        panelVenta.add(txtDescripcionVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 70, 191, 30));
-
         txtCantidadVenta.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtCantidadVentaKeyPressed(evt);
@@ -416,15 +408,15 @@ public final class Sistema extends javax.swing.JFrame {
         txtPrecioVenta.setEditable(false);
         panelVenta.add(txtPrecioVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 70, 80, 30));
 
-        txtStockDisponible.setEditable(false);
-        panelVenta.add(txtStockDisponible, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 110, 79, 30));
+        txtStock.setEditable(false);
+        panelVenta.add(txtStock, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 110, 79, 30));
 
         TablaVenta.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "ID", "DESCRIPCIÓN", "CANTIDAD", "PRECIO U.", "PRECIO TOTAL"
+                "CÓDIGO", "NOMBRE", "CANTIDAD", "PRECIO U.", "PRECIO TOTAL"
             }
         ));
         jScrollPane1.setViewportView(TablaVenta);
@@ -471,8 +463,6 @@ public final class Sistema extends javax.swing.JFrame {
 
         LabelTotal.setText("-----");
         panelVenta.add(LabelTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(756, 381, -1, -1));
-        panelVenta.add(txtIdCV, new org.netbeans.lib.awtextra.AbsoluteConstraints(327, 375, -1, -1));
-        panelVenta.add(txtIdPro, new org.netbeans.lib.awtextra.AbsoluteConstraints(678, 126, -1, -1));
 
         btnGraficar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/torta.png"))); // NOI18N
         btnGraficar.addActionListener(new java.awt.event.ActionListener() {
@@ -486,6 +476,10 @@ public final class Sistema extends javax.swing.JFrame {
         jLabel11.setText("Seleccionar:");
         panelVenta.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 50, -1, -1));
         panelVenta.add(txtCurpVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 372, 120, 40));
+
+        panelVenta.add(comboCodProd, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 110, 30));
+
+        panelVenta.add(comboNombreProd, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 70, 180, 30));
 
         pane.addTab("1", panelVenta);
 
@@ -1285,10 +1279,20 @@ public final class Sistema extends javax.swing.JFrame {
         });
 
         btnNuevoProveedor2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/nuevo.png"))); // NOI18N
+        btnNuevoProveedor2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoProveedor2ActionPerformed(evt);
+            }
+        });
 
         btnEliminarProveedor2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/eliminar.png"))); // NOI18N
 
         btnEditarProveedor2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/Actualizar (2).png"))); // NOI18N
+        btnEditarProveedor2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarProveedor2ActionPerformed(evt);
+            }
+        });
 
         direccion.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         direccion.setForeground(new java.awt.Color(0, 0, 255));
@@ -1370,7 +1374,7 @@ public final class Sistema extends javax.swing.JFrame {
                 .addComponent(direccion)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtDireccionEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel43)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(comboRol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1391,9 +1395,14 @@ public final class Sistema extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "NOMBRE", "CURP", "DIRECCIÓN", "TELEFONO"
+                "ID", "NOMBRE", "CURP", "DIRECCIÓN", "TELEFONO", "ROL"
             }
         ));
+        TablaEmpleados.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TablaEmpleadosMouseClicked(evt);
+            }
+        });
         jScrollPane7.setViewportView(TablaEmpleados);
 
         panelEmpleados.add(jScrollPane7, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 40, 860, 380));
@@ -1501,7 +1510,7 @@ public final class Sistema extends javax.swing.JFrame {
     }//GEN-LAST:event_TablaVentasMouseClicked
 //Limpia los campos de texto en el panel de productos
     private void btnNuevoProActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoProActionPerformed
-        method.limpiarProd(txtCodProd, txtNombreProd, txtCantProd, txtPrecioCompra, txtPrecioVentaProd, comboProveedor, comboCategoria);
+        method.limpiarProd(txtCodProd, txtNombreProd, txtCantProd, txtPrecioCompra, txtPrecioVentaProd);
     }//GEN-LAST:event_btnNuevoProActionPerformed
 //Elimina un producto de la base de datos
     private void btnEliminarProActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarProActionPerformed
@@ -1655,11 +1664,13 @@ public final class Sistema extends javax.swing.JFrame {
     }//GEN-LAST:event_btnGenerarVentaActionPerformed
     /**/
     private void btnEliminarventaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarventaActionPerformed
-        // TODO add your handling code here:
-//        modelo = (DefaultTableModel) TableVenta.getModel();
-//        modelo.removeRow(TableVenta.getSelectedRow());
-        TotalPagar();
-        txtCodigoVenta.requestFocus();
+        try {
+            // TODO add your handling code here:
+            method.eliminarProdVenta(TablaVenta);
+            method.TotalPagar(TablaVenta, LabelTotal);
+        } catch (SQLException ex) {
+            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnEliminarventaActionPerformed
 
     private void txtCantidadVentaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCantidadVentaKeyTyped
@@ -1671,80 +1682,32 @@ public final class Sistema extends javax.swing.JFrame {
         // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             if (!"".equals(txtCantidadVenta.getText())) {
-                int id = Integer.parseInt(txtIdPro.getText());
-                String descripcion = txtDescripcionVenta.getText();
-                int cant = Integer.parseInt(txtCantidadVenta.getText());
                 double precio = Double.parseDouble(txtPrecioVenta.getText());
-                double total = cant * precio;
-                int stock = Integer.parseInt(txtStockDisponible.getText());
-                if (stock >= cant) {
-                    item = item + 1;
-                    tmp = (DefaultTableModel) TablaVenta.getModel();
-                    for (int i = 0; i < TablaVenta.getRowCount(); i++) {
-                        if (TablaVenta.getValueAt(i, 1).equals(txtDescripcionVenta.getText())) {
-                            JOptionPane.showMessageDialog(null, "El producto ya esta registrado");
-                            return;
-                        }
-                    }
-                    ArrayList lista = new ArrayList();
-                    lista.add(item);
-                    lista.add(id);
-                    lista.add(descripcion);
-                    lista.add(cant);
-                    lista.add(precio);
-                    lista.add(total);
-                    Object[] O = new Object[5];
-                    O[0] = lista.get(1);
-                    O[1] = lista.get(2);
-                    O[2] = lista.get(3);
-                    O[3] = lista.get(4);
-                    O[4] = lista.get(5);
-                    tmp.addRow(O);
-                    TablaVenta.setModel(tmp);
-                    TotalPagar();
-                    LimparVenta();
-                    txtCodigoVenta.requestFocus();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Stock no disponible");
+                int stock = Integer.parseInt(txtStock.getText());
+                item = item + 1;
+                tmp = (DefaultTableModel) TablaVenta.getModel();
+                for (int i = 0; i < TablaVenta.getRowCount(); i++) {
+                    JOptionPane.showMessageDialog(null, "El producto ya esta registrado");
+                    return;
                 }
+                ArrayList lista = new ArrayList();
+                lista.add(item);
+                Object[] O = new Object[5];
+                O[0] = lista.get(1);
+                O[1] = lista.get(2);
+                O[2] = lista.get(3);
+                O[3] = lista.get(4);
+                O[4] = lista.get(5);
+                tmp.addRow(O);
+                TablaVenta.setModel(tmp);
+                TotalPagar();
+                LimparVenta();
+                JOptionPane.showMessageDialog(null, "Stock no disponible");
             } else {
                 JOptionPane.showMessageDialog(null, "Ingrese Cantidad");
             }
         }
     }//GEN-LAST:event_txtCantidadVentaKeyPressed
-
-    private void txtDescripcionVentaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDescripcionVentaKeyTyped
-        // TODO add your handling code here:
-        event.textKeyPress(evt);
-    }//GEN-LAST:event_txtDescripcionVentaKeyTyped
-
-    private void txtCodigoVentaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodigoVentaKeyTyped
-        // TODO add your handling code here:
-        event.numberKeyPress(evt);
-    }//GEN-LAST:event_txtCodigoVentaKeyTyped
-
-    private void txtCodigoVentaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodigoVentaKeyPressed
-        // TODO add your handling code here:
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            if (!"".equals(txtCodigoVenta.getText())) {
-                String cod = txtCodigoVenta.getText();
-//                pro = proDao.BuscarPro(cod);
-                /*              if (pro.getNombre() != null) {
-                    txtIdPro.setText("" + pro.getId());
-                    txtDescripcionVenta.setText("" + pro.getNombre());
-                    txtPrecioVenta.setText("" + pro.getPrecio());
-                    txtStockDisponible.setText("" + pro.getStock());
-                    txtCantidadVenta.requestFocus();
-                } else {
-                    LimparVenta();
-                    txtCodigoVenta.requestFocus();
-                }
-                 */            } else {
-                JOptionPane.showMessageDialog(null, "Ingrese el codigo del productos");
-                txtCodigoVenta.requestFocus();
-            }
-        }
-    }//GEN-LAST:event_txtCodigoVentaKeyPressed
 
     private void txtCorreoEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCorreoEmpleadoActionPerformed
 
@@ -1760,8 +1723,36 @@ public final class Sistema extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEmpleadosActionPerformed
 
     private void btnguardarProveedor2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnguardarProveedor2ActionPerformed
-        method.registrarEmpleado(txtCorreoEmpleado, txtNombreEmpleado, txtApellidosEmpleado, txtCurpEmpleado, txtTelefonoEmpledo, txtDireccionEmpleado, txtPassEmpleado, comboRol);
+        try {
+            method.addUpdEmpleado(TablaEmpleados, txtCorreoEmpleado, txtNombreEmpleado, txtApellidosEmpleado, txtCurpEmpleado, txtTelefonoEmpledo, txtDireccionEmpleado, txtPassEmpleado, comboRol, true);
+        } catch (SQLException ex) {
+            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnguardarProveedor2ActionPerformed
+
+    private void TablaEmpleadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaEmpleadosMouseClicked
+        method.clickTablaEmpleados(TablaEmpleados, txtCorreoEmpleado, txtNombreEmpleado, txtApellidosEmpleado, txtCurpEmpleado, txtTelefonoEmpledo, txtDireccionEmpleado, txtPassEmpleado, comboRol);
+    }//GEN-LAST:event_TablaEmpleadosMouseClicked
+
+    private void btnNuevoProveedor2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoProveedor2ActionPerformed
+        method.limpiarEmpleado(txtCorreoEmpleado, txtNombreEmpleado, txtApellidosEmpleado, txtCurpEmpleado, txtTelefonoEmpledo, txtDireccionEmpleado, txtPassEmpleado);
+    }//GEN-LAST:event_btnNuevoProveedor2ActionPerformed
+
+    private void btnEditarProveedor2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarProveedor2ActionPerformed
+        try {
+            method.addUpdEmpleado(TablaEmpleados, txtCorreoEmpleado, txtNombreEmpleado, txtApellidosEmpleado, txtCurpEmpleado, txtTelefonoEmpledo, txtDireccionEmpleado, txtPassEmpleado, comboRol, false);
+        } catch (SQLException ex) {
+            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnEditarProveedor2ActionPerformed
+
+    private void txtCantidadVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCantidadVentaActionPerformed
+        try {
+            method.addProdVenta(TablaVenta, txtCantidadVenta, txtStock, comboCodProd, comboNombreProd, txtPrecioVenta, LabelTotal);
+        } catch (SQLException ex) {
+            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_txtCantidadVentaActionPerformed
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -1817,6 +1808,8 @@ public final class Sistema extends javax.swing.JFrame {
     private javax.swing.JButton btnguardarProveedor2;
     private javax.swing.JComboBox<String> cbxRol;
     private javax.swing.JComboBox<String> comboCategoria;
+    private javax.swing.JComboBox<String> comboCodProd;
+    private javax.swing.JComboBox<String> comboNombreProd;
     private javax.swing.JComboBox<String> comboProveedor;
     private javax.swing.JComboBox<String> comboRol;
     private javax.swing.JLabel correolbl;
@@ -1896,20 +1889,16 @@ public final class Sistema extends javax.swing.JFrame {
     private javax.swing.JTextField txtCantProd;
     private javax.swing.JTextField txtCantidadVenta;
     private javax.swing.JTextField txtCodProd;
-    private javax.swing.JTextField txtCodigoVenta;
     private javax.swing.JTextField txtCorreo;
     private javax.swing.JTextField txtCorreoEmpleado;
     private javax.swing.JTextField txtCorreoInfo;
     private javax.swing.JTextField txtCurpCliente;
     private javax.swing.JTextField txtCurpEmpleado;
     private javax.swing.JTextField txtCurpVenta;
-    private javax.swing.JTextField txtDescripcionVenta;
     private javax.swing.JTextField txtDireccionCliente;
     private javax.swing.JTextField txtDireccionEmpleado;
     private javax.swing.JTextField txtDireccionInfo;
     private javax.swing.JTextField txtDireccionProveedor;
-    private javax.swing.JTextField txtIdCV;
-    private javax.swing.JTextField txtIdPro;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JTextField txtNombreCliente;
     private javax.swing.JTextField txtNombreClienteventa;
@@ -1922,7 +1911,7 @@ public final class Sistema extends javax.swing.JFrame {
     private javax.swing.JTextField txtPrecioCompra;
     private javax.swing.JTextField txtPrecioVenta;
     private javax.swing.JTextField txtPrecioVentaProd;
-    private javax.swing.JTextField txtStockDisponible;
+    private javax.swing.JTextField txtStock;
     private javax.swing.JTextField txtTelefonoCliente;
     private javax.swing.JTextField txtTelefonoEmpledo;
     private javax.swing.JTextField txtTelefonoInfo;
@@ -1942,15 +1931,12 @@ public final class Sistema extends javax.swing.JFrame {
     }
 
     private void LimparVenta() {
-        txtCodigoVenta.setText("");
-        txtDescripcionVenta.setText("");
         txtCantidadVenta.setText("");
-        txtStockDisponible.setText("");
+        txtStock.setText("");
         txtPrecioVenta.setText("");
     }
 
     private void RegistrarVenta() {
-        int cliente = Integer.parseInt(txtIdCV.getText());
         //String vendedor = LabelVendedor.getText();
         double monto = Totalpagar;
 //        v.setCliente(cliente);
@@ -1967,7 +1953,6 @@ public final class Sistema extends javax.swing.JFrame {
             int cant = Integer.parseInt(TablaVenta.getValueAt(i, 2).toString());
             double precio = Double.parseDouble(TablaVenta.getValueAt(i, 3).toString());
         }
-        int cliente = Integer.parseInt(txtIdCV.getText());
 //        Vdao.pdfV(id, cliente, Totalpagar, LabelVendedor.getText());
     }
 
@@ -1993,7 +1978,6 @@ public final class Sistema extends javax.swing.JFrame {
     private void LimpiarClienteventa() {
 //        txtRucVenta.setText("");
         txtNombreClienteventa.setText("");
-        txtIdCV.setText("");
     }
 
     private void nuevoUsuario() {
@@ -2001,4 +1985,5 @@ public final class Sistema extends javax.swing.JFrame {
         txtCorreo.setText("");
         txtPass.setText("");
     }
+
 }
