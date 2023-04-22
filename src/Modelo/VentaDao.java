@@ -1,4 +1,3 @@
-
 package Modelo;
 
 import com.itextpdf.text.BaseColor;
@@ -29,13 +28,14 @@ import java.util.List;
 import javax.swing.filechooser.FileSystemView;
 
 public class VentaDao {
+
     Connection con;
     Conexion cn = new Conexion();
     PreparedStatement ps;
     ResultSet rs;
     int r;
-    
-    public int IdVenta(){
+
+    public int IdVenta() {
         int id = 0;
         String sql = "SELECT MAX(id) FROM ventas";
         try {
@@ -50,6 +50,7 @@ public class VentaDao {
         }
         return id;
     }
+<<<<<<< Updated upstream
     
     public int RegistrarVenta(Venta v){
         String sql = "INSERT INTO ventas (cliente, vendedor, total, fecha) VALUES (?,?,?,?)";
@@ -96,11 +97,37 @@ public class VentaDao {
     }
     
     public boolean ActualizarStock(int cant, int id){
+=======
+
+    public void RegistrarVenta(double subtotal, double total, String curp, int vendedor) throws SQLException {
+        Connection con = cn.getConnection();
+        CallableStatement cstmt = con.prepareCall("{CALL insertar_venta(?, ?, ?, ?)}");
+        cstmt.setDouble(1, subtotal);
+        cstmt.setDouble(2, total);
+        cstmt.setString(3, curp);
+        cstmt.setInt(4, vendedor);
+        cstmt.execute();
+        con.close();
+    }
+
+    public void RegistrarDetalle(String codigo, int cant, double precio, double total) throws SQLException {
+        Connection con = cn.getConnection();
+        CallableStatement cstmt = con.prepareCall("{CALL insertar_detalleVenta(?, ?, ?, ?)}");
+        cstmt.setString(1, codigo);
+        cstmt.setInt(2, cant);
+        cstmt.setDouble(3, precio);
+        cstmt.setDouble(4, total);
+        cstmt.execute();
+        con.close();
+    }
+
+    public boolean ActualizarStock(int cant, int id) {
+>>>>>>> Stashed changes
         String sql = "UPDATE productos SET stock = ? WHERE id = ?";
         try {
             con = cn.getConnection();
             ps = con.prepareStatement(sql);
-            ps.setInt(1,cant);
+            ps.setInt(1, cant);
             ps.setInt(2, id);
             ps.execute();
             return true;
@@ -109,6 +136,7 @@ public class VentaDao {
             return false;
         }
     }
+<<<<<<< Updated upstream
     
     public List Listarventas(){
        List<Venta> ListaVenta = new ArrayList();
@@ -131,6 +159,17 @@ public class VentaDao {
        return ListaVenta;
    }
     public Venta BuscarVenta(int id){
+=======
+
+    public ResultSet Listarventas() throws SQLException {
+        con = cn.getConnection();
+        CallableStatement cstmt = con.prepareCall("{ CALL listarVentas() }");
+        ResultSet rs = cstmt.executeQuery();
+        return rs;
+    }
+
+    /*    public Venta BuscarVenta(int id){
+>>>>>>> Stashed changes
         Venta cl = new Venta();
         String sql = "SELECT * FROM ventas WHERE id = ?";
         try {
@@ -150,6 +189,10 @@ public class VentaDao {
         }
         return cl;
     }
+<<<<<<< Updated upstream
+=======
+     */
+>>>>>>> Stashed changes
     public void pdfV(int idventa, int Cliente, double total, String usuario) {
         try {
             Date date = new Date();
@@ -297,5 +340,12 @@ public class VentaDao {
         }
     }
 
-    
+    public ResultSet obtenerUltimaVenta() throws SQLException {
+        con = cn.getConnection();
+        CallableStatement cstmt = con.prepareCall("{ CALL obtenerUltimaVenta() }");
+        ResultSet rs = cstmt.executeQuery();
+        return rs;
+
+    }
+
 }

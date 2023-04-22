@@ -8,7 +8,24 @@ public class login {
     private String pass;
     private String rol;
 
+<<<<<<< Updated upstream
     public login() {
+=======
+    LoginDAO login = new LoginDAO();
+   //Valida el usuario que ingresa al sistema
+    public void validar(String correo,String pass,Login athis) throws SQLException {
+        if (!"".equals(correo) || !"".equals(pass)) {//Verifica que los campos cintengan informacion
+            ResultSet rs = login.log(correo, pass);
+            if (rs.next()) {//Si el usuario y contraseña son correctos, entonces abre la ventana de sistema
+                Sistema sis = new Sistema(rs.getInt("idUsuario"));
+                sis.setVisible(true);
+                athis.dispose();
+            } else {
+                JOptionPane.showMessageDialog(null, "Correo o Contraseña incorrecta");
+            }
+        }
+
+>>>>>>> Stashed changes
     }
 
     public login(int id, String nombre, String correo, String pass, String rol) {
