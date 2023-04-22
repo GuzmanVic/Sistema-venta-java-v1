@@ -11,9 +11,11 @@ import Modelo.VentaDao;
 import Modelo.login;
 import Modelo.metodos;
 import Reportes.Grafico;
+import com.itextpdf.text.DocumentException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -35,15 +37,15 @@ public final class Sistema extends javax.swing.JFrame {
     VentaDao Vdao = new VentaDao();
     ConfigDao conf = new ConfigDao();
     Eventos event = new Eventos();
-    login lg = new login();
-    LoginDAO login = new LoginDAO();
     DefaultTableModel tmp = new DefaultTableModel();
     int item;
     double Totalpagar = 0.00;
     metodos method = new metodos();
+    int idUsuario = 8;
 
-    public Sistema() throws SQLException {
+    public Sistema(int idUsuario) throws SQLException {
         initComponents();
+//        this.idUsuario = idUsuario;
         //Establece los nombres de las tablas en el sistema para un facil manejo de estas
         tablaClientes.setName("Clientes");
         TablaVenta.setName("Venta");
@@ -58,6 +60,7 @@ public final class Sistema extends javax.swing.JFrame {
         method.llenarCombos(comboProveedor, comboCategoria, comboCodProd, comboNombreProd);
         method.comboListener(comboCodProd, comboNombreProd, txtPrecioVenta, txtStock);
         method.comboListener(comboNombreProd, comboCodProd, txtPrecioVenta, txtStock);
+        method.actualizarInfo(txtNombreInfo, txtCorreoInfo, txtDireccionInfo, txtTelefonoInfo, txtWebInfo);
     }
 
     @SuppressWarnings("unchecked")
@@ -207,10 +210,10 @@ public final class Sistema extends javax.swing.JFrame {
         txtTelefonoEmpledo = new javax.swing.JTextField();
         rol = new javax.swing.JLabel();
         txtCurpEmpleado = new javax.swing.JTextField();
-        btnguardarProveedor2 = new javax.swing.JButton();
-        btnNuevoProveedor2 = new javax.swing.JButton();
-        btnEliminarProveedor2 = new javax.swing.JButton();
-        btnEditarProveedor2 = new javax.swing.JButton();
+        btnguardarEmpleado = new javax.swing.JButton();
+        btnNuevoEmpleado = new javax.swing.JButton();
+        btnEliminarEmpleado = new javax.swing.JButton();
+        btnEditarEmpleado = new javax.swing.JButton();
         direccion = new javax.swing.JLabel();
         txtDireccionEmpleado = new javax.swing.JTextField();
         jScrollPane7 = new javax.swing.JScrollPane();
@@ -428,7 +431,7 @@ public final class Sistema extends javax.swing.JFrame {
             TablaVenta.getColumnModel().getColumn(4).setPreferredWidth(60);
         }
 
-        panelVenta.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 150, 843, 191));
+        panelVenta.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 150, 1080, 191));
 
         btnEliminarventa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/eliminar.png"))); // NOI18N
         btnEliminarventa.addActionListener(new java.awt.event.ActionListener() {
@@ -444,10 +447,10 @@ public final class Sistema extends javax.swing.JFrame {
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         jLabel9.setText("Nombre");
-        panelVenta.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(146, 352, -1, -1));
+        panelVenta.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 360, -1, -1));
 
         txtNombreClienteventa.setEditable(false);
-        panelVenta.add(txtNombreClienteventa, new org.netbeans.lib.awtextra.AbsoluteConstraints(146, 375, 169, 30));
+        panelVenta.add(txtNombreClienteventa, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 380, 169, 30));
 
         btnGenerarVenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/print.png"))); // NOI18N
         btnGenerarVenta.addActionListener(new java.awt.event.ActionListener() {
@@ -475,7 +478,7 @@ public final class Sistema extends javax.swing.JFrame {
 
         jLabel11.setText("Seleccionar:");
         panelVenta.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 50, -1, -1));
-        panelVenta.add(txtCurpVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 372, 120, 40));
+        panelVenta.add(txtCurpVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 372, 220, 30));
 
         panelVenta.add(comboCodProd, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 110, 30));
 
@@ -1271,26 +1274,26 @@ public final class Sistema extends javax.swing.JFrame {
         rol.setForeground(new java.awt.Color(0, 0, 255));
         rol.setText("CURP");
 
-        btnguardarProveedor2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/GuardarTodo.png"))); // NOI18N
-        btnguardarProveedor2.addActionListener(new java.awt.event.ActionListener() {
+        btnguardarEmpleado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/GuardarTodo.png"))); // NOI18N
+        btnguardarEmpleado.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnguardarProveedor2ActionPerformed(evt);
+                btnguardarEmpleadoActionPerformed(evt);
             }
         });
 
-        btnNuevoProveedor2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/nuevo.png"))); // NOI18N
-        btnNuevoProveedor2.addActionListener(new java.awt.event.ActionListener() {
+        btnNuevoEmpleado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/nuevo.png"))); // NOI18N
+        btnNuevoEmpleado.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNuevoProveedor2ActionPerformed(evt);
+                btnNuevoEmpleadoActionPerformed(evt);
             }
         });
 
-        btnEliminarProveedor2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/eliminar.png"))); // NOI18N
+        btnEliminarEmpleado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/eliminar.png"))); // NOI18N
 
-        btnEditarProveedor2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/Actualizar (2).png"))); // NOI18N
-        btnEditarProveedor2.addActionListener(new java.awt.event.ActionListener() {
+        btnEditarEmpleado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/Actualizar (2).png"))); // NOI18N
+        btnEditarEmpleado.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEditarProveedor2ActionPerformed(evt);
+                btnEditarEmpleadoActionPerformed(evt);
             }
         });
 
@@ -1307,13 +1310,13 @@ public final class Sistema extends javax.swing.JFrame {
                 .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel14Layout.createSequentialGroup()
                         .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnEliminarProveedor2)
+                            .addComponent(btnEliminarEmpleado)
                             .addGroup(jPanel14Layout.createSequentialGroup()
-                                .addComponent(btnguardarProveedor2)
+                                .addComponent(btnguardarEmpleado)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnNuevoProveedor2)))
+                                .addComponent(btnNuevoEmpleado)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnEditarProveedor2)
+                        .addComponent(btnEditarEmpleado)
                         .addGap(37, 37, 37))
                     .addGroup(jPanel14Layout.createSequentialGroup()
                         .addComponent(jLabel43)
@@ -1380,11 +1383,11 @@ public final class Sistema extends javax.swing.JFrame {
                 .addComponent(comboRol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnguardarProveedor2)
-                    .addComponent(btnNuevoProveedor2)
-                    .addComponent(btnEditarProveedor2))
+                    .addComponent(btnguardarEmpleado)
+                    .addComponent(btnNuevoEmpleado)
+                    .addComponent(btnEditarEmpleado))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnEliminarProveedor2)
+                .addComponent(btnEliminarEmpleado)
                 .addGap(35, 35, 35))
         );
 
@@ -1422,19 +1425,16 @@ public final class Sistema extends javax.swing.JFrame {
         }
         pane.setSelectedIndex(1);
     }//GEN-LAST:event_btnClientesActionPerformed
-
+//Actualiza la tabla proveedores y posiciona al usuario en el panel de proveedores
     private void btnProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProveedorActionPerformed
         try {
             method.listarTablas(TablaProveedores);
         } catch (SQLException ex) {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
-//        ListarProveedor();
         pane.setSelectedIndex(2);
-        btnEditarProveedor.setEnabled(true);
-        btnEliminarProveedor.setEnabled(true);
     }//GEN-LAST:event_btnProveedorActionPerformed
-//Se ejecuta al presionar el botón de productos.
+//Actualiza la tabla productos y posiciona al usuario en el panel de productos
     private void btnProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductosActionPerformed
         try {
             method.listarTablas(TablaProductos);
@@ -1443,11 +1443,11 @@ public final class Sistema extends javax.swing.JFrame {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnProductosActionPerformed
-//Se ejecuta al presionar el botón venta
+//Abre el panel de venta
     private void btnNuevaVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaVentaActionPerformed
         pane.setSelectedIndex(0);
     }//GEN-LAST:event_btnNuevaVentaActionPerformed
-//Se ejecuta al presionar el boton de configuracion
+//Abre el panel de configuracion y actualiza la informacion del mismo
     private void btnConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfigActionPerformed
         pane.setSelectedIndex(5);
         try {
@@ -1456,7 +1456,7 @@ public final class Sistema extends javax.swing.JFrame {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnConfigActionPerformed
-
+//Actualiza la tabla ventas y posiciona al usuario en el panel de ventas
     private void btnVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVentasActionPerformed
         try {
             method.listarTablas(TablaVentas);
@@ -1486,7 +1486,6 @@ public final class Sistema extends javax.swing.JFrame {
             String nom = txtNombre.getText();
             String rol = cbxRol.getSelectedItem().toString();
             JOptionPane.showMessageDialog(null, "Usuario Registrado");
-            nuevoUsuario();
         }
     }//GEN-LAST:event_btnIniciarActionPerformed
     private void txtCorreoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCorreoActionPerformed
@@ -1520,7 +1519,7 @@ public final class Sistema extends javax.swing.JFrame {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnEliminarProActionPerformed
-//Actualiza el producto insertado en la base de datos
+//Actualiza un producto en la base de datos
     private void btnEditarproActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarproActionPerformed
         try {
             method.addUpdProd(TablaProductos, vencimiento, txtCodProd, txtNombreProd, txtCantProd, txtPrecioCompra, txtPrecioVentaProd, comboProveedor, comboCategoria, false);
@@ -1547,7 +1546,7 @@ public final class Sistema extends javax.swing.JFrame {
         // TODO add your handling code here:
         event.numberDecimalKeyPress(evt, txtPrecioCompra);
     }//GEN-LAST:event_txtPrecioCompraKeyTyped
-//Se ejecuta al hacer clock en un elemento de la tabla productos        
+//Se ejecuta al hacer click en un elemento de la tabla productos        
     private void TablaProductosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaProductosMouseClicked
         try {
             method.clickTablaProd(TablaProductos, vencimiento, txtCodProd, txtNombreProd, txtCantProd, txtPrecioCompra, txtPrecioVentaProd, comboProveedor, comboCategoria);
@@ -1575,7 +1574,7 @@ public final class Sistema extends javax.swing.JFrame {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnEditarProveedorActionPerformed
-//Guardará un nuevo proveedor
+//Guardará un nuevo proveedor en la base de datos
     private void btnguardarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnguardarProveedorActionPerformed
         try {
             method.addUpdProveedor(TablaProveedores, txtNombreproveedor, txtTelefonoProveedor, txtDireccionProveedor, true);
@@ -1597,23 +1596,19 @@ public final class Sistema extends javax.swing.JFrame {
     private void btnEliminarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarClienteActionPerformed
         try {
             method.eliminar(tablaClientes);
-
         } catch (SQLException ex) {
-            Logger.getLogger(Sistema.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnEliminarClienteActionPerformed
-
+//Actualiza la informacion de un cliente
     private void btnEditarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarClienteActionPerformed
         if (tablaClientes.getSelectedRow() < 0) {
             JOptionPane.showMessageDialog(null, "seleccione una fila");
         } else {
             try {
                 method.addUpdClientes(tablaClientes, txtCurpCliente, txtNombreCliente, txtApellidosCliente, txtTelefonoCliente, txtDireccionCliente, false);
-
             } catch (SQLException ex) {
-                Logger.getLogger(Sistema.class
-                        .getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_btnEditarClienteActionPerformed
@@ -1623,10 +1618,8 @@ public final class Sistema extends javax.swing.JFrame {
             method.addUpdClientes(tablaClientes, txtCurpCliente, txtNombreCliente, txtApellidosCliente, txtTelefonoCliente, txtDireccionCliente, true);
 
         } catch (SQLException ex) {
-            Logger.getLogger(Sistema.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }//GEN-LAST:event_btnGuardarClienteActionPerformed
 
     private void txtCurpClienteKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCurpClienteKeyTyped
@@ -1636,37 +1629,39 @@ public final class Sistema extends javax.swing.JFrame {
     private void tablaClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaClientesMouseClicked
         method.clickTablaClientes(tablaClientes, txtCurpCliente, txtNombreCliente, txtApellidosCliente, txtTelefonoCliente, txtDireccionCliente);
     }//GEN-LAST:event_tablaClientesMouseClicked
-
+//Grafica un informe de ventas
     private void btnGraficarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGraficarActionPerformed
-        // TODO add your handling code here:
-
         String fechaReporte = new SimpleDateFormat("dd/MM/yyyy").format(Midate.getDate());
         Grafico.Graficar(fechaReporte);
 
     }//GEN-LAST:event_btnGraficarActionPerformed
-
+//Realiza una nueva venta
     private void btnGenerarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarVentaActionPerformed
-        method.generarVenta(TablaVenta,txtNombreClienteventa,txtCurpVenta,LabelTotal);
-
+        try {
+            method.generarVenta(TablaVenta, txtCurpVenta, LabelTotal, idUsuario);
+            method.pdf(TablaVenta, txtNombreInfo.getText(), txtDireccionInfo.getText(), LabelTotal.getText(), txtCurpVenta.getText(), txtTelefonoInfo.getText(), idUsuario);
+        } catch (SQLException | DocumentException | IOException ex) {
+            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnGenerarVentaActionPerformed
-    /**/
+    //elimina un prducto de la tabla de venta
     private void btnEliminarventaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarventaActionPerformed
         try {
             // TODO add your handling code here:
-            method.eliminarProdVenta(TablaVenta);
+            method.eliminarProdVenta(TablaVenta,txtStock,comboCodProd);
             method.TotalPagar(TablaVenta, LabelTotal);
         } catch (SQLException ex) {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnEliminarventaActionPerformed
-
+//Controla que el txt de cantidad solo acepte valores numéricos
     private void txtCantidadVentaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCantidadVentaKeyTyped
         // TODO add your handling code here:
         event.numberKeyPress(evt);
     }//GEN-LAST:event_txtCantidadVentaKeyTyped
 
     private void txtCantidadVentaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCantidadVentaKeyPressed
-        // TODO add your handling code here:
+        /*
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             if (!"".equals(txtCantidadVenta.getText())) {
                 double precio = Double.parseDouble(txtPrecioVenta.getText());
@@ -1694,12 +1689,13 @@ public final class Sistema extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Ingrese Cantidad");
             }
         }
+         */
     }//GEN-LAST:event_txtCantidadVentaKeyPressed
 
     private void txtCorreoEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCorreoEmpleadoActionPerformed
 
     }//GEN-LAST:event_txtCorreoEmpleadoActionPerformed
-
+//Actualiza la tabla empleados y posiciona al usuario en el panel empleados
     private void btnEmpleadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmpleadosActionPerformed
         try {
             pane.setSelectedIndex(7);
@@ -1708,31 +1704,31 @@ public final class Sistema extends javax.swing.JFrame {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnEmpleadosActionPerformed
-
-    private void btnguardarProveedor2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnguardarProveedor2ActionPerformed
+//Guarda un empleado en la base de datos
+    private void btnguardarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnguardarEmpleadoActionPerformed
         try {
             method.addUpdEmpleado(TablaEmpleados, txtCorreoEmpleado, txtNombreEmpleado, txtApellidosEmpleado, txtCurpEmpleado, txtTelefonoEmpledo, txtDireccionEmpleado, txtPassEmpleado, comboRol, true);
         } catch (SQLException ex) {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_btnguardarProveedor2ActionPerformed
-
+    }//GEN-LAST:event_btnguardarEmpleadoActionPerformed
+//Extrae los datos del elemento seleccionado la tabla empleados
     private void TablaEmpleadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaEmpleadosMouseClicked
         method.clickTablaEmpleados(TablaEmpleados, txtCorreoEmpleado, txtNombreEmpleado, txtApellidosEmpleado, txtCurpEmpleado, txtTelefonoEmpledo, txtDireccionEmpleado, txtPassEmpleado, comboRol);
     }//GEN-LAST:event_TablaEmpleadosMouseClicked
-
-    private void btnNuevoProveedor2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoProveedor2ActionPerformed
+//Limpia los campos del panel empleados
+    private void btnNuevoEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoEmpleadoActionPerformed
         method.limpiarEmpleado(txtCorreoEmpleado, txtNombreEmpleado, txtApellidosEmpleado, txtCurpEmpleado, txtTelefonoEmpledo, txtDireccionEmpleado, txtPassEmpleado);
-    }//GEN-LAST:event_btnNuevoProveedor2ActionPerformed
-
-    private void btnEditarProveedor2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarProveedor2ActionPerformed
+    }//GEN-LAST:event_btnNuevoEmpleadoActionPerformed
+//Actualiza la informacion de un empleado
+    private void btnEditarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarEmpleadoActionPerformed
         try {
             method.addUpdEmpleado(TablaEmpleados, txtCorreoEmpleado, txtNombreEmpleado, txtApellidosEmpleado, txtCurpEmpleado, txtTelefonoEmpledo, txtDireccionEmpleado, txtPassEmpleado, comboRol, false);
         } catch (SQLException ex) {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_btnEditarProveedor2ActionPerformed
-
+    }//GEN-LAST:event_btnEditarEmpleadoActionPerformed
+//Agrega un producto a la tabla ventas
     private void txtCantidadVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCantidadVentaActionPerformed
         try {
             method.addProdVenta(TablaVenta, txtCantidadVenta, txtStock, comboCodProd, comboNombreProd, txtPrecioVenta, LabelTotal);
@@ -1745,7 +1741,7 @@ public final class Sistema extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    new Sistema().setVisible(true);
+                    new Sistema(8).setVisible(true);
                 } catch (SQLException ex) {
                     Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -1767,13 +1763,13 @@ public final class Sistema extends javax.swing.JFrame {
     private javax.swing.JButton btnClientes;
     private javax.swing.JButton btnConfig;
     private javax.swing.JButton btnEditarCliente;
+    private javax.swing.JButton btnEditarEmpleado;
     private javax.swing.JButton btnEditarProveedor;
-    private javax.swing.JButton btnEditarProveedor2;
     private javax.swing.JButton btnEditarpro;
     private javax.swing.JButton btnEliminarCliente;
+    private javax.swing.JButton btnEliminarEmpleado;
     private javax.swing.JButton btnEliminarPro;
     private javax.swing.JButton btnEliminarProveedor;
-    private javax.swing.JButton btnEliminarProveedor2;
     private javax.swing.JButton btnEliminarventa;
     private javax.swing.JButton btnEmpleados;
     private javax.swing.JButton btnGenerarVenta;
@@ -1783,16 +1779,16 @@ public final class Sistema extends javax.swing.JFrame {
     private javax.swing.JButton btnIniciar;
     private javax.swing.JButton btnNuevaVenta;
     private javax.swing.JButton btnNuevoCliente;
+    private javax.swing.JButton btnNuevoEmpleado;
     private javax.swing.JButton btnNuevoPro;
     private javax.swing.JButton btnNuevoProveedor;
-    private javax.swing.JButton btnNuevoProveedor2;
     private javax.swing.JButton btnPdfVentas;
     private javax.swing.JButton btnProductos;
     private javax.swing.JButton btnProveedor;
     private javax.swing.JButton btnUsuarios;
     private javax.swing.JButton btnVentas;
+    private javax.swing.JButton btnguardarEmpleado;
     private javax.swing.JButton btnguardarProveedor;
-    private javax.swing.JButton btnguardarProveedor2;
     private javax.swing.JComboBox<String> cbxRol;
     private javax.swing.JComboBox<String> comboCategoria;
     private javax.swing.JComboBox<String> comboCodProd;
@@ -1906,61 +1902,5 @@ public final class Sistema extends javax.swing.JFrame {
     private javax.swing.JTextField txtWebInfo;
     private com.toedter.calendar.JDateChooser vencimiento;
     // End of variables declaration//GEN-END:variables
-
-    private void TotalPagar() {
-        Totalpagar = 0.00;
-        int numFila = TablaVenta.getRowCount();
-        for (int i = 0; i < numFila; i++) {
-            double cal = Double.parseDouble(String.valueOf(TablaVenta.getModel().getValueAt(i, 4)));
-            Totalpagar = Totalpagar + cal;
-        }
-        LabelTotal.setText(String.format("%.2f", Totalpagar));
-    }
-
-    private void LimparVenta() {
-        txtCantidadVenta.setText("");
-        txtStock.setText("");
-        txtPrecioVenta.setText("");
-    }
-
-    private void RegistrarVenta() {
-        //String vendedor = LabelVendedor.getText();
-        double monto = Totalpagar;
-//        v.setCliente(cliente);
-//        v.setVendedor(vendedor);
-        //      v.setTotal(monto);
-        //    v.setFecha(fechaActual);
-        //  Vdao.RegistrarVenta(v);
-    }
-
-    private void RegistrarDetalle() {
-        int id = Vdao.IdVenta();
-        for (int i = 0; i < TablaVenta.getRowCount(); i++) {
-            int id_pro = Integer.parseInt(TablaVenta.getValueAt(i, 0).toString());
-            int cant = Integer.parseInt(TablaVenta.getValueAt(i, 2).toString());
-            double precio = Double.parseDouble(TablaVenta.getValueAt(i, 3).toString());
-        }
-//        Vdao.pdfV(id, cliente, Totalpagar, LabelVendedor.getText());
-    }
-
-    
-    private void LimpiarTableVenta() {
-        tmp = (DefaultTableModel) TablaVenta.getModel();
-        int fila = TablaVenta.getRowCount();
-        for (int i = 0; i < fila; i++) {
-            tmp.removeRow(0);
-        }
-    }
-
-    private void LimpiarClienteventa() {
-//        txtRucVenta.setText("");
-        txtNombreClienteventa.setText("");
-    }
-
-    private void nuevoUsuario() {
-        txtNombre.setText("");
-        txtCorreo.setText("");
-        txtPass.setText("");
-    }
 
 }

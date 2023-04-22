@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Modelo;
 
 import java.sql.CallableStatement;
@@ -14,10 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author USUARIO
- */
 public class ClienteDao {
 
     Conexion cn = new Conexion();
@@ -53,7 +44,7 @@ public class ClienteDao {
         con.close();
     }
 
-    public void ModificarCliente(int id,String nombre, String apellidoP, String apellidoM, String curp, String telefono, String direccion) throws SQLException {
+    public void ModificarCliente(int id, String nombre, String apellidoP, String apellidoM, String curp, String telefono, String direccion) throws SQLException {
         Connection con = cn.getConnection();
         CallableStatement cstmt = con.prepareCall("{CALL actualizarCliente(?, ?, ?, ?, ?, ?, ?)}");
         cstmt.setInt(1, id);
@@ -66,25 +57,12 @@ public class ClienteDao {
         cstmt.execute();
         con.close();
     }
-/*
-    public Cliente Buscarcliente(int dni) {
-        Cliente cl = new Cliente();
-        String sql = "SELECT * FROM clientes WHERE dni = ?";
-        try {
-            con = cn.getConnection();
-            ps = con.prepareStatement(sql);
-            ps.setInt(1, dni);
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                cl.setId(rs.getInt("id"));
-                cl.setNombre(rs.getString("nombre"));
-                cl.setTelefono(rs.getString("telefono"));
-                cl.setDireccion(rs.getString("direccion"));
-            }
-        } catch (SQLException e) {
-            System.out.println(e.toString());
-        }
-        return cl;
+
+    public ResultSet Buscarcliente(String curp) throws SQLException {
+        Connection con = cn.getConnection();
+        CallableStatement cstmt = con.prepareCall("{CALL buscarCliente(?)}");
+        cstmt.setString(1, curp);
+        ResultSet rs = cstmt.executeQuery();
+        return rs;
     }
-*/
 }

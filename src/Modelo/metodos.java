@@ -2,6 +2,7 @@ package Modelo;
 
 import Vista.Sistema;
 import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
@@ -23,8 +24,11 @@ import java.io.IOException;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -47,8 +51,12 @@ public class metodos {
     ProductosDao prod = new ProductosDao();
     VentaDao ventas = new VentaDao();
     EmpleadoDao empleado = new EmpleadoDao();
-
+    VentaDao venta = new VentaDao();
+    LocalDate fechaVenta = LocalDate.now();//Almacena la fecha de venta
+    double subtotal = 0.0, descuento = 0.0, total = 0.0;
+    LocalTime horaActual = LocalTime.now();
 //Estos métodos limpian los campos en los distintos paneles del sistema
+
     public void limpiarCliente(JTextField curp, JTextField nombre, JTextField apellidos, JTextField telefono, JTextField direccion) {//Panel clientes
         JTextField[] camposTexto = {curp, nombre, apellidos, telefono, direccion};
         for (JTextField campo : camposTexto) {
@@ -238,12 +246,12 @@ public class metodos {
         } else {
             if (caso) {
                 if (correo.getText().isEmpty() || nombre.getText().isEmpty() || apellidos.getText().isEmpty() || contraseña.getText().isEmpty()) {
+                        System.out.println("a pnto de registrar");
                     if (enviarCorreo(correo.getText())) {
                         ArrayList<String> apellidosS = separarApellidos(apellidos.getText());//Ejecuta un metodo para separar apellidos y los almacena en un array
                         usuario.registrar(correo.getText(), nombre.getText(), apellidosS.get(0), apellidosS.get(1), telefono.getText(), contraseña.getText(), combo.getSelectedItem().toString());
                         empleado.registrarEmpleado(nombre.getText(), apellidosS.get(0), apellidosS.get(1), curp.getText(), direccion.getText());
                     }
-
                 }
             } else {
                 int id = Integer.parseInt(tabla.getValueAt(tabla.getSelectedRow(), 0).toString());
@@ -269,16 +277,18 @@ public class metodos {
         } else {
             int pregunta = JOptionPane.showConfirmDialog(null, "¿Está seguro de eliminar este elemento?");
             if (pregunta == 0) {
-                int fila = tabla.getSelectedRow(), id = Integer.parseInt(tabla.getValueAt(fila, 0).toString());//Obtiene el id del elemento a eliminar
+                int fila = tabla.getSelectedRow();
                 switch (tabla.getName()) {//Ubica el nombre de la tabla con la que se va a trabajar y elimina el elemento de la misma.
+                    case "Productos":
+                        prod.EliminarProductos(tabla.getValueAt(fila, 0).toString());
+                        break;
                     case "Clientes":
+                        int id = Integer.parseInt(tabla.getValueAt(fila, 0).toString());//Obtiene el id del elemento a eliminar
                         client.EliminarCliente(id);
                         break;
                     case "Proveedores":
+                        id = Integer.parseInt(tabla.getValueAt(fila, 0).toString());//Obtiene el id del elemento a eliminar
                         proveedor.EliminarProveedor(id);
-                        break;
-                    case "Productos":
-                        prod.EliminarProductos(String.valueOf(id));
                         break;
                 }
                 listarTablas(tabla);//Actualiza la tabla en el sistema
@@ -357,9 +367,8 @@ public class metodos {
             JTextField txtWebInfo) throws SQLException {
         if (txtNombreInfo.getText().isEmpty() || txtCorreoInfo.getText().isEmpty() || txtDireccionInfo.getText().isEmpty()
                 || txtTelefonoInfo.getText().isEmpty() || txtWebInfo.getText().isEmpty()) {//Verifica que los campos no estén vacíos
-            info.addUpdInfo(txtNombreInfo.getText(), txtCorreoInfo.getText(), txtDireccionInfo.getText(), txtTelefonoInfo.getText(), txtWebInfo.getText());
         } else {
-            JOptionPane.showMessageDialog(null, "Los campos están vacíos");
+            info.addUpdInfo(txtNombreInfo.getText(), txtCorreoInfo.getText(), txtDireccionInfo.getText(), txtTelefonoInfo.getText(), txtWebInfo.getText());
         }
     }
 
@@ -403,42 +412,88 @@ public class metodos {
 
     public void addProdVenta(JTable tabla, JTextField cantidad, JTextField stock, JComboBox<String> comboCodProd, JComboBox<String> comboNombreProd,
             JTextField precioVenta, JLabel totalPagar) throws SQLException {
-        modelo = (DefaultTableModel) tabla.getModel();//Obtiene el modelo de la tabla venta
-        Object[] fila = new Object[5];
+        boolean presente = false;//Indicará si el producto en cuestión a agregar ya estaba en la tabla o no.
+        int existencia = Integer.parseInt(stock.getText());
         int cant = Integer.parseInt(cantidad.getText());
-        double precio = Double.parseDouble(precioVenta.getText());
-        double total = cant * precio;
-        fila[0] = comboCodProd.getSelectedItem().toString();
-        fila[1] = comboNombreProd.getSelectedItem().toString();
-        fila[2] = cantidad.getText();
-        fila[3] = precioVenta.getText();
-        fila[4] = total;
-        modelo.addRow(fila);
-        TotalPagar(tabla, totalPagar);
-        prod.addProdVenta(fila[0].toString(), cant);
-        stock.setText(String.valueOf(Integer.parseInt(stock.getText()) - cant));//Resta la cantidad en stock en la interfaz
+        if (existencia >= cant) {//perimitirá que se agregue el producto solo si aun quedan en existencia
+            String codigo = comboCodProd.getSelectedItem().toString();
+            int cantTabla = 0, filaTabla = -1;
+            double total = 0.0;
+            double precio = Double.parseDouble(precioVenta.getText());
+            modelo = (DefaultTableModel) tabla.getModel();//Obtiene el modelo de la tabla venta
+            for (int i = 0; i < modelo.getRowCount(); i++) {
+                if (codigo.equals(tabla.getValueAt(i, 0))) {//Verifica si ya hay un producto en la tabla con el mismo codigo
+                    cantTabla = Integer.parseInt(tabla.getValueAt(i, 2).toString());//Obtiene la cantidad del producto que estaba en la tabla
+                    filaTabla = i;//Obtiene la fila en la que se encuentra el producto
+                    presente = true;//determina que el producto ya esta en la tabla
+                    break;//rompe la iteración
+                } else {//Si el producto en cuestión no estaba en la tabla...
+                    presente = false;//Determina que el producto no está presente en la tabla
+                }
+            }
+            if (presente) {//Si el producto ya estaba en la tabla...
+                cantTabla += cant;//Suma la cantidad ingresada por el usuario a la cantidad que ya estaba en la tabla
+                total = cantTabla * precio;//multiplica el precio por la nueva cantidad
+                modelo.setValueAt(cantTabla, filaTabla, 2);//Cambia la cantidad en la tabla
+                modelo.setValueAt(total, filaTabla, 4);//Cambia el precio en la tabla
+            } else {//Si el producto no estaba en la tabla lo agrega
+                Object[] fila = new Object[5];
+                total = cant * precio;//Multiplica la cantidad por el precio
+                fila[0] = codigo;
+                fila[1] = comboNombreProd.getSelectedItem().toString();
+                fila[2] = cantidad.getText();
+                fila[3] = precioVenta.getText();
+                fila[4] = total;
+                modelo.addRow(fila);//Agrega la fila a la tabla.
+            }
+            TotalPagar(tabla, totalPagar);//Ejecuta el procedimiento para sumar todos los totales de la tabla.
+            prod.addProdVenta(codigo, cant);//Resta la cantidad que se agrego de la base de datos
+            stock.setText(String.valueOf(existencia - cant));//Resta la cantidad en stock en la interfaz
+            cantidad.setText("");//borra la cantidad ingresada en el campo de cantidad
+        } else {
+            JOptionPane.showMessageDialog(null, "No hay suficientes productos en existencia.");
+        }
     }
 
+//Busca todos los totales en la tabla de ventas y los suma
     public void TotalPagar(JTable tabla, JLabel total) {
         double Totalpagar = 0.00;
-        int numFila = tabla.getRowCount();
-        for (int i = 0; i < numFila; i++) {
-            double cal = Double.parseDouble(String.valueOf(tabla.getModel().getValueAt(i, 4)));
-            Totalpagar = Totalpagar + cal;
+        for (int i = 0; i < tabla.getRowCount(); i++) {//Recorre todas las filas de la tabla
+            double cal = Double.parseDouble(String.valueOf(tabla.getModel().getValueAt(i, 4)));//Obtiene los totales
+            Totalpagar = Totalpagar + cal;//Suma todos los totales
         }
-        total.setText(String.format("%.2f", Totalpagar));
+        total.setText(String.format("%.2f", Totalpagar));//Establece el total en la interfaz con solo dos decimales
     }
 
-    public void eliminarProdVenta(JTable tabla) throws SQLException {
-        int cantidad = Integer.parseInt(tabla.getValueAt(tabla.getSelectedRow(), 2).toString());
-        prod.sumarProd(tabla.getValueAt(tabla.getSelectedRow(), 0).toString(), cantidad);
-        modelo = (DefaultTableModel) tabla.getModel();
-        modelo.removeRow(tabla.getSelectedRow());
+//Elimina un producto de la tabla ventas
+    public void eliminarProdVenta(JTable tabla, JTextField stock, JComboBox<String> codigos) throws SQLException {
+        if (tabla.getRowCount() > -1) {//Verifica que se haya seleccionado un elemento
+            String codigo = tabla.getValueAt(tabla.getSelectedRow(), 0).toString();//Obtiene el codigo de producto
+            int cantidad = Integer.parseInt(tabla.getValueAt(tabla.getSelectedRow(), 2).toString());//Obtiene la cantidad del producto
+            prod.sumarProd(codigo, cantidad);//Suma la cantidad que se regresó a la base de datos
+            modelo = (DefaultTableModel) tabla.getModel();//Obtiene el modelo de la tabla
+            modelo.removeRow(tabla.getSelectedRow());//Elimina la fila de la tabla
+            ResultSet rs = prod.BuscarProd("codigos", codigo);
+            if (rs.next()) {
+                if (codigos.getSelectedItem().equals(codigo)) {//Si el producto que está seleccionado en el combobox es el mismo que se está eliminando
+                    stock.setText(rs.getString("cantidad"));//Actualiza el stock en la interfaz
+                }//Si el producto en el combobox no es el que se está eliminando, entonces no hace falta actualizar el stock en la interfaz
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "No se ha seleccionado ningún elemento.");
+        }
     }
 
-    public void pdf() throws FileNotFoundException, DocumentException, IOException {
-        File file = new File("src/pdf/venta" + idVenta + ".pdf");// Se crea un objeto File con la ruta y nombre del archivo PDF que se va a generar
-
+//Genera un ticket en un documento PDF
+    public void pdf(JTable TablaVenta, String nombreInfo, String direccionInfo, String lblTotal, String nombreC, String telefonoInfo, int idUsuario) throws FileNotFoundException, DocumentException, IOException, SQLException {
+        ResultSet rs = venta.obtenerUltimaVenta();
+        int idVenta = 0, idEmpleado = 0;
+        if (rs.next()) {
+            idVenta = rs.getInt("idVentas");
+            idEmpleado = rs.getInt("idEmpleado");
+        }
+        String empleado = usuario.buscarEmpleado(idEmpleado);
+        File file = new File("src/pdf/venta " + idVenta + ".pdf");// Se crea un objeto File con la ruta y nombre del archivo PDF que se va a generar
 //Se crean los objetos necesarios para generar el documento del ticket de venta
         try (FileOutputStream archivo = new FileOutputStream(file) // Se crea un objeto FileOutputStream con el archivo anteriormente creado para escribir en él
                 ) {
@@ -453,10 +508,10 @@ public class metodos {
             Paragraph encabezado = new Paragraph();//Se crea una seccion para el encabezado del documento
             //Se agrega la informacion de la empresa en el encabezado
             encabezado.add(img);//Se agrega la imagen al encabezado
-            encabezado.add(nombreInfo.getText() + "\n" + direccionInfo.getText() + "\n");
-            encabezado.add(fechaActual + "  " + horaActual + "\n\n");//Se agrega la fecha y hora actual al encabezado
+            encabezado.add(nombreInfo + "\n" + direccionInfo + "\n");
+            encabezado.add(fechaVenta + "  " + horaActual + " \n\n");//Se agrega la fecha y hora actual al encabezado
             encabezado.setAlignment(Element.ALIGN_CENTER);
-            encabezado.add("________________________________________________________________________________________________________________________");
+            encabezado.add("______________________________________________________________________________");
             doc.add(encabezado);//Se agrega el encabezado al documento
 
             //Productos
@@ -488,11 +543,11 @@ public class metodos {
             tablaProd.addCell("");
             tablaProd.addCell("");
 //Se recorren todos los elementos que se compraron para agregarlos al ticket
-            for (int i = 0; i < tablaVenta.getRowCount(); i++) {
-                String descripcion = tablaVenta.getValueAt(i, 1).toString();
-                String cantidad = tablaVenta.getValueAt(i, 2).toString();
-                String precio = tablaVenta.getValueAt(i, 3).toString();
-                String precioT = tablaVenta.getValueAt(i, 4).toString();
+            for (int i = 0; i < TablaVenta.getRowCount(); i++) {
+                String descripcion = TablaVenta.getValueAt(i, 1).toString();
+                String cantidad = TablaVenta.getValueAt(i, 2).toString();
+                String precio = TablaVenta.getValueAt(i, 3).toString();
+                String precioT = TablaVenta.getValueAt(i, 4).toString();
                 tablaProd.addCell(cantidad);
                 tablaProd.addCell(descripcion);
                 tablaProd.addCell(precio);
@@ -502,21 +557,23 @@ public class metodos {
 //Se crea una seccion para escribir el total en el ticket
             Paragraph total = new Paragraph();
             total.add(Chunk.NEWLINE);//Salto de linea
-            total.add("________________________________________________________________________________________________________________________");
-            total.add("Total " + lblTotal.getText() + "\n");
-            total.add("Descuento: " + method.desc + "\n");
-            total.add("Subtotal " + subtotal);
+            total.add("______________________________________________________________________________");
+            total.add("Subtotal " + subtotal + "\n");
+            total.add("Descuento: " + descuento + "\n");
+            total.add("Total " + this.total + "\n");
             total.setAlignment(Element.ALIGN_RIGHT);
             doc.add(total);//Se agrega la seccion al ticket
 //Se crea una seccion para la informacion del cliente
             Paragraph Cliente = new Paragraph();
             Cliente.setAlignment(Element.ALIGN_CENTER);
             String cliente = "Cliente";
-            if (!txtNombreClienteVenta.getText().isEmpty()) {
-                cliente = txtNombreClienteVenta.getText();
+            if (!nombreC.isEmpty()) {
+                cliente = nombreC;
             }
-            Cliente.add("Apreciable: " + cliente + "\n");
-            Cliente.add("Le atendió: " + usuario);
+            Cliente.add("Apreciable " + cliente + "\n");
+            if (!empleado.isEmpty() || empleado != null) {
+                Cliente.add("Le atendió: " + empleado + "\n");
+            }
             Cliente.add("Que tenga un excelente día");
             doc.add(Cliente);//Se agrega la informacon del cliente al ticket
 //Se crea una seccion para agregar la firma del cliente al ticket 
@@ -526,31 +583,74 @@ public class metodos {
             firma.add("-------------------");
             firma.setAlignment(Element.ALIGN_CENTER);
             doc.add(firma);//Se agrega la firma al ticket
-//Se crea una seccion para escribir un mensaje estattico al final del ticket
+//Se crea una seccion para escribir un mensaje estatico al final del ticket
             Paragraph mensaje = new Paragraph();
             mensaje.add(Chunk.NEWLINE);//Salto de linea
             mensaje.add("Gracias por su compra" + "\n");
             mensaje.add("Para mayor información acerca del tratamiento de sus datos, usted puede consultar la version integral del aviso de privacidad, "
                     + "asi como todo lo relacionado a servicio a domicilio y atención a clientes");
-            mensaje.add("\n ATENCIÓN A CLIENTES " + telefonoInfo.getText());
+            mensaje.add("\n ATENCIÓN A CLIENTES " + telefonoInfo);
             mensaje.setAlignment(Element.ALIGN_CENTER);
             doc.add(mensaje);//Se agrega el mensaje al ticket
 
             doc.close();//Se cierra el documento, indicando que ya se dejo de escribir en el
         } // Se crea un objeto Document que representa el documento PDF
         Desktop.getDesktop().open(file);//Se abre el documento automaticamente
+        //Elimina todas las filas de la tabla venta
+        modelo = (DefaultTableModel) TablaVenta.getModel();
+        modelo.setRowCount(0);
 
     }
 
-    public void generarVenta(JTable TablaVenta, JTextField txtNombreClienteventa, JTextField txtCurpVenta, JLabel LabelTotal) {
+    public void generarVenta(JTable TablaVenta, JTextField txtCurpVenta, JLabel LabelTotal, int idUsuario) throws SQLException, DocumentException, IOException {
         if (TablaVenta.getRowCount() > 0) {
-                RegistrarVenta();
-                RegistrarDetalle();
-                ActualizarStock();
-                LimpiarTableVenta();
-                LimpiarClienteventa();
+            double monto = Double.parseDouble(LabelTotal.getText());
+            if (monto >= 1000) {
+                descuento = monto * 0.10;
+            } else if (monto >= 2000) {
+                descuento = monto * 0.20;
+            } else if (monto >= 3000) {
+                descuento = monto * 0.30;
+            } else if (monto >= 4000) {
+                descuento = monto * 0.40;
+            } else if (monto >= 5000) {
+                descuento = monto * 0.50;
+            }
+            subtotal = monto;
+            total = monto - descuento;
+            venta.RegistrarVenta(subtotal, total, txtCurpVenta.getText(), idUsuario);
+            generarDetalle(TablaVenta);
         } else {
             JOptionPane.showMessageDialog(null, "Noy productos en la venta");
+        }
+    }
+
+    private void generarDetalle(JTable TablaVenta) throws SQLException, DocumentException, IOException {
+        for (int i = 0; i < TablaVenta.getRowCount(); i++) {
+            String codigo = TablaVenta.getValueAt(i, 0).toString();
+            int cantidad = Integer.parseInt(TablaVenta.getValueAt(i, 2).toString());
+            double precioU = Double.parseDouble(TablaVenta.getValueAt(i, 3).toString());
+            double total = Double.parseDouble(TablaVenta.getValueAt(i, 4).toString());
+            venta.RegistrarDetalle(codigo, cantidad, precioU, total);
+        }
+    }
+
+    public void buscarCliente(String curp, JTextField nombre) throws SQLException {
+        if (validarCurp(curp)) {//Valida que la curp sea real
+            ResultSet rs = client.Buscarcliente(curp);
+            if (rs.next()) {
+                nombre.setText(rs.getString("nombre") + " " + rs.getString("apellido_P") + " " + rs.getString("apellido_M"));
+            }
+        }
+    }
+//Estos métodos validan que una cadena cumpla con ciertas condiciones
+
+    private boolean validarCurp(String curp) {//Valida un curp
+        if (curp.matches("[A-Z]{4}[0-9]{6}[H,M][A-Z]{5}[0-9]{2}")) {
+            return true;
+        } else {
+            JOptionPane.showMessageDialog(null, "El CURP ingresado es inválido.");
+            return false;
         }
     }
 }

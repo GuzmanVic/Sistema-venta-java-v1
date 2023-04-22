@@ -38,6 +38,7 @@ public class EmpleadoDao {
         cstmt.setString(5, direccion);
         cstmt.execute();
         con.close();
+        System.out.println("empleado registrado");
     }
 
     void modificar(int id, String curp, String telefono, String direccion) throws SQLException {
