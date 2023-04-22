@@ -21,13 +21,13 @@ public class EmpleadoDao {
         ResultSet rs = cstmt.executeQuery();
         return rs;
     }
-
-    /*
-    void registrarEmpleado(String correo, String nombre, String apellidoP, String apellidoM, JTextField telefono, JPasswordField contraseña, String acceso) throws SQLException {
-
+    public void EliminarEmpleado(int id) throws SQLException {
+        con = cn.getConnection();
+        CallableStatement cstmt = con.prepareCall("{ CALL eliminarEmpleado(?) }");
+        cstmt.setInt(1, id);
+        cstmt.executeQuery();
     }
 
-     */
     void registrarEmpleado(String nombre, String apellidoP, String apellidoM, String curp, String direccion) throws SQLException {
         Connection con = cn.getConnection();
         CallableStatement cstmt = con.prepareCall("{CALL nuevoEmpleado(?, ?, ?, ?, ?)}");
@@ -38,7 +38,6 @@ public class EmpleadoDao {
         cstmt.setString(5, direccion);
         cstmt.execute();
         con.close();
-        System.out.println("empleado registrado");
     }
 
     void modificar(int id, String curp, String telefono, String direccion) throws SQLException {

@@ -1289,6 +1289,11 @@ public final class Sistema extends javax.swing.JFrame {
         });
 
         btnEliminarEmpleado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/eliminar.png"))); // NOI18N
+        btnEliminarEmpleado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarEmpleadoActionPerformed(evt);
+            }
+        });
 
         btnEditarEmpleado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/Actualizar (2).png"))); // NOI18N
         btnEditarEmpleado.addActionListener(new java.awt.event.ActionListener() {
@@ -1661,35 +1666,6 @@ public final class Sistema extends javax.swing.JFrame {
     }//GEN-LAST:event_txtCantidadVentaKeyTyped
 
     private void txtCantidadVentaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCantidadVentaKeyPressed
-        /*
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            if (!"".equals(txtCantidadVenta.getText())) {
-                double precio = Double.parseDouble(txtPrecioVenta.getText());
-                int stock = Integer.parseInt(txtStock.getText());
-                item = item + 1;
-                tmp = (DefaultTableModel) TablaVenta.getModel();
-                for (int i = 0; i < TablaVenta.getRowCount(); i++) {
-                    JOptionPane.showMessageDialog(null, "El producto ya esta registrado");
-                    return;
-                }
-                ArrayList lista = new ArrayList();
-                lista.add(item);
-                Object[] O = new Object[5];
-                O[0] = lista.get(1);
-                O[1] = lista.get(2);
-                O[2] = lista.get(3);
-                O[3] = lista.get(4);
-                O[4] = lista.get(5);
-                tmp.addRow(O);
-                TablaVenta.setModel(tmp);
-                TotalPagar();
-                LimparVenta();
-                JOptionPane.showMessageDialog(null, "Stock no disponible");
-            } else {
-                JOptionPane.showMessageDialog(null, "Ingrese Cantidad");
-            }
-        }
-         */
     }//GEN-LAST:event_txtCantidadVentaKeyPressed
 
     private void txtCorreoEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCorreoEmpleadoActionPerformed
@@ -1736,6 +1712,14 @@ public final class Sistema extends javax.swing.JFrame {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_txtCantidadVentaActionPerformed
+
+    private void btnEliminarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarEmpleadoActionPerformed
+        try {
+            method.eliminar(TablaEmpleados);
+        } catch (SQLException ex) {
+            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnEliminarEmpleadoActionPerformed
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {

@@ -245,13 +245,14 @@ public class metodos {
             JOptionPane.showMessageDialog(null, "Los campos estan vacios");
         } else {
             if (caso) {
-                if (correo.getText().isEmpty() || nombre.getText().isEmpty() || apellidos.getText().isEmpty() || contraseña.getText().isEmpty()) {
-                        System.out.println("a pnto de registrar");
+                if (!correo.getText().isEmpty() || !nombre.getText().isEmpty() || !apellidos.getText().isEmpty() || !contraseña.getText().isEmpty()) {
                     if (enviarCorreo(correo.getText())) {
                         ArrayList<String> apellidosS = separarApellidos(apellidos.getText());//Ejecuta un metodo para separar apellidos y los almacena en un array
                         usuario.registrar(correo.getText(), nombre.getText(), apellidosS.get(0), apellidosS.get(1), telefono.getText(), contraseña.getText(), combo.getSelectedItem().toString());
                         empleado.registrarEmpleado(nombre.getText(), apellidosS.get(0), apellidosS.get(1), curp.getText(), direccion.getText());
                     }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Los campos estan vacios");
                 }
             } else {
                 int id = Integer.parseInt(tabla.getValueAt(tabla.getSelectedRow(), 0).toString());
@@ -290,6 +291,11 @@ public class metodos {
                         id = Integer.parseInt(tabla.getValueAt(fila, 0).toString());//Obtiene el id del elemento a eliminar
                         proveedor.EliminarProveedor(id);
                         break;
+                    case "Empleados":
+                        id = Integer.parseInt(tabla.getValueAt(fila, 0).toString());//Obtiene el id del elemento a eliminar
+                        empleado.EliminarEmpleado(id);
+                        break;
+
                 }
                 listarTablas(tabla);//Actualiza la tabla en el sistema
             }

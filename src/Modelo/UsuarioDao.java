@@ -32,7 +32,6 @@ public class UsuarioDao {
         cstmt.setString(7, acceso);
         cstmt.execute();
         con.close();
-        System.out.println("usuario registrado");
     }
 
     public String buscarEmpleado(int idEmpleado) throws SQLException {
