@@ -144,6 +144,9 @@ public class metodos {
                 while (rs.next()) {
                     String nombreC = rs.getString("cliente_nombre") + " " + rs.getString("cliente_nombre") + " " + rs.getString("cliente_apellidoP") + " " + rs.getString("cliente_apellidoM");
                     String nombreE = rs.getString("empleado_nombre") + " " + rs.getString("empleado_nombre") + " " + rs.getString("empleado_apellidoP") + " " + rs.getString("empleado_apellidoM");
+                    if (nombreC.contains("null")) {
+                        nombreC = "No registrado";
+                    }
                     fila[0] = rs.getString("idVentas");
                     fila[1] = nombreC;
                     fila[2] = nombreE;
@@ -186,17 +189,19 @@ public class metodos {
             JTextField txtTelefonoCliente, JTextField txtDireccionCliente, boolean caso) throws SQLException {
         if (!"".equals(txtCurpCliente.getText()) || !"".equals(txtNombreCliente.getText()) || !"".equals(txtTelefonoCliente.getText())
                 || !"".equals(txtDireccionCliente.getText())) {//Verifica que todos los campos necesarios contengan datos
-            ArrayList<String> apellidos = separarApellidos(txtApellidosCliente.getText());//Ejecuta un metodo para separar apellidos y los almacena en un array
-            if (caso) {//Si CASO es true, significa que debe registrar un cliente
-                client.RegistrarCliente(txtNombreCliente.getText(), apellidos.get(0), apellidos.get(1), txtCurpCliente.getText(), txtTelefonoCliente.getText(), txtDireccionCliente.getText());
-            } else {//si CASO es false entonces deberá actualizar un cliente
-                int seleccionado = Integer.parseInt(tabla.getValueAt(tabla.getSelectedRow(), 0).toString());//Obtiene el id del cliente en cuestion
-                client.ModificarCliente(seleccionado, txtNombreCliente.getText(), apellidos.get(0), apellidos.get(1),
-                        txtCurpCliente.getText(), txtTelefonoCliente.getText(), txtDireccionCliente.getText());
+            if (validarCurp(txtCurpCliente.getText()) && validarTelefono(txtTelefonoCliente.getText())) {
+                ArrayList<String> apellidos = separarApellidos(txtApellidosCliente.getText());//Ejecuta un metodo para separar apellidos y los almacena en un array
+                if (caso) {//Si CASO es true, significa que debe registrar un cliente
+                    client.RegistrarCliente(txtNombreCliente.getText(), apellidos.get(0), apellidos.get(1), txtCurpCliente.getText(), txtTelefonoCliente.getText(), txtDireccionCliente.getText());
+                } else {//si CASO es false entonces deberá actualizar un cliente
+                    int seleccionado = Integer.parseInt(tabla.getValueAt(tabla.getSelectedRow(), 0).toString());//Obtiene el id del cliente en cuestion
+                    client.ModificarCliente(seleccionado, txtNombreCliente.getText(), apellidos.get(0), apellidos.get(1),
+                            txtCurpCliente.getText(), txtTelefonoCliente.getText(), txtDireccionCliente.getText());
+                }
+                listarTablas(tabla);//Actualiza la tabla en el sistema
+                limpiarCliente(txtCurpCliente, txtNombreCliente, txtApellidosCliente, txtTelefonoCliente,
+                        txtDireccionCliente);//Limpia los campos del panel clientes
             }
-            listarTablas(tabla);//Actualiza la tabla en el sistema
-            limpiarCliente(txtCurpCliente, txtNombreCliente, txtApellidosCliente, txtTelefonoCliente,
-                    txtDireccionCliente);//Limpia los campos del panel clientes
         } else {
             JOptionPane.showMessageDialog(null, "Los campos estan vacios");
         }
@@ -204,14 +209,16 @@ public class metodos {
 
     public void addUpdProveedor(JTable tabla, JTextField txtNombreproveedor, JTextField txtTelefonoProveedor, JTextField txtDireccionProveedor, boolean caso) throws SQLException {
         if (!"".equals(txtNombreproveedor.getText()) || !"".equals(txtTelefonoProveedor.getText()) || !"".equals(txtDireccionProveedor.getText())) {
-            if (caso) {//Si CASO es true, significa que debe registrar
-                proveedor.RegistrarProveedor(txtNombreproveedor.getText(), txtTelefonoProveedor.getText(), txtDireccionProveedor.getText());
-            } else {//si CASO es false entonces deberá actualizar
-                int seleccionado = Integer.parseInt(tabla.getValueAt(tabla.getSelectedRow(), 0).toString());//Obtiene el id del elemento en cuestion
-                proveedor.ModificarProveedor(seleccionado, txtNombreproveedor.getText(), txtTelefonoProveedor.getText(), txtDireccionProveedor.getText());
+            if (validarTelefono(txtTelefonoProveedor.getText())) {
+                if (caso) {//Si CASO es true, significa que debe registrar
+                    proveedor.RegistrarProveedor(txtNombreproveedor.getText(), txtTelefonoProveedor.getText(), txtDireccionProveedor.getText());
+                } else {//si CASO es false entonces deberá actualizar
+                    int seleccionado = Integer.parseInt(tabla.getValueAt(tabla.getSelectedRow(), 0).toString());//Obtiene el id del elemento en cuestion
+                    proveedor.ModificarProveedor(seleccionado, txtNombreproveedor.getText(), txtTelefonoProveedor.getText(), txtDireccionProveedor.getText());
+                }
+                listarTablas(tabla);//Actualiza la tabla en el sistema
+                limpiarProveedor(txtNombreproveedor, txtTelefonoProveedor, txtDireccionProveedor);//Limpia los campos del panel proveedor
             }
-            listarTablas(tabla);//Actualiza la tabla en el sistema
-            limpiarProveedor(txtNombreproveedor, txtTelefonoProveedor, txtDireccionProveedor);//Limpia los campos del panel proveedor
         } else {
             JOptionPane.showMessageDialog(null, "Los campos estan vacios");
         }
@@ -244,22 +251,24 @@ public class metodos {
         if (curp.getText().isEmpty() || telefono.getText().isEmpty() || direccion.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Los campos estan vacios");
         } else {
-            if (caso) {
-                if (!correo.getText().isEmpty() || !nombre.getText().isEmpty() || !apellidos.getText().isEmpty() || !contraseña.getText().isEmpty()) {
-                    if (enviarCorreo(correo.getText())) {
-                        ArrayList<String> apellidosS = separarApellidos(apellidos.getText());//Ejecuta un metodo para separar apellidos y los almacena en un array
-                        usuario.registrar(correo.getText(), nombre.getText(), apellidosS.get(0), apellidosS.get(1), telefono.getText(), contraseña.getText(), combo.getSelectedItem().toString());
-                        empleado.registrarEmpleado(nombre.getText(), apellidosS.get(0), apellidosS.get(1), curp.getText(), direccion.getText());
+            if (validarCurp(curp.getText()) && validarTelefono(telefono.getText())) {//Valida que el telefono sea de 10 digitos y la curp valida
+                if (caso) {
+                    if (!correo.getText().isEmpty() || !nombre.getText().isEmpty() || !apellidos.getText().isEmpty() || !contraseña.getText().isEmpty()) {
+                        if (enviarCorreo(correo.getText())) {
+                            ArrayList<String> apellidosS = separarApellidos(apellidos.getText());//Ejecuta un metodo para separar apellidos y los almacena en un array
+                            usuario.registrar(correo.getText(), nombre.getText(), apellidosS.get(0), apellidosS.get(1), telefono.getText(), contraseña.getText(), combo.getSelectedItem().toString());
+                            empleado.registrarEmpleado(nombre.getText(), apellidosS.get(0), apellidosS.get(1), curp.getText(), direccion.getText());
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Los campos estan vacios");
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Los campos estan vacios");
+                    int id = Integer.parseInt(tabla.getValueAt(tabla.getSelectedRow(), 0).toString());
+                    empleado.modificar(id, curp.getText(), telefono.getText(), direccion.getText());
                 }
-            } else {
-                int id = Integer.parseInt(tabla.getValueAt(tabla.getSelectedRow(), 0).toString());
-                empleado.modificar(id, curp.getText(), telefono.getText(), direccion.getText());
+                listarTablas(tabla);
+                limpiarEmpleado(correo, nombre, apellidos, curp, telefono, direccion, contraseña);
             }
-            listarTablas(tabla);
-            limpiarEmpleado(correo, nombre, apellidos, curp, telefono, direccion, contraseña);
         }
     }
 
@@ -372,8 +381,7 @@ public class metodos {
     public void actualizarInfo(JTextField txtNombreInfo, JTextField txtCorreoInfo, JTextField txtDireccionInfo, JTextField txtTelefonoInfo,
             JTextField txtWebInfo) throws SQLException {
         if (txtNombreInfo.getText().isEmpty() || txtCorreoInfo.getText().isEmpty() || txtDireccionInfo.getText().isEmpty()
-                || txtTelefonoInfo.getText().isEmpty() || txtWebInfo.getText().isEmpty()) {//Verifica que los campos no estén vacíos
-        } else {
+                || txtTelefonoInfo.getText().isEmpty() || txtWebInfo.getText().isEmpty()) {//Verifica que los campos estén vacíos
             info.addUpdInfo(txtNombreInfo.getText(), txtCorreoInfo.getText(), txtDireccionInfo.getText(), txtTelefonoInfo.getText(), txtWebInfo.getText());
         }
     }
@@ -421,7 +429,7 @@ public class metodos {
         boolean presente = false;//Indicará si el producto en cuestión a agregar ya estaba en la tabla o no.
         int existencia = Integer.parseInt(stock.getText());
         int cant = Integer.parseInt(cantidad.getText());
-        if (existencia >= cant) {//perimitirá que se agregue el producto solo si aun quedan en existencia
+        if (existencia >= cant || existencia == 0) {//perimitirá que se agregue el producto solo si aun quedan en existencia
             String codigo = comboCodProd.getSelectedItem().toString();
             int cantTabla = 0, filaTabla = -1;
             double total = 0.0;
@@ -491,9 +499,13 @@ public class metodos {
     }
 
 //Genera un ticket en un documento PDF
-    public void pdf(JTable TablaVenta, String nombreInfo, String direccionInfo, String lblTotal, String nombreC, String telefonoInfo, int idUsuario) throws FileNotFoundException, DocumentException, IOException, SQLException {
+    public void pdf(JTable TablaVenta, String nombreInfo, String direccionInfo, String nombreC, String telefonoInfo, int idUsuario) throws FileNotFoundException, DocumentException, IOException, SQLException {
         ResultSet rs = venta.obtenerUltimaVenta();
         int idVenta = 0, idEmpleado = 0;
+        //Establece el descuento y el total en un formato en el que solo muestren 2 decimales
+        String desc = String.format("%.2f", descuento);
+        String tot = String.format("%.2f", this.total);
+
         if (rs.next()) {
             idVenta = rs.getInt("idVentas");
             idEmpleado = rs.getInt("idEmpleado");
@@ -565,8 +577,8 @@ public class metodos {
             total.add(Chunk.NEWLINE);//Salto de linea
             total.add("______________________________________________________________________________");
             total.add("Subtotal " + subtotal + "\n");
-            total.add("Descuento: " + descuento + "\n");
-            total.add("Total " + this.total + "\n");
+            total.add("Descuento: " + desc + "\n");
+            total.add("Total " + tot + "\n");
             total.setAlignment(Element.ALIGN_RIGHT);
             doc.add(total);//Se agrega la seccion al ticket
 //Se crea una seccion para la informacion del cliente
@@ -608,7 +620,7 @@ public class metodos {
 
     }
 
-    public void generarVenta(JTable TablaVenta, JTextField txtCurpVenta, JLabel LabelTotal, int idUsuario) throws SQLException, DocumentException, IOException {
+    public void generarVenta(JTable TablaVenta, JLabel LabelTotal, int idUsuario, int idCliente) throws SQLException, DocumentException, IOException {
         if (TablaVenta.getRowCount() > 0) {
             double monto = Double.parseDouble(LabelTotal.getText());
             if (monto >= 1000) {
@@ -624,8 +636,9 @@ public class metodos {
             }
             subtotal = monto;
             total = monto - descuento;
-            venta.RegistrarVenta(subtotal, total, txtCurpVenta.getText(), idUsuario);
+            venta.RegistrarVenta(subtotal, total, idCliente, idUsuario);
             generarDetalle(TablaVenta);
+            LabelTotal.setText("-----");
         } else {
             JOptionPane.showMessageDialog(null, "Noy productos en la venta");
         }
@@ -641,21 +654,47 @@ public class metodos {
         }
     }
 
-    public void buscarCliente(String curp, JTextField nombre) throws SQLException {
+    public int buscarCliente(String curp, JTextField nombre) throws SQLException {
         if (validarCurp(curp)) {//Valida que la curp sea real
             ResultSet rs = client.Buscarcliente(curp);
             if (rs.next()) {
                 nombre.setText(rs.getString("nombre") + " " + rs.getString("apellido_P") + " " + rs.getString("apellido_M"));
+                return rs.getInt("idCliente");
+            } else {
+                JOptionPane.showMessageDialog(null, "No se ha encontrado un cliente con esta curp");
+                return 0;
             }
+        } else {
+            return 0;
         }
     }
-//Estos métodos validan que una cadena cumpla con ciertas condiciones
 
+    //Abre un documento pdf seleccionado por el usuario
+    public void abrirPDF(JTable tabla) throws IOException {
+        if (tabla.getRowCount() >= 0) {//Verifica que haya una fila seleccionada
+            String id = tabla.getValueAt(tabla.getSelectedRow(), 0).toString();//Obtiee el id de la venta
+            File file = new File("src/pdf/venta " + id + ".pdf");// Se crea un objeto File con la ruta y nombre del archivo PDF que se va a abrir
+            Desktop.getDesktop().open(file);//Se abre el documento
+        } else {
+            JOptionPane.showMessageDialog(null, "No se ha seleccionado un elemento");
+        }
+    }
+
+//Estos métodos validan que una cadena cumpla con ciertas condiciones
     private boolean validarCurp(String curp) {//Valida un curp
         if (curp.matches("[A-Z]{4}[0-9]{6}[H,M][A-Z]{5}[0-9]{2}")) {
             return true;
         } else {
             JOptionPane.showMessageDialog(null, "El CURP ingresado es inválido.");
+            return false;
+        }
+    }
+
+    private boolean validarTelefono(String tel) {//Valida un curp
+        if (tel.matches("[0-9]{10}")) {
+            return true;
+        } else {
+            JOptionPane.showMessageDialog(null, "El número telefonico debe ser de 10 digitos.");
             return false;
         }
     }

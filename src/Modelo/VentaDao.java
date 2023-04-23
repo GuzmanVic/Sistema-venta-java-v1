@@ -34,14 +34,13 @@ public class VentaDao {
     Conexion cn = new Conexion();
     PreparedStatement ps;
     ResultSet rs;
-    int r;
 
-    public void RegistrarVenta(double subtotal, double total, String curp, int vendedor) throws SQLException {
+    public void RegistrarVenta(double subtotal, double total, int cliente, int vendedor) throws SQLException {
         Connection con = cn.getConnection();
         CallableStatement cstmt = con.prepareCall("{CALL insertar_venta(?, ?, ?, ?)}");
         cstmt.setDouble(1, subtotal);
         cstmt.setDouble(2, total);
-        cstmt.setString(3, curp);
+        cstmt.setInt(3, cliente);
         cstmt.setInt(4, vendedor);
         cstmt.execute();
         con.close();
