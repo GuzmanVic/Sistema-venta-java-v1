@@ -20,7 +20,7 @@ public class UsuarioDao {
         return rs;
     }
 
-    void registrar(String correo, String nombre, String apellidoP, String apellidoM, String tel, String contraseña, String acceso) throws SQLException {
+    public void registrar(String correo, String nombre, String apellidoP, String apellidoM, String tel, String contraseña, String acceso) throws SQLException {
         Connection con = cn.getConnection();
         CallableStatement cstmt = con.prepareCall("{CALL nuevoUsuario(?, ?, ?, ?, ?, ?, ?)}");
         cstmt.setString(1, nombre);

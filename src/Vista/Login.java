@@ -2,7 +2,7 @@
 package Vista;
 
 import Modelo.LoginDAO;
-import Modelo.login;
+import Controlador.login;
 import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;

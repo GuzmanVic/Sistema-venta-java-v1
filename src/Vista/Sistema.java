@@ -3,13 +3,14 @@ package Vista;
 import Modelo.ClienteDao;
 import Modelo.Combo;
 import Modelo.ConfigDao;
-import Modelo.Eventos;
+import Controlador.Eventos;
+import Controlador.ProductoTableRenderer;
 import Modelo.LoginDAO;
 import Modelo.ProductosDao;
 import Modelo.ProveedorDao;
 import Modelo.VentaDao;
-import Modelo.login;
-import Modelo.metodos;
+import Controlador.login;
+import Controlador.metodos;
 import com.itextpdf.text.DocumentException;
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
@@ -41,6 +42,7 @@ public final class Sistema extends javax.swing.JFrame {
     metodos method = new metodos();
     int idUsuario = 8;
     int idCliente = 0;
+    ProductoTableRenderer renderer = new ProductoTableRenderer();
 
     public Sistema(int idUsuario) throws SQLException {
         initComponents();
@@ -59,6 +61,8 @@ public final class Sistema extends javax.swing.JFrame {
         method.comboListener(comboCodProd, comboNombreProd, txtPrecioVenta, txtStock);
         method.comboListener(comboNombreProd, comboCodProd, txtPrecioVenta, txtStock);
         method.listarInfo(txtNombreInfo, txtCorreoInfo, txtDireccionInfo, txtTelefonoInfo, txtWebInfo);
+        renderer.colorearProductosAVencer(TablaProductos);
+
     }
 
     @SuppressWarnings("unchecked")
@@ -594,7 +598,7 @@ public final class Sistema extends javax.swing.JFrame {
                                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(txtCurpCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(txtNombreCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 1, Short.MAX_VALUE))
+                                .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(txtCorreoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))))
@@ -807,7 +811,7 @@ public final class Sistema extends javax.swing.JFrame {
             TablaProductos.getColumnModel().getColumn(7).setPreferredWidth(40);
         }
 
-        panelProducto.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 50, 870, 330));
+        panelProducto.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 50, 870, 330));
 
         jPanel11.setBackground(new java.awt.Color(255, 204, 255));
         jPanel11.setBorder(javax.swing.BorderFactory.createTitledBorder("Nuevo Producto"));
@@ -936,7 +940,7 @@ public final class Sistema extends javax.swing.JFrame {
                                 .addComponent(txtCodProd, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel11Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(vencimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(vencimiento, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel11Layout.createSequentialGroup()
                         .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jLabel17, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -993,7 +997,7 @@ public final class Sistema extends javax.swing.JFrame {
                 .addGap(23, 23, 23))
         );
 
-        panelProducto.add(jPanel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 250, 370));
+        panelProducto.add(jPanel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 290, 370));
 
         pane.addTab("4", panelProducto);
 
@@ -1436,6 +1440,7 @@ public final class Sistema extends javax.swing.JFrame {
     private void btnEditarproActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarproActionPerformed
         try {
             method.addUpdProd(TablaProductos, vencimiento, txtCodProd, txtNombreProd, txtCantProd, txtPrecioCompra, txtPrecioVentaProd, comboProveedor, comboCategoria, false);
+        renderer.colorearProductosAVencer(TablaProductos);
 
         } catch (SQLException ex) {
             Logger.getLogger(Sistema.class
@@ -1446,6 +1451,7 @@ public final class Sistema extends javax.swing.JFrame {
     private void btnGuardarproActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarproActionPerformed
         try {
             method.addUpdProd(TablaProductos, vencimiento, txtCodProd, txtNombreProd, txtCantProd, txtPrecioCompra, txtPrecioVentaProd, comboProveedor, comboCategoria, true);
+        renderer.colorearProductosAVencer(TablaProductos);
 
         } catch (SQLException ex) {
             Logger.getLogger(Sistema.class
