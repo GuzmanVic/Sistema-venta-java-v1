@@ -62,6 +62,8 @@ import javax.swing.table.TableColumnModel;
 
 public class metodos {
 
+    ProductoTableRenderer renderer = new ProductoTableRenderer();
+
     ConfigDao info = new ConfigDao();
     UsuarioDao usuario = new UsuarioDao();
     DefaultTableModel modelo = new DefaultTableModel();
@@ -109,7 +111,8 @@ public class metodos {
     }
 
 //Actualiza el contenido de las tablas en los paneles
-    public void listarTablas(JTable tabla) throws SQLException {
+    public boolean listarTablas(JTable tabla) throws SQLException {
+        boolean productos = false; //Determina si se ha llenado la tabla productos
         modelo = (DefaultTableModel) tabla.getModel();//Obtiene el modelo de la tabla en cuestion
         modelo.setRowCount(0);//Borra el contenido de la tabla
         ResultSet rs = null;
@@ -158,6 +161,7 @@ public class metodos {
                     modelo.addRow(fila);
                     tabla.getColumnModel().getColumn(0).setMaxWidth(100);
                 }
+                productos = true;
                 break;
             case "Ventas":
                 rs = ventas.Listarventas();
@@ -203,6 +207,10 @@ public class metodos {
                 break;
         }
         tabla.setModel(modelo);
+        if (productos) {
+            renderer.colorearProductosAVencer(tabla);
+        }
+        return productos;
     }
 
 //Estos metodos Guardan o actualizan datos en distintas tablas de la base de datos

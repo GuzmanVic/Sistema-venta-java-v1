@@ -42,7 +42,6 @@ public final class Sistema extends javax.swing.JFrame {
     metodos method = new metodos();
     int idUsuario = 8;
     int idCliente = 0;
-    ProductoTableRenderer renderer = new ProductoTableRenderer();
 
     public Sistema(int idUsuario) throws SQLException {
         initComponents();
@@ -61,7 +60,9 @@ public final class Sistema extends javax.swing.JFrame {
         method.comboListener(comboCodProd, comboNombreProd, txtPrecioVenta, txtStock);
         method.comboListener(comboNombreProd, comboCodProd, txtPrecioVenta, txtStock);
         method.listarInfo(txtNombreInfo, txtCorreoInfo, txtDireccionInfo, txtTelefonoInfo, txtWebInfo);
-        renderer.colorearProductosAVencer(TablaProductos);
+        if (method.listarTablas(TablaProductos)){
+            pane.setSelectedIndex(3);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -1439,8 +1440,6 @@ public final class Sistema extends javax.swing.JFrame {
     private void btnEditarproActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarproActionPerformed
         try {
             method.addUpdProd(TablaProductos, vencimiento, txtCodProd, txtNombreProd, txtCantProd, txtPrecioCompra, txtPrecioVentaProd, comboProveedor, comboCategoria, false);
-        renderer.colorearProductosAVencer(TablaProductos);
-
         } catch (SQLException ex) {
             Logger.getLogger(Sistema.class
                     .getName()).log(Level.SEVERE, null, ex);
@@ -1450,8 +1449,6 @@ public final class Sistema extends javax.swing.JFrame {
     private void btnGuardarproActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarproActionPerformed
         try {
             method.addUpdProd(TablaProductos, vencimiento, txtCodProd, txtNombreProd, txtCantProd, txtPrecioCompra, txtPrecioVentaProd, comboProveedor, comboCategoria, true);
-        renderer.colorearProductosAVencer(TablaProductos);
-
         } catch (SQLException ex) {
             Logger.getLogger(Sistema.class
                     .getName()).log(Level.SEVERE, null, ex);
