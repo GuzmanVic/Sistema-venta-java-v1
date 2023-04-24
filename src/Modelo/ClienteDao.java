@@ -16,7 +16,7 @@ public class ClienteDao {
     PreparedStatement ps;
     ResultSet rs;
 
-    public void RegistrarCliente(String nombre, String apellidoP, String apellidoM, String curp, String telefono, String direccion) throws SQLException {
+    public void RegistrarCliente(String nombre, String apellidoP, String apellidoM, String curp, String telefono, String direccion, String correo) throws SQLException {
         Connection con = cn.getConnection();
         CallableStatement cstmt = con.prepareCall("{CALL insertar_cliente(?, ?, ?, ?, ?, ?)}");
         cstmt.setString(1, nombre);
