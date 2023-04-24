@@ -62,7 +62,6 @@ public final class Sistema extends javax.swing.JFrame {
         method.comboListener(comboNombreProd, comboCodProd, txtPrecioVenta, txtStock);
         method.listarInfo(txtNombreInfo, txtCorreoInfo, txtDireccionInfo, txtTelefonoInfo, txtWebInfo);
         renderer.colorearProductosAVencer(TablaProductos);
-
     }
 
     @SuppressWarnings("unchecked")

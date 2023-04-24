@@ -1,5 +1,7 @@
 package Controlador;
+
 import java.awt.Color;
+import java.awt.Component;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import javax.swing.JTable;
@@ -31,16 +33,22 @@ public class ProductoTableRenderer extends DefaultTableCellRenderer {
         setBackground(Color.WHITE);
     }
 
-    public void colorearProductosAVencer(JTable tabla) {
-        for (int i = 0; i < tabla.getRowCount(); i++) {
-            LocalDate fechaVencimiento = LocalDate.parse(tabla.getValueAt(i, 4).toString());
-            long diasRestantes = ChronoUnit.DAYS.between(hoy, fechaVencimiento);
-            if (diasRestantes <= 30) {
-                tabla.setValueAt(tabla.getValueAt(i, 4) + " (" + diasRestantes + " días)", i, 5);
-                System.out.println(diasRestantes);
-                tabla.setDefaultRenderer(Object.class, this);
-                setBackground(Color.YELLOW);
-            }
+  public void colorearProductosAVencer(JTable tabla) {
+    for (int i = 0; i < tabla.getRowCount(); i++) {
+        LocalDate fechaVencimiento = LocalDate.parse(tabla.getValueAt(i, 4).toString());
+        long diasRestantes = ChronoUnit.DAYS.between(hoy, fechaVencimiento);
+        if (diasRestantes <= 30) {
+            tabla.getColumnModel().getColumn(4).setCellRenderer(new DefaultTableCellRenderer() {
+                @Override
+                public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                    super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                    setBackground(Color.YELLOW);
+                    return this;
+                }
+            });
         }
     }
+}
+
+
 }
