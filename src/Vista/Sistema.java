@@ -1473,8 +1473,7 @@ public final class Sistema extends javax.swing.JFrame {
         try {
             method.addUpdProd(TablaProductos, vencimiento, txtCodProd, txtNombreProd, txtCantProd, txtPrecioCompra, txtPrecioVentaProd, comboProveedor, comboCategoria, false);
         } catch (SQLException ex) {
-            Logger.getLogger(Sistema.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnEditarproActionPerformed
 //Guarda el producto ingresado en la base de datos
@@ -1512,10 +1511,8 @@ public final class Sistema extends javax.swing.JFrame {
     private void btnEliminarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarProveedorActionPerformed
         try {
             method.eliminar(TablaProveedores);
-
         } catch (SQLException ex) {
-            Logger.getLogger(Sistema.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnEliminarProveedorActionPerformed
 //Limpia los campos de texto en el panel proveedor
@@ -1528,8 +1525,7 @@ public final class Sistema extends javax.swing.JFrame {
             method.addUpdProveedor(TablaProveedores, txtNombreproveedor, txtTelefonoProveedor, txtDireccionProveedor, false);
 
         } catch (SQLException ex) {
-            Logger.getLogger(Sistema.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnEditarProveedorActionPerformed
 //Guardará un nuevo proveedor en la base de datos
@@ -1538,8 +1534,7 @@ public final class Sistema extends javax.swing.JFrame {
             method.addUpdProveedor(TablaProveedores, txtNombreproveedor, txtTelefonoProveedor, txtDireccionProveedor, true);
 
         } catch (SQLException ex) {
-            Logger.getLogger(Sistema.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnguardarProveedorActionPerformed
 //Extrae los datos del proveedor seleccionado en la tabla
@@ -1556,8 +1551,7 @@ public final class Sistema extends javax.swing.JFrame {
             method.eliminar(tablaClientes);
 
         } catch (SQLException ex) {
-            Logger.getLogger(Sistema.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnEliminarClienteActionPerformed
 //Actualiza la informacion de un cliente
@@ -1568,7 +1562,7 @@ public final class Sistema extends javax.swing.JFrame {
             try {
                 method.addUpdClientes(tablaClientes, txtCurpCliente, txtNombreCliente, txtApellidosCliente, txtTelefonoCliente, txtDireccionCliente, txtCorreoCliente, false);
             } catch (SQLException ex) {
-                Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
+                      Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_btnEditarClienteActionPerformed
