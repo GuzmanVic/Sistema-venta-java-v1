@@ -62,8 +62,8 @@ import javax.swing.table.TableColumnModel;
 
 public class metodos {
 
+    public boolean ventaAutorizada = false;
     ProductoTableRenderer renderer = new ProductoTableRenderer();
-
     ConfigDao info = new ConfigDao();
     UsuarioDao usuario = new UsuarioDao();
     DefaultTableModel modelo = new DefaultTableModel();
@@ -118,6 +118,7 @@ public class metodos {
         ResultSet rs = null;
         Object[] fila;
         tabla.getColumnModel().getColumn(0).setMaxWidth(30);
+        tabla.getColumnModel().getColumn(0).setMinWidth(30);
         switch (tabla.getName()) {//Segun el nombre de la tabla sera la consulta que hará a la base de datos
             case "Clientes":
                 rs = client.ListarCliente();
@@ -159,6 +160,7 @@ public class metodos {
                     fila[7] = rs.getString("cantidad");
                     fila[8] = rs.getString("categoria");
                     modelo.addRow(fila);
+                    tabla.getColumnModel().getColumn(0).setMinWidth(80);
                     tabla.getColumnModel().getColumn(0).setMaxWidth(100);
                 }
                 productos = true;
@@ -263,7 +265,7 @@ public class metodos {
     public void addUpdProd(JTable tabla, JDateChooser vencimiento, JTextField txtCodProd, JTextField txtNombreProd, JTextField txtCantProd,
             JTextField txtPrecioCompra, JTextField txtPrecioVentaProd, JComboBox<String> comboProveedor, JComboBox<String> comboCategoria, boolean caso) throws SQLException {
         if (!"".equals(txtCodProd.getText()) || !"".equals(txtNombreProd.getText()) || !"".equals(txtCantProd.getText())
-                || txtPrecioCompra.getText().isEmpty() || txtPrecioVentaProd.getText().isEmpty()) {//Verifica que los campos contengan informacion
+                || !txtPrecioCompra.getText().isEmpty() ||! txtPrecioVentaProd.getText().isEmpty()) {//Verifica que los campos contengan informacion
             //Almacena los datos en variables para un mejor manejo de estas.
             String codigo = txtCodProd.getText(), nombre = txtNombreProd.getText(), proveedor = comboProveedor.getSelectedItem().toString();
             String categoria = comboCategoria.getSelectedItem().toString();
@@ -562,8 +564,8 @@ public class metodos {
 
 //Genera un ticket en un documento PDF
     public void pdf(JTable TablaVenta, String nombreInfo, String direccionInfo, String nombreC, String telefonoInfo, int idUsuario) throws FileNotFoundException, DocumentException, IOException, SQLException {
-        ResultSet rs = venta.obtenerUltimaVenta();
-        int idVenta = 0, idEmpleado = 0;
+        ResultSet rs = venta.obtenerUltimaVenta();//Obtiene la última venta generada
+        int idVenta = 0, idEmpleado = 0;//Almacenará el id de la venta
         //Establece el descuento y el total en un formato en el que solo muestren 2 decimales
         String desc = String.format("%.2f", descuento);
         String tot = String.format("%.2f", this.total);
@@ -571,7 +573,6 @@ public class metodos {
             idVenta = rs.getInt("idVentas");
             idEmpleado = rs.getInt("idEmpleado");
         }
-        String empleado = usuario.buscarEmpleado(idEmpleado);
         File file = new File("src/pdf/venta " + idVenta + ".pdf");// Se crea un objeto File con la ruta y nombre del archivo PDF que se va a generar
 //Se crean los objetos necesarios para generar el documento del ticket de venta
         try (FileOutputStream archivo = new FileOutputStream(file) // Se crea un objeto FileOutputStream con el archivo anteriormente creado para escribir en él
@@ -650,9 +651,9 @@ public class metodos {
                 cliente = nombreC;
             }
             Cliente.add("Apreciable " + cliente + "\n");
-            if (!empleado.isEmpty() || empleado != null) {
+//            if (!empleado.isEmpty() || empleado != null) {
                 Cliente.add("Le atendió: " + empleado + "\n");
-            }
+  //          }
             Cliente.add("Que tenga un excelente día");
             doc.add(Cliente);//Se agrega la informacon del cliente al ticket
 //Se crea una seccion para agregar la firma del cliente al ticket 
@@ -700,8 +701,10 @@ public class metodos {
             venta.RegistrarVenta(subtotal, total, idCliente, idUsuario);
             generarDetalle(TablaVenta);
             LabelTotal.setText("-----");
+            ventaAutorizada = true;
         } else {
             JOptionPane.showMessageDialog(null, "Noy productos en la venta");
+            ventaAutorizada = false;
         }
     }
 //Genera un detalle de la venta generada

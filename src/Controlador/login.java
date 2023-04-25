@@ -1,5 +1,6 @@
 package Controlador;
 
+import Modelo.EmpleadoDao;
 import Modelo.LoginDAO;
 import Modelo.LoginDAO;
 import Vista.Login;
@@ -10,20 +11,20 @@ import javax.swing.JOptionPane;
 
 public class login {
 
-    private int id;
-    private String nombre;
-    private String correo;
-    private String pass;
-    private String rol;
+    private int idUsuario, idEmpleado;
+    private String nombre, correo, acceso, telefono;
 
     LoginDAO login = new LoginDAO();
+    EmpleadoDao empleado = new EmpleadoDao();
 
     //Valida el usuario que ingresa al sistema
     public void validar(String correo, String pass, Login athis) throws SQLException {
         if (!"".equals(correo) || !"".equals(pass)) {//Verifica que los campos cintengan informacion
             ResultSet rs = login.log(correo, pass);
             if (rs.next()) {//Si el usuario y contraseña son correctos, entonces abre la ventana de sistema
-                Sistema sis = new Sistema(rs.getInt("idUsuario"));
+                obtenerDatosUsuario(rs);
+                logeado loged = new logeado(nombre,acceso,telefono,this.correo,idUsuario,idEmpleado);//Guarda en un objeto la información del usuario ingresado en el sistema
+                Sistema sis = new Sistema(loged);//Abre la ventana principal con la información del usuario como parametro
                 sis.setVisible(true);
                 athis.dispose();
             } else {
@@ -31,53 +32,16 @@ public class login {
             }
         }
     }
-/*
-    public login(int id, String nombre, String correo, String pass, String rol) {
-        this.id = id;
-        this.nombre = nombre;
-        this.correo = correo;
-        this.pass = pass;
-        this.rol = rol;
+//Obtiene todos los datos del usuario de la base de datos.
+    private void obtenerDatosUsuario(ResultSet rs) throws SQLException {
+        idUsuario = rs.getInt("idUsuario");
+        nombre = rs.getString("nombre") + " " + rs.getString("apellidoP") + " " + rs.getString("apellidoM");
+        acceso = rs.getString("acceso");
+        telefono = rs.getString("telefono");
+        correo = rs.getString("correo");
+        ResultSet rs1 = empleado.buscarEmpleado(idUsuario);
+        if (rs1.next()) {
+            idEmpleado=rs1.getInt("idEmpleado");
+        }
     }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getCorreo() {
-        return correo;
-    }
-
-    public void setCorreo(String correo) {
-        this.correo = correo;
-    }
-
-    public String getPass() {
-        return pass;
-    }
-
-    public void setPass(String pass) {
-        this.pass = pass;
-    }
-
-    public String getRol() {
-        return rol;
-    }
-
-    public void setRol(String rol) {
-        this.rol = rol;
-    }
-*/
 }

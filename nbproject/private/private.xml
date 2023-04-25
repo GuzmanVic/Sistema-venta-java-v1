@@ -5,7 +5,15 @@
         <group>
             <file>file:/C:/Users/ALUMNO/Documents/GitHub/Sistema-venta-java-v1/src/Controlador/ProductoTableRenderer.java</file>
             <file>file:/C:/Users/ALUMNO/Documents/GitHub/Sistema-venta-java-v1/src/Vista/Sistema.java</file>
+            <file>file:/C:/Users/ALUMNO/Documents/GitHub/Sistema-venta-java-v1/src/Controlador/login.java</file>
+            <file>file:/C:/Users/ALUMNO/Documents/GitHub/Sistema-venta-java-v1/src/Modelo/EmpleadoDao.java</file>
+            <file>file:/C:/Users/ALUMNO/Documents/GitHub/Sistema-venta-java-v1/src/Modelo/ProductosDao.java</file>
+            <file>file:/C:/Users/ALUMNO/Documents/GitHub/Sistema-venta-java-v1/src/Controlador/logeado.java</file>
+            <file>file:/C:/Users/ALUMNO/Documents/GitHub/Sistema-venta-java-v1/src/Controlador/metodos.java</file>
+            <file>file:/C:/Users/ALUMNO/Documents/GitHub/Sistema-venta-java-v1/src/Modelo/UsuarioDao.java</file>
             <file>file:/C:/Users/ALUMNO/Documents/GitHub/Sistema-venta-java-v1/src/Controlador/EnviarCorreo.java</file>
+            <file>file:/C:/Users/ALUMNO/Documents/GitHub/Sistema-venta-java-v1/src/Modelo/VentaDao.java</file>
+            <file>file:/C:/Users/ALUMNO/Documents/GitHub/Sistema-venta-java-v1/src/Vista/Login.java</file>
         </group>
     </open-files>
 </project-private>

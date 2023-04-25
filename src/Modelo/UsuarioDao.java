@@ -33,17 +33,4 @@ public class UsuarioDao {
         cstmt.execute();
         con.close();
     }
-
-    public String buscarEmpleado(int idEmpleado) throws SQLException {
-        con = cn.getConnection();
-        CallableStatement cstmt = con.prepareCall("{ CALL buscarEmpleado(?) }");
-        cstmt.setInt(1, idEmpleado);
-        ResultSet rs = cstmt.executeQuery();
-        String nombre = "";
-        if (rs.next()) {
-            nombre = rs.getString("nombre");
-        }
-        return nombre;
-
-    }
 }

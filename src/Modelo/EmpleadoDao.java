@@ -21,6 +21,7 @@ public class EmpleadoDao {
         ResultSet rs = cstmt.executeQuery();
         return rs;
     }
+
     public void EliminarEmpleado(int id) throws SQLException {
         con = cn.getConnection();
         CallableStatement cstmt = con.prepareCall("{ CALL eliminarEmpleado(?) }");
@@ -49,5 +50,14 @@ public class EmpleadoDao {
         cstmt.setString(4, direccion);
         cstmt.execute();
         con.close();
+    }
+
+    public ResultSet buscarEmpleado(int idEmpleado) throws SQLException {
+        con = cn.getConnection();
+        CallableStatement cstmt = con.prepareCall("{ CALL buscarEmpleado(?) }");
+        cstmt.setInt(1, idEmpleado);
+        ResultSet rs = cstmt.executeQuery();
+        return rs;
+
     }
 }

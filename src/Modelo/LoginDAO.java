@@ -17,7 +17,9 @@ public class LoginDAO {
     
     public ResultSet log(String correo, String pass) throws SQLException{
         con = cn.getConnection();
-        CallableStatement cstmt = con.prepareCall("{ CALL get_login() }");
+        CallableStatement cstmt = con.prepareCall("{ CALL get_login(?,?) }");
+        cstmt.setString(1, correo);
+        cstmt.setString(2, pass);
         ResultSet rs = cstmt.executeQuery();
         return rs;
     }
