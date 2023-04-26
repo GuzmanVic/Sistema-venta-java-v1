@@ -265,7 +265,7 @@ public class metodos {
     public void addUpdProd(JTable tabla, JDateChooser vencimiento, JTextField txtCodProd, JTextField txtNombreProd, JTextField txtCantProd,
             JTextField txtPrecioCompra, JTextField txtPrecioVentaProd, JComboBox<String> comboProveedor, JComboBox<String> comboCategoria, boolean caso) throws SQLException {
         if (!"".equals(txtCodProd.getText()) || !"".equals(txtNombreProd.getText()) || !"".equals(txtCantProd.getText())
-                || !txtPrecioCompra.getText().isEmpty() ||! txtPrecioVentaProd.getText().isEmpty()) {//Verifica que los campos contengan informacion
+                || !txtPrecioCompra.getText().isEmpty() || !txtPrecioVentaProd.getText().isEmpty()) {//Verifica que los campos contengan informacion
             //Almacena los datos en variables para un mejor manejo de estas.
             String codigo = txtCodProd.getText(), nombre = txtNombreProd.getText(), proveedor = comboProveedor.getSelectedItem().toString();
             String categoria = comboCategoria.getSelectedItem().toString();
@@ -458,7 +458,7 @@ public class metodos {
         correo.setEnabled(false);
         nombre.setEnabled(false);
         apellidos.setEnabled(false);
-        curp.setText(tabla.getValueAt(fila, 2).toString());
+        curp.setText(tabla.getValueAt(fila, 1).toString());
         dir.setText(tabla.getValueAt(fila, 3).toString());
         tel.setText(tabla.getValueAt(fila, 4).toString());
         combo.setSelectedItem(tabla.getValueAt(fila, 5).toString());
@@ -563,15 +563,14 @@ public class metodos {
     }
 
 //Genera un ticket en un documento PDF
-    public void pdf(JTable TablaVenta, String nombreInfo, String direccionInfo, String nombreC, String telefonoInfo, int idUsuario) throws FileNotFoundException, DocumentException, IOException, SQLException {
+    public void pdf(JTable TablaVenta, String nombreInfo, String direccionInfo, String nombreC, String telefonoInfo, String empleado) throws FileNotFoundException, DocumentException, IOException, SQLException {
         ResultSet rs = venta.obtenerUltimaVenta();//Obtiene la última venta generada
-        int idVenta = 0, idEmpleado = 0;//Almacenará el id de la venta
+        int idVenta = 0;//Almacenará el id de la venta
         //Establece el descuento y el total en un formato en el que solo muestren 2 decimales
         String desc = String.format("%.2f", descuento);
         String tot = String.format("%.2f", this.total);
         if (rs.next()) {
             idVenta = rs.getInt("idVentas");
-            idEmpleado = rs.getInt("idEmpleado");
         }
         File file = new File("src/pdf/venta " + idVenta + ".pdf");// Se crea un objeto File con la ruta y nombre del archivo PDF que se va a generar
 //Se crean los objetos necesarios para generar el documento del ticket de venta
@@ -651,9 +650,9 @@ public class metodos {
                 cliente = nombreC;
             }
             Cliente.add("Apreciable " + cliente + "\n");
-//            if (!empleado.isEmpty() || empleado != null) {
+            if (!empleado.isEmpty() || empleado != null) {
                 Cliente.add("Le atendió: " + empleado + "\n");
-  //          }
+            }
             Cliente.add("Que tenga un excelente día");
             doc.add(Cliente);//Se agrega la informacon del cliente al ticket
 //Se crea una seccion para agregar la firma del cliente al ticket 

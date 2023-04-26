@@ -41,22 +41,20 @@ public final class Sistema extends javax.swing.JFrame {
     ConfigDao conf = new ConfigDao();
     Eventos event = new Eventos();
     metodos method = new metodos();
-    int idUsuario = 8;
-    int idCliente = 0;
+    int idEmpleado = 0, idCliente = 0;
     static logeado log = new logeado("victor", "empleado", "555", "mail.com", 5, 5);
 
     public Sistema(logeado log) throws SQLException {
         initComponents();
         controlarAcceso(log);
-
-    }
-
-    private Sistema() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public void controlarAcceso(logeado log) throws SQLException {
         //Establece los nombres de las tablas en el sistema para un facil manejo de estas
+        idEmpleado = log.getIdEmpleado();
+        System.out.println(idEmpleado);
+        this.log=log;
+        System.out.println(log.getIdEmpleado());
         tablaClientes.setName("Clientes");
         TablaVenta.setName("Venta");
         comboCodProd.setName("Codigos");
@@ -75,7 +73,7 @@ public final class Sistema extends javax.swing.JFrame {
                 txtDireccionInfo.setEnabled(false);
                 txtTelefonoInfo.setEnabled(false);
                 txtWebInfo.setEnabled(false);
-                //Remuevelos paneles y botones que el empleado no debe tener acceso.
+                //Remueve los paneles y botones que el empleado no debe tener acceso.
                 pane.remove(panelEmpleados);
                 pane.remove(panelProveedor);
                 pane.remove(panelProductos);
@@ -1424,7 +1422,7 @@ public final class Sistema extends javax.swing.JFrame {
 //Abre el panel de usuarios y actualiza la tabla
     private void btnEmpleadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmpleadosActionPerformed
         try {
-            pane.setSelectedIndex(6);
+            pane.setSelectedComponent(panelEmpleados);
             method.listarTablas(TablaEmpleados);
         } catch (SQLException ex) {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
@@ -1438,8 +1436,7 @@ public final class Sistema extends javax.swing.JFrame {
         try {
             method.actualizarInfo(txtNombreInfo, txtCorreoInfo, txtDireccionInfo, txtTelefonoInfo, txtWebInfo);
         } catch (SQLException ex) {
-            Logger.getLogger(Sistema.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnActualizarConfigActionPerformed
 
@@ -1452,7 +1449,6 @@ public final class Sistema extends javax.swing.JFrame {
     }//GEN-LAST:event_btnPdfVentasActionPerformed
 
     private void TablaVentasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaVentasMouseClicked
-        // TODO add your handling code here:
         int fila = TablaVentas.rowAtPoint(evt.getPoint());
     }//GEN-LAST:event_TablaVentasMouseClicked
 //Limpia los campos de texto en el panel de productos
@@ -1494,7 +1490,6 @@ public final class Sistema extends javax.swing.JFrame {
     }//GEN-LAST:event_comboProveedorItemStateChanged
 
     private void txtPrecioCompraKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPrecioCompraKeyTyped
-        // TODO add your handling code here:
         event.numberDecimalKeyPress(evt, txtPrecioCompra);
     }//GEN-LAST:event_txtPrecioCompraKeyTyped
 //Se ejecuta al hacer click en un elemento de la tabla productos        
@@ -1549,7 +1544,6 @@ public final class Sistema extends javax.swing.JFrame {
     private void btnEliminarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarClienteActionPerformed
         try {
             method.eliminar(tablaClientes);
-
         } catch (SQLException ex) {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1562,7 +1556,7 @@ public final class Sistema extends javax.swing.JFrame {
             try {
                 method.addUpdClientes(tablaClientes, txtCurpCliente, txtNombreCliente, txtApellidosCliente, txtTelefonoCliente, txtDireccionCliente, txtCorreoCliente, false);
             } catch (SQLException ex) {
-                      Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_btnEditarClienteActionPerformed
@@ -1586,9 +1580,10 @@ public final class Sistema extends javax.swing.JFrame {
 //Realiza una nueva venta
     private void btnGenerarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarVentaActionPerformed
         try {
-            method.generarVenta(TablaVenta, LabelTotal, idUsuario, idCliente);
+            method.generarVenta(TablaVenta, LabelTotal, idEmpleado, idCliente);
             if (method.ventaAutorizada) {
-                method.pdf(TablaVenta, txtNombreInfo.getText(), txtDireccionInfo.getText(), txtNombreClienteventa.getText(), txtTelefonoInfo.getText(), idUsuario);
+                System.out.println("Empleado: " + log.getNombre());
+                method.pdf(TablaVenta, txtNombreInfo.getText(), txtDireccionInfo.getText(), txtNombreClienteventa.getText(), txtTelefonoInfo.getText(), log.getNombre());
             }
         } catch (SQLException | DocumentException | IOException ex) {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
@@ -1597,7 +1592,6 @@ public final class Sistema extends javax.swing.JFrame {
     //elimina un prducto de la tabla de venta
     private void btnEliminarventaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarventaActionPerformed
         try {
-            // TODO add your handling code here:
             method.eliminarProdVenta(TablaVenta, txtStock, comboCodProd);
             method.TotalPagar(TablaVenta, LabelTotal);
 
@@ -1607,7 +1601,6 @@ public final class Sistema extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEliminarventaActionPerformed
 //Controla que el txt de cantidad solo acepte valores numéricos
     private void txtCantidadVentaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCantidadVentaKeyTyped
-        // TODO add your handling code here:
         event.numberKeyPress(evt);
     }//GEN-LAST:event_txtCantidadVentaKeyTyped
 
@@ -1658,7 +1651,6 @@ public final class Sistema extends javax.swing.JFrame {
     private void btnEliminarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarEmpleadoActionPerformed
         try {
             method.eliminar(TablaEmpleados);
-
         } catch (SQLException ex) {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }

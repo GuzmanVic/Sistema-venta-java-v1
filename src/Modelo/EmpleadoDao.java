@@ -52,12 +52,11 @@ public class EmpleadoDao {
         con.close();
     }
 
-    public ResultSet buscarEmpleado(int idEmpleado) throws SQLException {
+    public ResultSet buscarEmpleado(int id) throws SQLException {
         con = cn.getConnection();
         CallableStatement cstmt = con.prepareCall("{ CALL buscarEmpleado(?) }");
-        cstmt.setInt(1, idEmpleado);
+        cstmt.setInt(1, id);
         ResultSet rs = cstmt.executeQuery();
         return rs;
-
     }
 }

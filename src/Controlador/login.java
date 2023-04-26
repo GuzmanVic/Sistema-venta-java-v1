@@ -23,7 +23,9 @@ public class login {
             ResultSet rs = login.log(correo, pass);
             if (rs.next()) {//Si el usuario y contraseña son correctos, entonces abre la ventana de sistema
                 obtenerDatosUsuario(rs);
-                logeado loged = new logeado(nombre,acceso,telefono,this.correo,idUsuario,idEmpleado);//Guarda en un objeto la información del usuario ingresado en el sistema
+                System.out.println("Empleado: " + nombre);
+                logeado loged = new logeado(nombre, acceso, telefono, this.correo, idUsuario, idEmpleado);//Guarda en un objeto la información del usuario ingresado en el sistema
+                System.out.println(loged.getNombre()+ "nombre en el puto objeto");
                 Sistema sis = new Sistema(loged);//Abre la ventana principal con la información del usuario como parametro
                 sis.setVisible(true);
                 athis.dispose();
@@ -33,6 +35,7 @@ public class login {
         }
     }
 //Obtiene todos los datos del usuario de la base de datos.
+
     private void obtenerDatosUsuario(ResultSet rs) throws SQLException {
         idUsuario = rs.getInt("idUsuario");
         nombre = rs.getString("nombre") + " " + rs.getString("apellidoP") + " " + rs.getString("apellidoM");
@@ -41,7 +44,8 @@ public class login {
         correo = rs.getString("correo");
         ResultSet rs1 = empleado.buscarEmpleado(idUsuario);
         if (rs1.next()) {
-            idEmpleado=rs1.getInt("idEmpleado");
+            idEmpleado = rs1.getInt("idEmpleado");
         }
+        System.out.println(rs.getString("apellidoP"));
     }
 }
