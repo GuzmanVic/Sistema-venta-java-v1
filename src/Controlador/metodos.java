@@ -743,12 +743,26 @@ public class metodos {
             JOptionPane.showMessageDialog(null, "No se ha seleccionado un elemento");
         }
     }
-
+    
+//Estos métodos buscan algun valor repetido en alguna de las tablas antes de hacer un registro
     private boolean buscarCURP(JTable tabla, String curp) {//Verficia que la curp ingresadda no se encuentre en la tabla
         for (int i = 0; i < tabla.getRowCount(); i++) {//Recorre todas las filas de la tabla
             String curpTabla = tabla.getValueAt(i, 1).toString();//La curp siempre estará en la columan 1 en cualquier tabla
             if (curpTabla.equals(curp)) {//Verifica que la curp ya esté registrada en la tabla, de ser asi, devuelve TRUE
-                JOptionPane.showMessageDialog(null, "Esta curp ya está registrada.");
+                JOptionPane.showMessageDialog(null, "Esta CURP ya está registrada.");
+                return true;
+            } else {
+                return false;//Si no encuentra la curp devuelve FALSE
+            }
+        }
+        return false;
+    }
+
+    private boolean buscarCorreo(JTable tabla, String correo) {//Verficia que la curp ingresadda no se encuentre en la tabla
+        for (int i = 0; i < tabla.getRowCount(); i++) {//Recorre todas las filas de la tabla
+            String correoTabla = tabla.getValueAt(i, 1).toString();//La curp siempre estará en la columan 1 en cualquier tabla
+            if (correoTabla.equals(correo)) {//Verifica que la curp ya esté registrada en la tabla, de ser asi, devuelve TRUE
+                JOptionPane.showMessageDialog(null, "Este correo ya está registrada.");
                 return true;
             } else {
                 return false;//Si no encuentra la curp devuelve FALSE

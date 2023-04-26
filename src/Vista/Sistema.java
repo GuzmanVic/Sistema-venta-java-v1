@@ -42,7 +42,7 @@ public final class Sistema extends javax.swing.JFrame {
     Eventos event = new Eventos();
     metodos method = new metodos();
     int idEmpleado = 0, idCliente = 0;
-    static logeado log = new logeado("victor", "empleado", "555", "mail.com", 5, 5);
+    static logeado log = new logeado("victor", "administrador", 5);
 
     public Sistema(logeado log) throws SQLException {
         initComponents();
@@ -52,9 +52,7 @@ public final class Sistema extends javax.swing.JFrame {
     public void controlarAcceso(logeado log) throws SQLException {
         //Establece los nombres de las tablas en el sistema para un facil manejo de estas
         idEmpleado = log.getIdEmpleado();
-        System.out.println(idEmpleado);
-        this.log=log;
-        System.out.println(log.getIdEmpleado());
+        this.log = log;
         tablaClientes.setName("Clientes");
         TablaVenta.setName("Venta");
         comboCodProd.setName("Codigos");
@@ -1449,7 +1447,6 @@ public final class Sistema extends javax.swing.JFrame {
     }//GEN-LAST:event_btnPdfVentasActionPerformed
 
     private void TablaVentasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaVentasMouseClicked
-        int fila = TablaVentas.rowAtPoint(evt.getPoint());
     }//GEN-LAST:event_TablaVentasMouseClicked
 //Limpia los campos de texto en el panel de productos
     private void btnNuevoProActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoProActionPerformed
@@ -1459,7 +1456,6 @@ public final class Sistema extends javax.swing.JFrame {
     private void btnEliminarProActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarProActionPerformed
         try {
             method.eliminar(TablaProductos);
-
         } catch (SQLException ex) {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1582,7 +1578,6 @@ public final class Sistema extends javax.swing.JFrame {
         try {
             method.generarVenta(TablaVenta, LabelTotal, idEmpleado, idCliente);
             if (method.ventaAutorizada) {
-                System.out.println("Empleado: " + log.getNombre());
                 method.pdf(TablaVenta, txtNombreInfo.getText(), txtDireccionInfo.getText(), txtNombreClienteventa.getText(), txtTelefonoInfo.getText(), log.getNombre());
             }
         } catch (SQLException | DocumentException | IOException ex) {

@@ -1,23 +1,14 @@
 package Controlador;
 
 public class logeado {
-    private int idUsuario,idEmpleado;
-    private String nombre, acceso, telefono, correo;
-    public logeado(String nombre,String acceso,String telefono,String correo,int idUsuario,int idEmpleado){
-        this.acceso=acceso;
-        this.telefono=telefono;
-        this.correo=correo;
-        this.idUsuario=idUsuario;
-        this.idEmpleado=idEmpleado;
-        this.nombre=nombre;
-    }
 
-    public int getIdUsuario() {
-        return idUsuario;
-    }
+    private int idEmpleado;
+    private String nombre, acceso;
 
-    public void setIdUsuario(int idUsuario) {
-        this.idUsuario = idUsuario;
+    public logeado(String nombre, String acceso, int idEmpleado) {
+        this.acceso = acceso;
+        this.idEmpleado = idEmpleado;
+        this.nombre = nombre;
     }
 
     public int getIdEmpleado() {
@@ -43,21 +34,4 @@ public class logeado {
     public void setAcceso(String acceso) {
         this.acceso = acceso;
     }
-
-    public String getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
-
-    public String getCorreo() {
-        return correo;
-    }
-
-    public void setCorreo(String correo) {
-        this.correo = correo;
-    }
-    
 }
