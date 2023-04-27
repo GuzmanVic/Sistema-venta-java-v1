@@ -74,6 +74,15 @@ public class ProductosDao {
         return rs;
     }
 
+    public ResultSet BuscarProdID(String busqueda) throws SQLException {
+        con = cn.getConnection();
+        CallableStatement cstmt = null;
+        cstmt = con.prepareCall("{ CALL buscarProdID(?) }");
+        cstmt.setString(1, busqueda);
+        ResultSet rs = cstmt.executeQuery(); // ejecutar el procedimiento almacenado
+        return rs;
+    }
+
     public void BuscarId(int id) {
         String sql = "SELECT pr.id AS id_proveedor, pr.nombre AS nombre_proveedor, p.* FROM proveedor pr INNER JOIN productos p ON p.proveedor = pr.id WHERE p.id = ?";
         try {

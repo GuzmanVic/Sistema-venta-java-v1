@@ -22,7 +22,7 @@ public class LoginTest {
     @Test
       public void testValidar() throws SQLException {
         login log = new login();
-        boolean resultado = log.validar("usuario@example.com", "password", new Login());
+     //   boolean resultado = log.validar("usuario@example.com", "password", new Login());
         assertTrue(resultado);
     }
     

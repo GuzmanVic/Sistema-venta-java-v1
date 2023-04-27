@@ -308,48 +308,61 @@ public class metodos {
     }
 
 //Agrega un producto a la tabla ventas
-    public void addProdVenta(JTable tabla, JTextField cantidad, JTextField stock, JComboBox<String> comboCodProd, JComboBox<String> comboNombreProd,
-            JTextField precioVenta, JLabel totalPagar) throws SQLException {
-        boolean presente = false;//Indicará si el producto en cuestión a agregar ya estaba en la tabla o no.
-        int existencia = Integer.parseInt(stock.getText());
-        int cant = Integer.parseInt(cantidad.getText());
-        if (existencia >= cant || existencia == 0) {//perimitirá que se agregue el producto solo si aun quedan en existencia
-            String codigo = comboCodProd.getSelectedItem().toString();
-            int cantTabla = 0, filaTabla = -1;
-            double total = 0.0;
-            double precio = Double.parseDouble(precioVenta.getText());
-            modelo = (DefaultTableModel) tabla.getModel();//Obtiene el modelo de la tabla venta
-            for (int i = 0; i < modelo.getRowCount(); i++) {
-                if (codigo.equals(tabla.getValueAt(i, 0))) {//Verifica si ya hay un producto en la tabla con el mismo codigo
-                    cantTabla = Integer.parseInt(tabla.getValueAt(i, 2).toString());//Obtiene la cantidad del producto que estaba en la tabla
-                    filaTabla = i;//Obtiene la fila en la que se encuentra el producto
-                    presente = true;//determina que el producto ya esta en la tabla
-                    break;//rompe la iteración
-                } else {//Si el producto en cuestión no estaba en la tabla...
-                    presente = false;//Determina que el producto no está presente en la tabla
+    public void addProdVenta(JTable tabla, JTextField cantidad, String codigo, JLabel totalPagar) throws SQLException {
+        //Crea variables para almacenar la información del producto
+        String nombre = "";
+        int stock = 0;
+        double precio = 0.0;
+        if (buscarProducto(codigo, nombre, precio, stock)) {//Busca el producto en la base de datos y agrega su informacion a las variables creadas (en caso de haberlo encontrado)
+            System.out.println("nombre en prodventa "+nombre);
+            System.out.println("precio en prodventa "+precio);
+            System.out.println("stock en prodventa "+stock);
+            boolean presente = false;//Indicará si el producto en cuestión a agregar ya estaba en la tabla o no.
+            int cant = 1;//Si no se ingreso una cantidad, por defecto el numero de la cantidad será 1
+            if (!cantidad.getText().isEmpty()) {//Si se agregó la cantidad entonces tomara el numero ingresado como cantidad
+                cant = Integer.parseInt(cantidad.getText());
+            }
+            if (stock >= cant && stock != 0) {//perimitirá que se agregue el producto solo si aun quedan en existencia
+                int cantTabla = 0;//almacenar la cantidad del producto presente en la tabla (en caso de que el producto en cuestión ya haya sidp agregado previamente)
+                int filaTabla = -1;//Almacena la fila en donde se encuentra el producto
+                double total = 0.0;
+                modelo = (DefaultTableModel) tabla.getModel();//Obtiene el modelo de la tabla venta
+                for (int i = 0; i < modelo.getRowCount(); i++) {
+                    if (codigo.equals(tabla.getValueAt(i, 0))) {//Verifica si ya hay un producto en la tabla con el mismo codigo
+                        cantTabla = Integer.parseInt(tabla.getValueAt(i, 2).toString());//Obtiene la cantidad del producto que estaba en la tabla
+                        filaTabla = i;//Obtiene la fila en la que se encuentra el producto
+                        presente = true;//determina que el producto ya esta en la tabla
+                        System.out.println("El producto ya estaba en la tabla");
+                        break;//rompe la iteración
+                    } else {//Si el producto en cuestión no estaba en la tabla...
+                        presente = false;//Determina que el producto no está presente en la tabla
+                        System.out.println("El producto NO estaba en la tabla");
+                    }
                 }
+                if (presente) {//Si el producto ya estaba en la tabla...
+                    cantTabla += cant;//Suma la cantidad ingresada por el usuario a la cantidad que ya estaba en la tabla
+                    total = cantTabla * precio;//multiplica el precio por la nueva cantidad
+                    modelo.setValueAt(cantTabla, filaTabla, 2);//Cambia la cantidad en la tabla
+                    modelo.setValueAt(total, filaTabla, 4);//Cambia el precio en la tabla
+                    System.out.println("Se sumó " + cantTabla + " al producto");
+                } else {//Si el producto no estaba en la tabla lo agrega
+                    Object[] fila = new Object[5];
+                    total = cant * precio;//Multiplica la cantidad por el precio
+                    fila[0] = codigo;
+                    fila[1] = nombre;
+                    fila[2] = cant;
+                    fila[3] = precio;
+                    fila[4] = total;
+                    modelo.addRow(fila);//Agrega la fila a la tabla.
+                    System.out.println("Se agregó " + nombre + " a la tabla");
+                }
+                TotalPagar(tabla, totalPagar);//Ejecuta el procedimiento para sumar todos los totales de la tabla.
+                prod.addProdVenta(codigo, cant);//Resta la cantidad que se agrego de la base de datos
+                cantidad.setText("");//borra la cantidad ingresada en el campo de cantidad
+            } else {
+                JOptionPane.showMessageDialog(null, "No hay suficientes productos en existencia.");
             }
-            if (presente) {//Si el producto ya estaba en la tabla...
-                cantTabla += cant;//Suma la cantidad ingresada por el usuario a la cantidad que ya estaba en la tabla
-                total = cantTabla * precio;//multiplica el precio por la nueva cantidad
-                modelo.setValueAt(cantTabla, filaTabla, 2);//Cambia la cantidad en la tabla
-                modelo.setValueAt(total, filaTabla, 4);//Cambia el precio en la tabla
-            } else {//Si el producto no estaba en la tabla lo agrega
-                Object[] fila = new Object[5];
-                total = cant * precio;//Multiplica la cantidad por el precio
-                fila[0] = codigo;
-                fila[1] = comboNombreProd.getSelectedItem().toString();
-                fila[2] = cantidad.getText();
-                fila[3] = precioVenta.getText();
-                fila[4] = total;
-                modelo.addRow(fila);//Agrega la fila a la tabla.
-            }
-            TotalPagar(tabla, totalPagar);//Ejecuta el procedimiento para sumar todos los totales de la tabla.
-            prod.addProdVenta(codigo, cant);//Resta la cantidad que se agrego de la base de datos
-            stock.setText(String.valueOf(existencia - cant));//Resta la cantidad en stock en la interfaz
-            cantidad.setText("");//borra la cantidad ingresada en el campo de cantidad
-        } else {
-            JOptionPane.showMessageDialog(null, "No hay suficientes productos en existencia.");
+
         }
     }
 
@@ -455,7 +468,7 @@ public class metodos {
     }
 
     //llean los comboBox que hay en la interfaz
-    public void llenarCombos(JComboBox<String> combo, JComboBox<String> combo2, JComboBox<String> combo3, JComboBox<String> combo4) throws SQLException {
+    public void llenarCombos(JComboBox<String> combo, JComboBox<String> combo2) throws SQLException {
         ResultSet rs = proveedor.ListarProveedor();
         while (rs.next()) {
             combo.addItem(rs.getString("nombre"));
@@ -464,16 +477,6 @@ public class metodos {
         rs = proveedor.listarCategoria();
         while (rs.next()) {
             combo2.addItem(rs.getString("descripcion"));
-        }
-        rs.close();
-        rs = prod.ListarProductos();
-        while (rs.next()) {
-            combo3.addItem(rs.getString("serie"));
-        }
-        rs.close();
-        rs = prod.ListarProductos();
-        while (rs.next()) {
-            combo4.addItem(rs.getString("nombre"));
         }
         rs.close();
     }
@@ -501,30 +504,6 @@ public class metodos {
         return true;
     }
 
-//Controla los cambios que hay en los combos del panel ventas
-    public void comboListener(JComboBox<String> combo, JComboBox<String> combo2, JTextField precio, JTextField stock) throws SQLException {
-        combo.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    ResultSet rs = prod.BuscarProd(combo.getName(), combo.getSelectedItem().toString());//Busca el producto por su codigo o nombre en la base de datos
-                    if (rs.next()) {
-                        if (combo.getName().equalsIgnoreCase("Codigos")) {//si el combo seleccionado es el combo de codigos entnces cambiara la posicion del combo nombres
-                            combo2.setSelectedItem(rs.getString("nombre"));
-                        } else {///y viceversa
-                            combo2.setSelectedItem(rs.getString("serie"));
-                        }
-                        precio.setText(rs.getString("precioVenta"));//Cambia el precio del producto en la interfas
-                        stock.setText(rs.getString("cantidad"));//Cambia el stock en la interfaz
-                    }
-                } catch (SQLException ex) {
-                    Logger.getLogger(metodos.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
-            }
-        });
-    }
-
     public void TotalPagar(JTable tabla, JLabel total) {//Busca todos los totales en la tabla de ventas y los suma
         double Totalpagar = 0.00;
         for (int i = 0; i < tabla.getRowCount(); i++) {//Recorre todas las filas de la tabla
@@ -534,19 +513,13 @@ public class metodos {
         total.setText(String.format("%.2f", Totalpagar));//Establece el total en la interfaz con solo dos decimales
     }
 
-    public void eliminarProdVenta(JTable tabla, JTextField stock, JComboBox<String> codigos) throws SQLException {//Elimina un producto de la tabla ventas
+    public void eliminarProdVenta(JTable tabla) throws SQLException {//Elimina un producto de la tabla ventas
         if (tabla.getRowCount() > -1) {//Verifica que se haya seleccionado un elemento
             String codigo = tabla.getValueAt(tabla.getSelectedRow(), 0).toString();//Obtiene el codigo de producto
             int cantidad = Integer.parseInt(tabla.getValueAt(tabla.getSelectedRow(), 2).toString());//Obtiene la cantidad del producto
             prod.sumarProd(codigo, cantidad);//Suma la cantidad que se regresó a la base de datos
             modelo = (DefaultTableModel) tabla.getModel();//Obtiene el modelo de la tabla
             modelo.removeRow(tabla.getSelectedRow());//Elimina la fila de la tabla
-            ResultSet rs = prod.BuscarProd("codigos", codigo);
-            if (rs.next()) {
-                if (codigos.getSelectedItem().equals(codigo)) {//Si el producto que está seleccionado en el combobox es el mismo que se está eliminando
-                    stock.setText(rs.getString("cantidad"));//Actualiza el stock en la interfaz
-                }//Si el producto en el combobox no es el que se está eliminando, entonces no hace falta actualizar el stock en la interfaz
-            }
         } else {
             JOptionPane.showMessageDialog(null, "No se ha seleccionado ningún elemento.");
         }
@@ -818,4 +791,16 @@ public class metodos {
         }
     }
 
+    public boolean buscarProducto(String codigoBarras, String nombre, double precio, int stock) throws SQLException {
+        ResultSet rs = prod.BuscarProdID(codigoBarras);//Busca el producto por su codigo o nombre en la base de datos
+        if (rs.next()) {
+            nombre = rs.getString("nombre");
+            precio = rs.getDouble("precioVenta");//Cambia el precio del producto en la interfas
+            stock = rs.getInt("cantidad");//Cambia el stock en la interfaz
+            System.out.println("Se encontró el producto " + nombre + " con precio " + precio + " y cantidad " + stock + "\n");
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

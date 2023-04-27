@@ -3,9 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/vguzm/OneDrive/Documentos/GitHub/Sistema-venta-java-v1/src/Vista/Sistema.java</file>
-            <file>file:/C:/Users/vguzm/OneDrive/Documentos/GitHub/Sistema-venta-java-v1/src/Controlador/metodos.java</file>
-            <file>file:/C:/Users/vguzm/OneDrive/Documentos/GitHub/Sistema-venta-java-v1/src/Controlador/login.java</file>
+            <file>file:/C:/Users/ALUMNO/Documents/GitHub/Sistema-venta-java-v1/test/Modelo/ClienteDaoTest.java</file>
+            <file>file:/C:/Users/ALUMNO/Documents/GitHub/Sistema-venta-java-v1/test/Controlador/metodosTest.java</file>
+            <file>file:/C:/Users/ALUMNO/Documents/GitHub/Sistema-venta-java-v1/test/Vista/LoginTest.java</file>
+            <file>file:/C:/Users/ALUMNO/Documents/GitHub/Sistema-venta-java-v1/test/Vista/SistemaTest.java</file>
+            <file>file:/C:/Users/ALUMNO/Documents/GitHub/Sistema-venta-java-v1/src/Vista/Login.java</file>
         </group>
     </open-files>
 </project-private>
