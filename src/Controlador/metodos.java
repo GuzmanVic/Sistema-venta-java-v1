@@ -131,7 +131,7 @@ public class metodos {
                     fila[3] = apellidos;
                     fila[4] = rs.getString("telefono");
                     fila[5] = rs.getString("direccion");
-                    fila[6] = rs.getDate("fecha");
+                    fila[6] = rs.getString("correo");
                     modelo.addRow(fila);
                 }
                 break;
@@ -143,6 +143,9 @@ public class metodos {
                     fila[1] = rs.getString("nombre");
                     fila[2] = rs.getString("telefono");
                     fila[3] = rs.getString("direccion");
+                    tabla.getColumnModel().getColumn(2).setMaxWidth(80);
+                    tabla.getColumnModel().getColumn(2).setMinWidth(80);
+
                     modelo.addRow(fila);
                 }
                 break;
@@ -182,20 +185,9 @@ public class metodos {
                     modelo.addRow(fila);
                 }
                 break;
-            case "Usuarios":
-                rs = usuario.listarUsuarios();
-                fila = new Object[4];
-                while (rs.next()) {
-                    fila[0] = rs.getString("idUsuario");
-                    fila[1] = rs.getString("nombre");
-                    fila[2] = rs.getString("correo");
-                    fila[3] = rs.getString("acceso");
-                    modelo.addRow(fila);
-                }
-                break;
             case "Empleados":
                 rs = empleado.listarEmpleados();
-                fila = new Object[6];
+                fila = new Object[7];
                 while (rs.next()) {
                     String nombre = rs.getString("nombre") + " " + rs.getString("apellidoP") + " " + rs.getString("apellidoM");;
                     fila[0] = rs.getString("idEmpleado");
@@ -204,6 +196,7 @@ public class metodos {
                     fila[3] = rs.getString("direccion");
                     fila[4] = rs.getString("telefono");
                     fila[5] = rs.getString("acceso");
+                    fila[6] = rs.getString("correo");
                     modelo.addRow(fila);
                 }
                 break;
@@ -222,7 +215,7 @@ public class metodos {
                 || !"".equals(txtDireccionCliente.getText())) {//Verifica que todos los campos necesarios contengan datos
             //Valida que los formatos de curp, teleefono y direccion sean correctos.
             if (validarCurp(txtCurpCliente.getText()) && validarTelefono(txtTelefonoCliente.getText()) && validarDireccion(txtDireccionCliente.getText())) {
-                if (!buscarCURP(tabla, txtCurpCliente.getText()) && !buscarTelefono(tabla, txtTelefonoCliente.getText())) {//verifica si la curp y el telefono ingresados ya fue agregada
+                if (!buscarCURP(tabla, txtCurpCliente.getText()) && !buscarTelefono(tabla, txtTelefonoCliente.getText()) && buscarCorreo(tabla, correo.getText())) {//verifica si la curp y el telefono ingresados ya fue agregada
                     ArrayList<String> apellidos = separarApellidos(txtApellidosCliente.getText());//Ejecuta un metodo para separar apellidos y los almacena en un array
                     if (enviarCorreo(correo.getText())) {
                         if (caso) {//Si CASO es true, significa que debe registrar un cliente
@@ -290,7 +283,7 @@ public class metodos {
             JOptionPane.showMessageDialog(null, "Los campos estan vacios");
         } else {
             if (validarCurp(curp.getText()) && validarTelefono(telefono.getText()) && validarDireccion(direccion.getText())) {//Valida que el telefono sea de 10 digitos y la curp valida
-                if (!buscarCURP(tabla, curp.getText()) && !buscarTelefono(tabla, telefono.getText())) {//verifica si la curp y el telefono ingresados ya fueron agregados
+                if (!buscarCURP(tabla, curp.getText()) && !buscarTelefono(tabla, telefono.getText()) && !buscarCorreo(tabla, correo.getText())) {//verifica si la curp y el telefono ingresados ya fueron agregados
                     if (validarContraseña(contraseña.getText())) {
                         if (caso) {
                             if (!correo.getText().isEmpty() || !nombre.getText().isEmpty() || !apellidos.getText().isEmpty() || !contraseña.getText().isEmpty()) {
@@ -743,7 +736,7 @@ public class metodos {
             JOptionPane.showMessageDialog(null, "No se ha seleccionado un elemento");
         }
     }
-    
+
 //Estos métodos buscan algun valor repetido en alguna de las tablas antes de hacer un registro
     private boolean buscarCURP(JTable tabla, String curp) {//Verficia que la curp ingresadda no se encuentre en la tabla
         for (int i = 0; i < tabla.getRowCount(); i++) {//Recorre todas las filas de la tabla
@@ -760,9 +753,9 @@ public class metodos {
 
     private boolean buscarCorreo(JTable tabla, String correo) {//Verficia que la curp ingresadda no se encuentre en la tabla
         for (int i = 0; i < tabla.getRowCount(); i++) {//Recorre todas las filas de la tabla
-            String correoTabla = tabla.getValueAt(i, 1).toString();//La curp siempre estará en la columan 1 en cualquier tabla
+            String correoTabla = tabla.getValueAt(i, 6).toString();//El correo siempre estará en la columan 6 en cualquier tabla
             if (correoTabla.equals(correo)) {//Verifica que la curp ya esté registrada en la tabla, de ser asi, devuelve TRUE
-                JOptionPane.showMessageDialog(null, "Este correo ya está registrada.");
+                JOptionPane.showMessageDialog(null, "Este correo ya está registrado.");
                 return true;
             } else {
                 return false;//Si no encuentra la curp devuelve FALSE
@@ -773,12 +766,14 @@ public class metodos {
 
     private boolean buscarTelefono(JTable tabla, String tel) {//Verficia que el teléfono ingresaddo no se encuentre en la tabla
         for (int i = 0; i < tabla.getRowCount(); i++) {//Recorre todas las filas de la tabla
-            String telTabla = "";//Declara una variable para almacenar el telefono en la tabla
-            if (tabla.getName().equalsIgnoreCase("Clientes") || tabla.getName().equalsIgnoreCase("Empleados")) {
-                telTabla = tabla.getValueAt(i, 4).toString();//el telefono en la tabla clientes y empleados se encuentra en la columna 4
-            } else if (tabla.getName().equalsIgnoreCase("Proveedores")) {
-                telTabla = tabla.getValueAt(tabla.getSelectedRow(), 2).toString();//El telefono en la tabla proveedores se encuentra en la columna2
+            int columna = 0;
+            if (tabla.getName().equalsIgnoreCase("Proveedores")) {
+                columna = 2;
+            } else {
+                columna = 4;
             }
+            String telTabla = "";//Declara una variable para almacenar el telefono en la tabla
+            telTabla = tabla.getValueAt(tabla.getSelectedRow(), columna).toString();
             if (telTabla.equals(tel)) {//Si el telefono ya está en la tabla, rompe el cico y devuelve TRUE
                 JOptionPane.showMessageDialog(null, "Este teléfono ya está registrado.");
                 return true;

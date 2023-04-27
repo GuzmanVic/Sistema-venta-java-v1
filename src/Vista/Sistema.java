@@ -492,7 +492,7 @@ public final class Sistema extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "CURP", "NOMBRE", "APELLIDOS", "TELÉFONO", "DIRECCIÓN", "FECHA"
+                "ID", "CURP", "NOMBRE", "APELLIDOS", "TELÉFONO", "DIRECCIÓN", "CORREO"
             }
         ));
         tablaClientes.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -506,7 +506,6 @@ public final class Sistema extends javax.swing.JFrame {
             tablaClientes.getColumnModel().getColumn(1).setPreferredWidth(50);
             tablaClientes.getColumnModel().getColumn(2).setResizable(false);
             tablaClientes.getColumnModel().getColumn(2).setPreferredWidth(100);
-            tablaClientes.getColumnModel().getColumn(3).setHeaderValue("APELLIDOS");
             tablaClientes.getColumnModel().getColumn(4).setResizable(false);
             tablaClientes.getColumnModel().getColumn(4).setPreferredWidth(50);
             tablaClientes.getColumnModel().getColumn(5).setPreferredWidth(80);
@@ -853,7 +852,7 @@ public final class Sistema extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "CURP", "NOMBRE", "DIRECCIÓN", "TELEFONO", "ROL"
+                "ID", "CURP", "NOMBRE", "DIRECCIÓN", "TELEFONO", "ACCESO", "CORREO"
             }
         ));
         TablaEmpleados.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1523,7 +1522,6 @@ public final class Sistema extends javax.swing.JFrame {
     private void btnguardarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnguardarProveedorActionPerformed
         try {
             method.addUpdProveedor(TablaProveedores, txtNombreproveedor, txtTelefonoProveedor, txtDireccionProveedor, true);
-
         } catch (SQLException ex) {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
