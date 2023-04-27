@@ -145,7 +145,6 @@ public class metodos {
                     fila[3] = rs.getString("direccion");
                     tabla.getColumnModel().getColumn(2).setMaxWidth(80);
                     tabla.getColumnModel().getColumn(2).setMinWidth(80);
-
                     modelo.addRow(fila);
                 }
                 break;
@@ -448,9 +447,7 @@ public class metodos {
 
     public void clickTablaEmpleados(JTable tabla, JTextField correo, JTextField nombre, JTextField apellidos, JTextField curp, JTextField tel, JTextField dir, JPasswordField pass, JComboBox<String> combo) {
         int fila = tabla.getSelectedRow();
-        correo.setEnabled(false);
-        nombre.setEnabled(false);
-        apellidos.setEnabled(false);
+        correo.setText(tabla.getValueAt(fila, 6).toString());
         curp.setText(tabla.getValueAt(fila, 1).toString());
         dir.setText(tabla.getValueAt(fila, 3).toString());
         tel.setText(tabla.getValueAt(fila, 4).toString());
