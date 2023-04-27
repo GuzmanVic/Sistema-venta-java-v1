@@ -76,8 +76,12 @@ public class metodos {
     LocalDate fechaVenta = LocalDate.now();//Almacena la fecha de venta
     double subtotal = 0.0, descuento = 0.0, total = 0.0;
     LocalTime horaActual = LocalTime.now();
-
+    //Estas variables serán utilizadas para almacenar los datos del producto que se busque en la base de datos
+    String nombre = "";
+    int stock = 0;
+    double precio = 0.0;
 //Estos métodos limpian los campos en los distintos paneles del sistema
+
     public void limpiarCliente(JTextField curp, JTextField nombre, JTextField apellidos, JTextField telefono, JTextField direccion) {//Panel clientes
         JTextField[] camposTexto = {curp, nombre, apellidos, telefono, direccion};
         for (JTextField campo : camposTexto) {
@@ -309,14 +313,7 @@ public class metodos {
 
 //Agrega un producto a la tabla ventas
     public void addProdVenta(JTable tabla, JTextField cantidad, String codigo, JLabel totalPagar) throws SQLException {
-        //Crea variables para almacenar la información del producto
-        String nombre = "";
-        int stock = 0;
-        double precio = 0.0;
-        if (buscarProducto(codigo, nombre, precio, stock)) {//Busca el producto en la base de datos y agrega su informacion a las variables creadas (en caso de haberlo encontrado)
-            System.out.println("nombre en prodventa "+nombre);
-            System.out.println("precio en prodventa "+precio);
-            System.out.println("stock en prodventa "+stock);
+        if (buscarProducto(codigo)) {//Busca el producto en la base de datos y agrega su informacion a las variables creadas (en caso de haberlo encontrado)
             boolean presente = false;//Indicará si el producto en cuestión a agregar ya estaba en la tabla o no.
             int cant = 1;//Si no se ingreso una cantidad, por defecto el numero de la cantidad será 1
             if (!cantidad.getText().isEmpty()) {//Si se agregó la cantidad entonces tomara el numero ingresado como cantidad
@@ -791,7 +788,7 @@ public class metodos {
         }
     }
 
-    public boolean buscarProducto(String codigoBarras, String nombre, double precio, int stock) throws SQLException {
+    public boolean buscarProducto(String codigoBarras) throws SQLException {
         ResultSet rs = prod.BuscarProdID(codigoBarras);//Busca el producto por su codigo o nombre en la base de datos
         if (rs.next()) {
             nombre = rs.getString("nombre");
@@ -800,7 +797,22 @@ public class metodos {
             System.out.println("Se encontró el producto " + nombre + " con precio " + precio + " y cantidad " + stock + "\n");
             return true;
         } else {
+            JOptionPane.showMessageDialog(null, "No existe este producto.");
             return false;
         }
+    }
+
+    public void sumarCantidad(JTable tabla, JTextField txtCantidadVenta, JLabel total) {
+        if (tabla.getSelectedRow() < 0) {//verifica que haya un producto seleccionado en la tabla
+            JOptionPane.showMessageDialog(null, "Seleccione un producto en la tabla");
+        } else {
+            int cantidadTabla = Integer.parseInt(tabla.getValueAt(tabla.getSelectedRow(), 2).toString());//Obtiene la cantidad de producto que estaba en la tabla
+            int cantidadNueva = Integer.parseInt(txtCantidadVenta.getText());//Obtiene la cantidad nueva ingresada por el usuario.
+            cantidadNueva += cantidadTabla;//Suma las cantidades
+            tabla.setValueAt(cantidadNueva, tabla.getSelectedRow(), 2);//Establece la nueva cantidad en la tabla
+            TotalPagar(tabla, total);//vuelve a sumar el total de la venta
+            txtCantidadVenta.setText("");//Borra la cantidad del campo de cantidad
+        }
+
     }
 }

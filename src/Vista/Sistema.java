@@ -1616,15 +1616,7 @@ public final class Sistema extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEditarEmpleadoActionPerformed
 //Agrega un producto a la tabla ventas
     private void txtCantidadVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCantidadVentaActionPerformed
-/*
-        try {
-            method.addProdVenta(TablaVenta, txtCantidadVenta, txtStock, comboCodProd, comboNombreProd, txtPrecioVenta, LabelTotal);
-        } catch (NullPointerException e) {
-            JOptionPane.showMessageDialog(null, "No se ha seleccionado un producto en la tabla.", "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (SQLException ex) {
-            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
-        }
-*/
+        method.sumarCantidad(TablaVenta, txtCantidadVenta, LabelTotal);
     }//GEN-LAST:event_txtCantidadVentaActionPerformed
 
     private void btnEliminarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarEmpleadoActionPerformed
@@ -1671,11 +1663,11 @@ public final class Sistema extends javax.swing.JFrame {
     }//GEN-LAST:event_txtCorreoClienteKeyTyped
 
     private void codigosBKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_codigosBKeyTyped
+        event.numberKeyPress(evt);//Solo acepta valores numericos
         if (evt.getKeyChar() == '\n') { // Verifica si se ingresó un carácter de nueva línea
             evt.consume(); // Consume el evento para que no se procese nuevamente
             String codigoBarras = codigosB.getText(); // Obtiene el texto ingresado en el JTextField
             // Procesa el código de barras aquí
-            System.out.println("El código de barras escaneado es: " + codigoBarras+"\n");
             try {
                 codigosB.setText("");
                 method.addProdVenta(TablaVenta, txtCantidadVenta, codigoBarras, LabelTotal);
