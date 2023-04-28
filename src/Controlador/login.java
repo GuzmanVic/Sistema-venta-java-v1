@@ -38,7 +38,9 @@ public class login {
         acceso = rs.getString("acceso");
         ResultSet rs1 = empleado.buscarEmpleado(rs.getInt("idUsuario"));
         if (rs1.next()) {
-            idEmpleado = rs.getInt("idUsuario");
+            System.out.println("usuario " + rs.getInt("idUsuario"));
+            idEmpleado = rs1.getInt("idEmpleado");
+            System.out.println("empleado: " + idEmpleado);
         }
     }
 }

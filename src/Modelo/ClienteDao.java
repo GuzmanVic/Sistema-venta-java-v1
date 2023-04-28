@@ -44,9 +44,9 @@ public class ClienteDao {
         con.close();
     }
 
-    public void ModificarCliente(int id, String nombre, String apellidoP, String apellidoM, String curp, String telefono, String direccion) throws SQLException {
+    public void ModificarCliente(int id, String nombre, String apellidoP, String apellidoM, String curp, String telefono, String direccion,String correo) throws SQLException {
         Connection con = cn.getConnection();
-        CallableStatement cstmt = con.prepareCall("{CALL actualizarCliente(?, ?, ?, ?, ?, ?, ?)}");
+        CallableStatement cstmt = con.prepareCall("{CALL actualizarCliente(?, ?, ?, ?, ?, ?, ?, ?)}");
         cstmt.setInt(1, id);
         cstmt.setString(2, curp);
         cstmt.setString(3, nombre);
@@ -54,6 +54,7 @@ public class ClienteDao {
         cstmt.setString(5, apellidoM);
         cstmt.setString(6, telefono);
         cstmt.setString(7, direccion);
+        cstmt.setString(8, correo);
         cstmt.execute();
         con.close();
     }

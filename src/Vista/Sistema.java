@@ -42,7 +42,7 @@ public final class Sistema extends javax.swing.JFrame {
     Eventos event = new Eventos();
     metodos method = new metodos();
     int idEmpleado = 0, idCliente = 0;
-    static logeado log = new logeado("victor", "administrador", 5);
+    static logeado log = new logeado("victor", "administrador", 59);
 
     public Sistema(logeado log) throws SQLException {
         initComponents();
@@ -50,9 +50,9 @@ public final class Sistema extends javax.swing.JFrame {
     }
 
     public void controlarAcceso(logeado log) throws SQLException {
-        //Establece los nombres de las tablas en el sistema para un facil manejo de estas
         idEmpleado = log.getIdEmpleado();
         this.log = log;
+        //Establece los nombres de las tablas en el sistema para un facil manejo de estas
         tablaClientes.setName("Clientes");
         TablaVenta.setName("Venta");
         //Importa los datos de la BDD para hacer la conexión  al iniciar el sistema
@@ -86,6 +86,7 @@ public final class Sistema extends javax.swing.JFrame {
                 if (method.listarTablas(TablaProductos)) {//Revisa si hay productos con la fecha de caducidad proxima o con cantidad de stock <=10
                     pane.setSelectedComponent(panelProductos);//Establece la ventana en el panel de productos
                 }
+                break;
         }
     }
 
@@ -617,7 +618,7 @@ public final class Sistema extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(txtCorreoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(7, Short.MAX_VALUE))
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -768,7 +769,7 @@ public final class Sistema extends javax.swing.JFrame {
                         .addComponent(btnguardarProveedor)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnEditarProveedor)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(89, Short.MAX_VALUE))
         );
         jPanel10Layout.setVerticalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -817,6 +818,11 @@ public final class Sistema extends javax.swing.JFrame {
                 TablaProductosMouseClicked(evt);
             }
         });
+        TablaProductos.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                TablaProductosKeyPressed(evt);
+            }
+        });
         jScrollPane4.setViewportView(TablaProductos);
         if (TablaProductos.getColumnModel().getColumnCount() > 0) {
             TablaProductos.getColumnModel().getColumn(0).setPreferredWidth(50);
@@ -826,13 +832,19 @@ public final class Sistema extends javax.swing.JFrame {
             TablaProductos.getColumnModel().getColumn(7).setPreferredWidth(40);
         }
 
-        panelProductos.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 50, 870, 330));
+        panelProductos.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 50, 850, 330));
 
         jPanel11.setBackground(new java.awt.Color(255, 204, 255));
         jPanel11.setBorder(javax.swing.BorderFactory.createTitledBorder("Nuevo Producto"));
 
         jLabel22.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel22.setText("Código:");
+
+        txtCodProd.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCodProdKeyTyped(evt);
+            }
+        });
 
         jLabel23.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel23.setText("Nombre:");
@@ -1385,6 +1397,7 @@ public final class Sistema extends javax.swing.JFrame {
 //Abre el panel de venta
     private void btnNuevaVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaVentaActionPerformed
         pane.setSelectedComponent(panelVenta);
+        codigosB.requestFocus();
     }//GEN-LAST:event_btnNuevaVentaActionPerformed
 //Abre el panel de configuracion y actualiza la informacion del mismo
     private void btnConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfigActionPerformed
@@ -1438,6 +1451,7 @@ public final class Sistema extends javax.swing.JFrame {
 //Limpia los campos de texto en el panel de productos
     private void btnNuevoProActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoProActionPerformed
         method.limpiarProd(txtCodProd, txtNombreProd, txtCantProd, txtPrecioCompra, txtPrecioVentaProd);
+        txtCodProd.requestFocus();
     }//GEN-LAST:event_btnNuevoProActionPerformed
 //Elimina un producto de la base de datos
     private void btnEliminarProActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarProActionPerformed
@@ -1479,10 +1493,8 @@ public final class Sistema extends javax.swing.JFrame {
     private void TablaProductosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaProductosMouseClicked
         try {
             method.clickTablaProd(TablaProductos, vencimiento, txtCodProd, txtNombreProd, txtCantProd, txtPrecioCompra, txtPrecioVentaProd, comboProveedor, comboCategoria);
-
         } catch (ParseException ex) {
-            Logger.getLogger(Sistema.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_TablaProductosMouseClicked
 //Elimina un proveedor
@@ -1509,6 +1521,7 @@ public final class Sistema extends javax.swing.JFrame {
     private void btnguardarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnguardarProveedorActionPerformed
         try {
             method.addUpdProveedor(TablaProveedores, txtNombreproveedor, txtTelefonoProveedor, txtDireccionProveedor, true);
+            method.llenarCombos(comboProveedor, comboCategoria);
         } catch (SQLException ex) {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1555,7 +1568,7 @@ public final class Sistema extends javax.swing.JFrame {
     }//GEN-LAST:event_txtCurpClienteKeyTyped
 //Al hacer click en un elemento de la tabla clientes extrae sus datos y los pone en los campos de texto en el panel clientes
     private void tablaClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaClientesMouseClicked
-        method.clickTablaClientes(tablaClientes, txtCurpCliente, txtNombreCliente, txtApellidosCliente, txtTelefonoCliente, txtDireccionCliente);
+        method.clickTablaClientes(tablaClientes, txtCurpCliente, txtNombreCliente, txtApellidosCliente, txtTelefonoCliente, txtDireccionCliente, txtCorreoCliente);
     }//GEN-LAST:event_tablaClientesMouseClicked
 
 //Realiza una nueva venta
@@ -1600,7 +1613,7 @@ public final class Sistema extends javax.swing.JFrame {
     }//GEN-LAST:event_btnguardarEmpleadoActionPerformed
 //Extrae los datos del elemento seleccionado la tabla empleados
     private void TablaEmpleadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaEmpleadosMouseClicked
-        method.clickTablaEmpleados(TablaEmpleados, txtCorreoEmpleado, txtNombreEmpleado, txtApellidosEmpleado, txtCurpEmpleado, txtTelefonoEmpledo, txtDireccionEmpleado, txtPassEmpleado, comboRol);
+        method.clickTablaEmpleados(TablaEmpleados, txtCorreoEmpleado, txtNombreEmpleado, txtApellidosEmpleado, txtCurpEmpleado, txtTelefonoEmpledo, txtDireccionEmpleado, comboRol);
     }//GEN-LAST:event_TablaEmpleadosMouseClicked
 //Limpia los campos del panel empleados
     private void btnNuevoEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoEmpleadoActionPerformed
@@ -1664,23 +1677,36 @@ public final class Sistema extends javax.swing.JFrame {
 
     private void codigosBKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_codigosBKeyTyped
         event.numberKeyPress(evt);//Solo acepta valores numericos
-        if (evt.getKeyChar() == '\n') { // Verifica si se ingresó un carácter de nueva línea
-            evt.consume(); // Consume el evento para que no se procese nuevamente
-            String codigoBarras = codigosB.getText(); // Obtiene el texto ingresado en el JTextField
-            // Procesa el código de barras aquí
-            try {
-                codigosB.setText("");
-                method.addProdVenta(TablaVenta, txtCantidadVenta, codigoBarras, LabelTotal);
-            } catch (SQLException ex) {
-                Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        String codigo = method.keyTyped(evt, event, txtCodProd.getText());
+        try {
+            codigosB.setText("");
+            method.addProdVenta(TablaVenta, txtCantidadVenta, codigo, LabelTotal);
+        } catch (SQLException ex) {
+            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
-        // TODO add your handling code here:
     }//GEN-LAST:event_codigosBKeyTyped
 
     private void codigosBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_codigosBActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_codigosBActionPerformed
+
+    private void txtCodProdKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodProdKeyTyped
+        event.numberKeyPress(evt);//Solo acepta valores numericos
+        String codigo = method.keyTyped(evt, event, txtCodProd.getText());
+        try {//Busca si ya hay un producto con ese código registrado en la base de datos
+            method.buscarProd(TablaProductos, codigo, vencimiento, txtCodProd, txtNombreProd, txtCantProd, txtPrecioCompra, txtPrecioVentaProd, comboProveedor, comboCategoria);
+        } catch (ParseException ex) {
+            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_txtCodProdKeyTyped
+
+    private void TablaProductosKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TablaProductosKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_DELETE) { // Verifica si se presionó la tecla "suprimir"
+            int filaSeleccionada = TablaProductos.getSelectedRow(); // Obtiene la fila seleccionada
+            if (filaSeleccionada != -1) { // Verifica si se seleccionó una fila
+                btnEliminarProveedor.doClick();//Ejecuta el botón de eliminar proveedor
+            }
+        }
+    }//GEN-LAST:event_TablaProductosKeyPressed
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
