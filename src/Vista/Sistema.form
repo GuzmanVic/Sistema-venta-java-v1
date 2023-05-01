@@ -478,11 +478,14 @@
             </Component>
             <Component class="javax.swing.JLabel" name="LabelTotal">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Segoe UI" size="18" style="0"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="-----"/>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                  <AbsoluteConstraints x="770" y="380" width="-1" height="-1"/>
+                  <AbsoluteConstraints x="760" y="360" width="110" height="60"/>
                 </Constraint>
               </Constraints>
             </Component>
@@ -2129,7 +2132,7 @@
               </AuxValues>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                  <AbsoluteConstraints x="310" y="40" width="860" height="380"/>
+                  <AbsoluteConstraints x="310" y="40" width="840" height="380"/>
                 </Constraint>
               </Constraints>
 

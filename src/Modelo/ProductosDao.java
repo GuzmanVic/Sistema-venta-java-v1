@@ -130,4 +130,17 @@ public class ProductosDao {
 
     }
 
+    public void ActualizarStock(int cant, String id) {
+        String sql = "UPDATE productos SET cantidad = ? WHERE serie = ?";
+        try {
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, cant);
+            ps.setString(2, id);
+            ps.execute();
+        } catch (SQLException e) {
+            System.out.println(e.toString());
+        }
+    }
+
 }

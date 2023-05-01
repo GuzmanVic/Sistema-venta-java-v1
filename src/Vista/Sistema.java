@@ -1,48 +1,24 @@
 package Vista;
 
-import Modelo.ClienteDao;
-import Modelo.ConfigDao;
 import Controlador.Eventos;
-import Controlador.ProductoTableRenderer;
 import Controlador.logeado;
-import Modelo.LoginDAO;
-import Modelo.ProductosDao;
-import Modelo.ProveedorDao;
-import Modelo.VentaDao;
-import Controlador.login;
 import Controlador.metodos;
 import com.itextpdf.text.DocumentException;
-import java.awt.Desktop;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
 
 public final class Sistema extends javax.swing.JFrame {
 
-    Date fechaVenta = new Date();//Almacena la fecha de venta
-    String fechaActual = new SimpleDateFormat("dd/MM/yyyy").format(fechaVenta);//Almacena la fecha actual
-    ProveedorDao PrDao = new ProveedorDao();
-    ProductosDao proDao = new ProductosDao();
-    VentaDao Vdao = new VentaDao();
-    ConfigDao conf = new ConfigDao();
     Eventos event = new Eventos();
     metodos method = new metodos();
     int idEmpleado = 0, idCliente = 0;
-    static logeado log = new logeado("victor", "administrador", 59);
+    static logeado log = new logeado("victor", "administrador", 52);
 
     public Sistema(logeado log) throws SQLException {
         initComponents();
@@ -449,8 +425,9 @@ public final class Sistema extends javax.swing.JFrame {
         jLabel10.setText("Total a Pagar:");
         panelVenta.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 380, -1, -1));
 
+        LabelTotal.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         LabelTotal.setText("-----");
-        panelVenta.add(LabelTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 380, -1, -1));
+        panelVenta.add(LabelTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 360, 110, 60));
 
         txtCurpVenta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1359,7 +1336,7 @@ public final class Sistema extends javax.swing.JFrame {
         });
         jScrollPane7.setViewportView(TablaEmpleados);
 
-        panelEmpleados.add(jScrollPane7, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 40, 860, 380));
+        panelEmpleados.add(jScrollPane7, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 40, 840, 380));
 
         pane.addTab("7", panelEmpleados);
 
@@ -1576,7 +1553,7 @@ public final class Sistema extends javax.swing.JFrame {
         try {
             method.generarVenta(TablaVenta, LabelTotal, idEmpleado, idCliente);
             if (method.ventaAutorizada) {
-                method.pdf(TablaVenta, txtNombreInfo.getText(), txtDireccionInfo.getText(), txtNombreClienteventa.getText(), txtTelefonoInfo.getText(), log.getNombre());
+                method.pdf(TablaVenta, txtNombreInfo.getText(), txtDireccionInfo.getText(), txtNombreClienteventa.getText(), txtTelefonoInfo.getText(), log.getNombre(),txtCurpCliente.getText());
             }
         } catch (SQLException | DocumentException | IOException ex) {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);

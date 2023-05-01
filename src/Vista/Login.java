@@ -2,6 +2,8 @@ package Vista;
 
 import Modelo.LoginDAO;
 import Controlador.login;
+import com.formdev.flatlaf.FlatLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
@@ -11,6 +13,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 
 public class Login extends javax.swing.JFrame {
 
@@ -126,6 +129,15 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_txtPassActionPerformed
 
     public static void main(String args[]) {
+        try {
+            UIManager.setLookAndFeel(new FlatLightLaf());
+            UIManager.put("Component.arc", 30);
+            UIManager.put("Button.arc", 30);
+            UIManager.put("TextComponent.arc", 30);
+            UIManager.put("OptionPane.arc", 30);
+        } catch (Exception ex) {
+            System.err.println("Failed to initialize LaF");
+        }
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Login().setVisible(true);

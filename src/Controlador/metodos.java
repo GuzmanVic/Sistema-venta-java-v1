@@ -47,9 +47,11 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.EventObject;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -209,6 +211,17 @@ public class metodos {
         if (productos) {
             renderer.colorearProductosAVencer(tabla);
         }
+        tabla.getTableHeader().setReorderingAllowed(false);//Impide que las columnas de la tabla sean reordenadas
+        //Recorre todas las celdas de la tabla para asi hacer que el usuario pueda seleccionarlas pero NO editarlas.
+        for (int i = 0; i < tabla.getColumnCount(); i++) {
+            TableColumn column = tabla.getColumnModel().getColumn(i);
+            column.setCellEditor(new DefaultCellEditor(new JTextField()) {
+                @Override
+                public boolean isCellEditable(EventObject e) {
+                    return false; // deshabilita la edición de celdas
+                }
+            });
+        }
         return productos;
     }
 
@@ -220,21 +233,24 @@ public class metodos {
             //Valida que los formatos de curp, teleefono y direccion sean correctos.
             if (validarCurp(txtCurpCliente.getText()) && validarTelefono(txtTelefonoCliente.getText()) && validarDireccion(txtDireccionCliente.getText())) {
                 ArrayList<String> apellidos = separarApellidos(txtApellidosCliente.getText());//Ejecuta un metodo para separar apellidos y los almacena en un array
-                if (enviarCorreo(correo.getText())) {
-                    if (caso) {//Si CASO es true, significa que debe registrar un cliente
-                        //Verifica que la curp, telefono o correo electronico no hayan sido agregados antes.
-                        if (!buscarCURP(tabla, txtCurpCliente.getText()) && !buscarTelefono(tabla, txtTelefonoCliente.getText()) && buscarCorreo(tabla, correo.getText())) {//verifica si la curp y el telefono ingresados ya fue agregada
+                if (caso) {//Si CASO es true, significa que debe registrar un cliente
+                    //Verifica que la curp, telefono o correo electronico no hayan sido agregados antes.
+                    if (!buscarCURP(tabla, txtCurpCliente.getText()) && !buscarTelefono(tabla, txtTelefonoCliente.getText()) && buscarCorreo(tabla, correo.getText())) {//verifica si la curp y el telefono ingresados ya fue agregada
+                        if (enviarCorreo(correo.getText())) {//Envia un correo para confirmar la direccion de correo
                             client.RegistrarCliente(txtNombreCliente.getText(), apellidos.get(0), apellidos.get(1), txtCurpCliente.getText(), txtTelefonoCliente.getText(), txtDireccionCliente.getText(), correo.getText());
+                            EnviarCorreo enviar = new EnviarCorreo();
+                            enviar.enviar(correo.getText(), "Bienvenida", new File(""));
+
                         }
-                    } else {//si CASO es false entonces deberá actualizar un cliente
-                        int seleccionado = Integer.parseInt(tabla.getValueAt(tabla.getSelectedRow(), 0).toString());//Obtiene el id del cliente en cuestion
-                        client.ModificarCliente(seleccionado, txtNombreCliente.getText(), apellidos.get(0), apellidos.get(1),
-                                txtCurpCliente.getText(), txtTelefonoCliente.getText(), txtDireccionCliente.getText(), correo.getText());
                     }
-                    listarTablas(tabla);//Actualiza la tabla en el sistema
-                    limpiarCliente(txtCurpCliente, txtNombreCliente, txtApellidosCliente, txtTelefonoCliente,
-                            txtDireccionCliente);//Limpia los campos del panel clientes
+                } else {//si CASO es false entonces deberá actualizar un cliente
+                    int seleccionado = Integer.parseInt(tabla.getValueAt(tabla.getSelectedRow(), 0).toString());//Obtiene el id del cliente en cuestion
+                    client.ModificarCliente(seleccionado, txtNombreCliente.getText(), apellidos.get(0), apellidos.get(1),
+                            txtCurpCliente.getText(), txtTelefonoCliente.getText(), txtDireccionCliente.getText(), correo.getText());
                 }
+                listarTablas(tabla);//Actualiza la tabla en el sistema
+                limpiarCliente(txtCurpCliente, txtNombreCliente, txtApellidosCliente, txtTelefonoCliente,
+                        txtDireccionCliente);//Limpia los campos del panel clientes
             }
         } else {
             JOptionPane.showMessageDialog(null, "Los campos estan vacios");
@@ -487,9 +503,8 @@ public class metodos {
     }
 
     private boolean enviarCorreo(String correo) {
-        /*
         EnviarCorreo enviar = new EnviarCorreo();
-        String codigo = enviar.enviar(correo, "confirmacion");
+        String codigo = enviar.enviar(correo, "confirmacion", new File(""));
         String mensaje = "Hemos envíado un código de confirmación a tu correo electrónico, digítalo aquí para continuar:";
         String confirmacion;
         do {
@@ -500,14 +515,13 @@ public class metodos {
                 mensaje = "El código ingresado es incorrecto. Inténtalo de nuevo o haz clic en \"Reenviar código\" para solicitar uno nuevo:";
                 int opcion = JOptionPane.showOptionDialog(null, mensaje, "Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[]{"Reenviar código", "Cancelar"}, "Reenviar código");
                 if (opcion == 0) {
-                    codigo = enviar.enviar(correo, "confirmacion");
+                    codigo = enviar.enviar(correo, "confirmacion", new File(""));
                     mensaje = "Hemos envíado un nuevo código de confirmación a tu correo electrónico, digítalo aquí para continuar:";
                 } else {
                     return false; // El usuario canceló la operación
                 }
             }
         } while (!confirmacion.equals(codigo));
-         */
         return true;
     }
 
@@ -533,7 +547,7 @@ public class metodos {
     }
 
 //Genera un ticket en un documento PDF
-    public void pdf(JTable TablaVenta, String nombreInfo, String direccionInfo, String nombreC, String telefonoInfo, String empleado) throws FileNotFoundException, DocumentException, IOException, SQLException {
+    public void pdf(JTable TablaVenta, String nombreInfo, String direccionInfo, String nombreC, String telefonoInfo, String empleado, String curp) throws FileNotFoundException, DocumentException, IOException, SQLException {
         ResultSet rs = venta.obtenerUltimaVenta();//Obtiene la última venta generada
         int idVenta = 0;//Almacenará el id de la venta
         //Establece el descuento y el total en un formato en el que solo muestren 2 decimales
@@ -645,6 +659,14 @@ public class metodos {
             doc.close();//Se cierra el documento, indicando que ya se dejo de escribir en el
         } // Se crea un objeto Document que representa el documento PDF
         Desktop.getDesktop().open(file);//Se abre el documento automaticamente
+        if (!nombreC.isEmpty()) {
+            rs = client.Buscarcliente(curp);//busca el cliente en la base de datos
+            if (rs.next()) {
+                EnviarCorreo enviar = new EnviarCorreo();
+                enviar.enviar(rs.getString("correo"), "ticket", file);//envia un correo con el ticket al usuario que hizo la omra
+            }
+        }
+
         //Elimina todas las filas de la tabla venta
         modelo = (DefaultTableModel) TablaVenta.getModel();
         modelo.setRowCount(0);
