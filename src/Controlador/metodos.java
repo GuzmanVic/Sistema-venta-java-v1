@@ -47,11 +47,13 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EventObject;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultCellEditor;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -169,6 +171,7 @@ public class metodos {
                     fila[7] = rs.getString("cantidad");
                     fila[8] = rs.getString("categoria");
                     modelo.addRow(fila);
+                    System.out.println(fila.toString());
                     tabla.getColumnModel().getColumn(0).setMinWidth(80);
                     tabla.getColumnModel().getColumn(0).setMaxWidth(100);
                 }
@@ -500,6 +503,33 @@ public class metodos {
             combo2.addItem(rs.getString("descripcion"));
         }
         rs.close();
+        // Obtener el modelo del JComboBox
+        DefaultComboBoxModel<String> model = (DefaultComboBoxModel<String>) combo.getModel();
+
+        // Ordenar los elementos del modelo
+        List<String> items = new ArrayList<String>();
+        for (int i = 0; i < model.getSize(); i++) {
+            items.add(model.getElementAt(i));
+        }
+        Collections.sort(items);
+
+// Establecer el modelo ordenado en el JComboBox
+        combo.setModel(new DefaultComboBoxModel<String>(items.toArray(new String[0])));
+
+        // Obtener el modelo del JComboBox
+        DefaultComboBoxModel<String> model2 = (DefaultComboBoxModel<String>) combo2.getModel();
+
+        // Ordenar los elementos del modelo
+        List<String> items2 = new ArrayList<String>();
+  for (int i = 0; i < model2.getSize(); i++) {
+            items2.add(model2.getElementAt(i));
+        }
+        Collections.sort(items2);
+        
+// Establecer el modelo ordenado en el JComboBox
+        combo2.setModel(new DefaultComboBoxModel<String>(items2.toArray(new String[0])));
+
+
     }
 
     private boolean enviarCorreo(String correo) {
