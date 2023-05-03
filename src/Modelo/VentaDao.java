@@ -15,6 +15,7 @@ public class VentaDao {
 
     public void RegistrarVenta(double subtotal, double total, int cliente, int vendedor) throws SQLException {
         Connection con = cn.getConnection();
+        System.out.println(vendedor +" empleado");
         CallableStatement cstmt = con.prepareCall("{CALL insertar_venta(?, ?, ?, ?)}");
         cstmt.setDouble(1, subtotal);
         cstmt.setDouble(2, total);

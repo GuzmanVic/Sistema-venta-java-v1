@@ -1,6 +1,7 @@
 package Vista;
 
 import Controlador.Eventos;
+import Controlador.emailSender;
 import Controlador.logeado;
 import Controlador.metodos;
 import com.itextpdf.text.DocumentException;
@@ -11,6 +12,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.mail.MessagingException;
 import javax.swing.JOptionPane;
 
 public final class Sistema extends javax.swing.JFrame {
@@ -1347,6 +1349,8 @@ public final class Sistema extends javax.swing.JFrame {
 //Actualiza la tabla clientes y posiciona al usuario en el panel de clientes
     private void btnClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientesActionPerformed
         try {
+            emailSender enviar=new emailSender();
+            enviar.main(null);
             method.listarTablas(tablaClientes);
         } catch (SQLException ex) {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
@@ -1528,6 +1532,8 @@ public final class Sistema extends javax.swing.JFrame {
                 method.addUpdClientes(tablaClientes, txtCurpCliente, txtNombreCliente, txtApellidosCliente, txtTelefonoCliente, txtDireccionCliente, txtCorreoCliente, false);
             } catch (SQLException ex) {
                 Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (MessagingException ex) {
+                Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_btnEditarClienteActionPerformed
@@ -1536,6 +1542,8 @@ public final class Sistema extends javax.swing.JFrame {
         try {
             method.addUpdClientes(tablaClientes, txtCurpCliente, txtNombreCliente, txtApellidosCliente, txtTelefonoCliente, txtDireccionCliente, txtCorreoCliente, true);
         } catch (SQLException ex) {
+            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (MessagingException ex) {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnGuardarClienteActionPerformed
@@ -1553,7 +1561,7 @@ public final class Sistema extends javax.swing.JFrame {
         try {
             method.generarVenta(TablaVenta, LabelTotal, idEmpleado, idCliente);
             if (method.ventaAutorizada) {
-                method.pdf(TablaVenta, txtNombreInfo.getText(), txtDireccionInfo.getText(), txtNombreClienteventa.getText(), txtTelefonoInfo.getText(), log.getNombre(),txtCurpCliente.getText());
+                method.pdf(TablaVenta, txtNombreInfo.getText(), txtDireccionInfo.getText(), txtNombreClienteventa.getText(), txtTelefonoInfo.getText(), log.getNombre(), txtCurpCliente.getText());
             }
         } catch (SQLException | DocumentException | IOException ex) {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
@@ -1586,6 +1594,8 @@ public final class Sistema extends javax.swing.JFrame {
             method.addUpdEmpleado(TablaEmpleados, txtCorreoEmpleado, txtNombreEmpleado, txtApellidosEmpleado, txtCurpEmpleado, txtTelefonoEmpledo, txtDireccionEmpleado, txtPassEmpleado, comboRol, true);
         } catch (SQLException ex) {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (MessagingException ex) {
+            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnguardarEmpleadoActionPerformed
 //Extrae los datos del elemento seleccionado la tabla empleados
@@ -1601,6 +1611,8 @@ public final class Sistema extends javax.swing.JFrame {
         try {
             method.addUpdEmpleado(TablaEmpleados, txtCorreoEmpleado, txtNombreEmpleado, txtApellidosEmpleado, txtCurpEmpleado, txtTelefonoEmpledo, txtDireccionEmpleado, txtPassEmpleado, comboRol, false);
         } catch (SQLException ex) {
+            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (MessagingException ex) {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnEditarEmpleadoActionPerformed
@@ -1654,12 +1666,15 @@ public final class Sistema extends javax.swing.JFrame {
 
     private void codigosBKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_codigosBKeyTyped
         event.numberKeyPress(evt);//Solo acepta valores numericos
-        String codigo = method.keyTyped(evt, event, txtCodProd.getText());
-        try {
-            codigosB.setText("");
-            method.addProdVenta(TablaVenta, txtCantidadVenta, codigo, LabelTotal);
-        } catch (SQLException ex) {
-            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
+        if (evt.getKeyChar() == '\n') { // Verifica si se ingresó un carácter de nueva línea
+            evt.consume(); // Consume el evento para que no se procese nuevamente
+            String codigo = codigosB.getText();
+            try {
+                method.addProdVenta(TablaVenta, txtCantidadVenta, codigo, LabelTotal);
+                codigosB.setText("");
+            } catch (SQLException ex) {
+                Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_codigosBKeyTyped
 

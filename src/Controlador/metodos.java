@@ -52,6 +52,7 @@ import java.util.EventObject;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.mail.MessagingException;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
@@ -171,7 +172,6 @@ public class metodos {
                     fila[7] = rs.getString("cantidad");
                     fila[8] = rs.getString("categoria");
                     modelo.addRow(fila);
-                    System.out.println(fila.toString());
                     tabla.getColumnModel().getColumn(0).setMinWidth(80);
                     tabla.getColumnModel().getColumn(0).setMaxWidth(100);
                 }
@@ -230,7 +230,7 @@ public class metodos {
 
 //Estos metodos Guardan o actualizan datos en distintas tablas de la base de datos
     public void addUpdClientes(JTable tabla, JTextField txtCurpCliente, JTextField txtNombreCliente, JTextField txtApellidosCliente,
-            JTextField txtTelefonoCliente, JTextField txtDireccionCliente, JTextField correo, boolean caso) throws SQLException {
+            JTextField txtTelefonoCliente, JTextField txtDireccionCliente, JTextField correo, boolean caso) throws SQLException, MessagingException {
         if (!"".equals(txtCurpCliente.getText()) || !"".equals(txtNombreCliente.getText()) || !"".equals(txtTelefonoCliente.getText())
                 || !"".equals(txtDireccionCliente.getText())) {//Verifica que todos los campos necesarios contengan datos
             //Valida que los formatos de curp, teleefono y direccion sean correctos.
@@ -238,11 +238,11 @@ public class metodos {
                 ArrayList<String> apellidos = separarApellidos(txtApellidosCliente.getText());//Ejecuta un metodo para separar apellidos y los almacena en un array
                 if (caso) {//Si CASO es true, significa que debe registrar un cliente
                     //Verifica que la curp, telefono o correo electronico no hayan sido agregados antes.
-                    if (!buscarCURP(tabla, txtCurpCliente.getText()) && !buscarTelefono(tabla, txtTelefonoCliente.getText()) && buscarCorreo(tabla, correo.getText())) {//verifica si la curp y el telefono ingresados ya fue agregada
+                    if (!buscarCURP(tabla, txtCurpCliente.getText()) && !buscarTelefono(tabla, txtTelefonoCliente.getText()) &&! buscarCorreo(tabla, correo.getText())) {//verifica si la curp y el telefono ingresados ya fue agregada
                         if (enviarCorreo(correo.getText())) {//Envia un correo para confirmar la direccion de correo
                             client.RegistrarCliente(txtNombreCliente.getText(), apellidos.get(0), apellidos.get(1), txtCurpCliente.getText(), txtTelefonoCliente.getText(), txtDireccionCliente.getText(), correo.getText());
-                            EnviarCorreo enviar = new EnviarCorreo();
-                            enviar.enviar(correo.getText(), "Bienvenida", new File(""));
+                            EnviarCorreo enviar = new EnviarCorreo("guzman.loredo.18259@istmante.edu.mx","linkzelda");
+                            enviar.enviar(correo.getText(), "Bienvenida" ,"bienvenido seas pa");
 
                         }
                     }
@@ -303,7 +303,7 @@ public class metodos {
         }
     }
 
-    public void addUpdEmpleado(JTable tabla, JTextField correo, JTextField nombre, JTextField apellidos, JTextField curp, JTextField telefono, JTextField direccion, JPasswordField contraseña, JComboBox<String> combo, boolean caso) throws SQLException {
+    public void addUpdEmpleado(JTable tabla, JTextField correo, JTextField nombre, JTextField apellidos, JTextField curp, JTextField telefono, JTextField direccion, JPasswordField contraseña, JComboBox<String> combo, boolean caso) throws SQLException, MessagingException {
         if (curp.getText().isEmpty() || telefono.getText().isEmpty() || direccion.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Los campos estan vacios");
         } else {
@@ -313,6 +313,10 @@ public class metodos {
                         if (!correo.getText().isEmpty() || !nombre.getText().isEmpty() || !apellidos.getText().isEmpty() || !contraseña.getText().isEmpty()) {
                             //Verifica que el correo, telefono o curp no haya sido agregado previamente
                             if (!buscarCURP(tabla, curp.getText()) && !buscarTelefono(tabla, telefono.getText()) && !buscarCorreo(tabla, correo.getText())) {//verifica si la curp y el telefono ingresados ya fueron agregados
+                                System.out.println("            ");
+                                System.out.println("            ");
+                                System.out.println("            ");
+                                System.out.println("Enviando correo");
                                 if (enviarCorreo(correo.getText())) {
                                     ArrayList<String> apellidosS = separarApellidos(apellidos.getText());//Ejecuta un metodo para separar apellidos y los almacena en un array
                                     usuario.registrar(correo.getText(), nombre.getText(), apellidosS.get(0), apellidosS.get(1), telefono.getText(), contraseña.getText(), combo.getSelectedItem().toString());
@@ -521,20 +525,20 @@ public class metodos {
 
         // Ordenar los elementos del modelo
         List<String> items2 = new ArrayList<String>();
-  for (int i = 0; i < model2.getSize(); i++) {
+        for (int i = 0; i < model2.getSize(); i++) {
             items2.add(model2.getElementAt(i));
         }
         Collections.sort(items2);
-        
+
 // Establecer el modelo ordenado en el JComboBox
         combo2.setModel(new DefaultComboBoxModel<String>(items2.toArray(new String[0])));
 
-
     }
 
-    private boolean enviarCorreo(String correo) {
-        EnviarCorreo enviar = new EnviarCorreo();
-        String codigo = enviar.enviar(correo, "confirmacion", new File(""));
+    private boolean enviarCorreo(String correo) throws MessagingException {
+        System.out.println("hola");
+        EnviarCorreo enviar = new EnviarCorreo("guzman.loredo.18259@itsmante.edu.mx","linkzelda");
+        String codigo = "";enviar.enviar(correo, "bienvenida", "bievnevido pa");
         String mensaje = "Hemos envíado un código de confirmación a tu correo electrónico, digítalo aquí para continuar:";
         String confirmacion;
         do {
@@ -545,7 +549,7 @@ public class metodos {
                 mensaje = "El código ingresado es incorrecto. Inténtalo de nuevo o haz clic en \"Reenviar código\" para solicitar uno nuevo:";
                 int opcion = JOptionPane.showOptionDialog(null, mensaje, "Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[]{"Reenviar código", "Cancelar"}, "Reenviar código");
                 if (opcion == 0) {
-                    codigo = enviar.enviar(correo, "confirmacion", new File(""));
+//                    codigo = enviar.enviar(correo, "confirmacion", new File(""));
                     mensaje = "Hemos envíado un nuevo código de confirmación a tu correo electrónico, digítalo aquí para continuar:";
                 } else {
                     return false; // El usuario canceló la operación
@@ -689,20 +693,20 @@ public class metodos {
             doc.close();//Se cierra el documento, indicando que ya se dejo de escribir en el
         } // Se crea un objeto Document que representa el documento PDF
         Desktop.getDesktop().open(file);//Se abre el documento automaticamente
-        if (!nombreC.isEmpty()) {
+/*        if (!nombreC.isEmpty()) {
             rs = client.Buscarcliente(curp);//busca el cliente en la base de datos
             if (rs.next()) {
                 EnviarCorreo enviar = new EnviarCorreo();
                 enviar.enviar(rs.getString("correo"), "ticket", file);//envia un correo con el ticket al usuario que hizo la omra
             }
         }
-
+         */
         //Elimina todas las filas de la tabla venta
         modelo = (DefaultTableModel) TablaVenta.getModel();
         modelo.setRowCount(0);
     }
-//Genera una venta y la inserta en la base de datos
 
+//Genera una venta y la inserta en la base de datos
     public void generarVenta(JTable TablaVenta, JLabel LabelTotal, int idUsuario, int idCliente) throws SQLException, DocumentException, IOException {
         if (TablaVenta.getRowCount() > 0) {//Verifia que haya productos en la tabla
             double monto = Double.parseDouble(LabelTotal.getText());
@@ -728,8 +732,8 @@ public class metodos {
             ventaAutorizada = false;
         }
     }
-//Genera un detalle de la venta generada
 
+//Genera un detalle de la venta generada
     private void generarDetalle(JTable TablaVenta) throws SQLException, DocumentException, IOException {
         for (int i = 0; i < TablaVenta.getRowCount(); i++) {//Recorre toda slas filas de la tabla ventas
             String codigo = TablaVenta.getValueAt(i, 0).toString();//Obtiene el codigo del producto en cuestion
@@ -803,22 +807,22 @@ public class metodos {
             int columna = 0;
             if (tabla.getName().equalsIgnoreCase("Proveedores")) {
                 columna = 2;
-                System.out.println(tabla.getName());
             } else {
                 columna = 4;
             }
             String telTabla = "";//Declara una variable para almacenar el telefono en la tabla
             telTabla = tabla.getValueAt(i, columna).toString();//Obtiene el telefono de la tabla
-            System.out.println("tabla " + telTabla);
             if (telTabla.equals(tel)) {//Si el telefono ya está en la tabla, rompe el cico y devuelve TRUE
                 JOptionPane.showMessageDialog(null, "Este teléfono ya está registrado.");
                 System.out.println("Ingresado" + tel);
                 presente = true;
                 break;
             } else {
+                System.out.println("NO ENCONTRADO");
                 presente = false;
             }
         }
+        System.out.println("resultado: "+presente);
         return presente;
     }
 
@@ -860,6 +864,7 @@ public class metodos {
     }
 
     public boolean buscarProducto(String codigoBarras) throws SQLException {
+        System.out.println(codigoBarras);
         ResultSet rs = prod.BuscarProdID(codigoBarras);//Busca el producto por su codigo o nombre en la base de datos
         if (rs.next()) {
             nombre = rs.getString("nombre");
@@ -891,6 +896,8 @@ public class metodos {
         for (int i = 0; i < tabla.getRowCount(); i++) {
             String codigoTabla = tabla.getValueAt(i, 0).toString();//Obtiene el codigo presente en la tabla
             //Si el código ingresado ya está presente en la tabla, extrae los datos de dicho producto
+
+            System.out.println(codigoBarras + " codigo");
             if (codigoBarras.equals(codigoTabla)) {
                 txtNombreProd.setText(tabla.getValueAt(i, 1).toString());
                 txtCantProd.setText(tabla.getValueAt(i, 7).toString());

@@ -1,18 +1,10 @@
 package Vista;
 
-import Modelo.LoginDAO;
 import Controlador.login;
-import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatLightLaf;
-import java.awt.Desktop;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 public class Login extends javax.swing.JFrame {
@@ -135,6 +127,7 @@ public class Login extends javax.swing.JFrame {
             UIManager.put("Button.arc", 30);
             UIManager.put("TextComponent.arc", 30);
             UIManager.put("OptionPane.arc", 30);
+            UIManager.put("Table.arc", 30);
         } catch (Exception ex) {
             System.err.println("Failed to initialize LaF");
         }
