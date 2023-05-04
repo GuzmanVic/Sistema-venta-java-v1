@@ -1,7 +1,6 @@
 package Vista;
 
 import Controlador.Eventos;
-import Controlador.emailSender;
 import Controlador.logeado;
 import Controlador.metodos;
 import com.itextpdf.text.DocumentException;
@@ -1349,8 +1348,6 @@ public final class Sistema extends javax.swing.JFrame {
 //Actualiza la tabla clientes y posiciona al usuario en el panel de clientes
     private void btnClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientesActionPerformed
         try {
-            emailSender enviar=new emailSender();
-            enviar.main(null);
             method.listarTablas(tablaClientes);
         } catch (SQLException ex) {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
@@ -1513,7 +1510,7 @@ public final class Sistema extends javax.swing.JFrame {
     }//GEN-LAST:event_TablaProveedoresMouseClicked
 //Limpia los campos del panel clientes
     private void btnNuevoClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoClienteActionPerformed
-        method.limpiarCliente(txtCurpCliente, txtNombreCliente, txtApellidosCliente, txtTelefonoCliente, txtDireccionCliente);
+        method.limpiarCliente(txtCurpCliente, txtNombreCliente, txtApellidosCliente, txtTelefonoCliente, txtDireccionCliente,txtCorreoCliente);
     }//GEN-LAST:event_btnNuevoClienteActionPerformed
 //Elimina un cliente de la  base de datos
     private void btnEliminarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarClienteActionPerformed
@@ -1600,7 +1597,7 @@ public final class Sistema extends javax.swing.JFrame {
     }//GEN-LAST:event_btnguardarEmpleadoActionPerformed
 //Extrae los datos del elemento seleccionado la tabla empleados
     private void TablaEmpleadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaEmpleadosMouseClicked
-        method.clickTablaEmpleados(TablaEmpleados, txtCorreoEmpleado, txtNombreEmpleado, txtApellidosEmpleado, txtCurpEmpleado, txtTelefonoEmpledo, txtDireccionEmpleado, comboRol);
+        method.clickTablaEmpleados(TablaEmpleados,txtPassEmpleado, txtCorreoEmpleado, txtNombreEmpleado, txtApellidosEmpleado, txtCurpEmpleado, txtTelefonoEmpledo, txtDireccionEmpleado, comboRol);
     }//GEN-LAST:event_TablaEmpleadosMouseClicked
 //Limpia los campos del panel empleados
     private void btnNuevoEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoEmpleadoActionPerformed

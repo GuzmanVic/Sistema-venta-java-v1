@@ -88,8 +88,8 @@ public class metodos {
     double precio = 0.0;
 //Estos métodos limpian los campos en los distintos paneles del sistema
 
-    public void limpiarCliente(JTextField curp, JTextField nombre, JTextField apellidos, JTextField telefono, JTextField direccion) {//Panel clientes
-        JTextField[] camposTexto = {curp, nombre, apellidos, telefono, direccion};
+    public void limpiarCliente(JTextField curp, JTextField nombre, JTextField apellidos, JTextField telefono, JTextField direccion, JTextField correo) {//Panel clientes
+        JTextField[] camposTexto = {curp, nombre, apellidos, telefono, direccion, correo};
         for (JTextField campo : camposTexto) {
             campo.setText("");
             campo.setEnabled(true);
@@ -238,13 +238,8 @@ public class metodos {
                 ArrayList<String> apellidos = separarApellidos(txtApellidosCliente.getText());//Ejecuta un metodo para separar apellidos y los almacena en un array
                 if (caso) {//Si CASO es true, significa que debe registrar un cliente
                     //Verifica que la curp, telefono o correo electronico no hayan sido agregados antes.
-                    if (!buscarCURP(tabla, txtCurpCliente.getText()) && !buscarTelefono(tabla, txtTelefonoCliente.getText()) &&! buscarCorreo(tabla, correo.getText())) {//verifica si la curp y el telefono ingresados ya fue agregada
-                        if (enviarCorreo(correo.getText())) {//Envia un correo para confirmar la direccion de correo
-                            client.RegistrarCliente(txtNombreCliente.getText(), apellidos.get(0), apellidos.get(1), txtCurpCliente.getText(), txtTelefonoCliente.getText(), txtDireccionCliente.getText(), correo.getText());
-                            EnviarCorreo enviar = new EnviarCorreo("guzman.loredo.18259@istmante.edu.mx","linkzelda");
-                            enviar.enviar(correo.getText(), "Bienvenida" ,"bienvenido seas pa");
-
-                        }
+                    if (!buscarCURP(tabla, txtCurpCliente.getText()) && !buscarTelefono(tabla, txtTelefonoCliente.getText()) && !buscarCorreo(tabla, correo.getText())) {//verifica si la curp y el telefono ingresados ya fue agregada
+                        client.RegistrarCliente(txtNombreCliente.getText(), apellidos.get(0), apellidos.get(1), txtCurpCliente.getText(), txtTelefonoCliente.getText(), txtDireccionCliente.getText(), correo.getText());
                     }
                 } else {//si CASO es false entonces deberá actualizar un cliente
                     int seleccionado = Integer.parseInt(tabla.getValueAt(tabla.getSelectedRow(), 0).toString());//Obtiene el id del cliente en cuestion
@@ -252,8 +247,7 @@ public class metodos {
                             txtCurpCliente.getText(), txtTelefonoCliente.getText(), txtDireccionCliente.getText(), correo.getText());
                 }
                 listarTablas(tabla);//Actualiza la tabla en el sistema
-                limpiarCliente(txtCurpCliente, txtNombreCliente, txtApellidosCliente, txtTelefonoCliente,
-                        txtDireccionCliente);//Limpia los campos del panel clientes
+                limpiarCliente(txtCurpCliente, txtNombreCliente, txtApellidosCliente, txtTelefonoCliente, txtDireccionCliente, correo);//Limpia los campos del panel clientes
             }
         } else {
             JOptionPane.showMessageDialog(null, "Los campos estan vacios");
@@ -313,16 +307,10 @@ public class metodos {
                         if (!correo.getText().isEmpty() || !nombre.getText().isEmpty() || !apellidos.getText().isEmpty() || !contraseña.getText().isEmpty()) {
                             //Verifica que el correo, telefono o curp no haya sido agregado previamente
                             if (!buscarCURP(tabla, curp.getText()) && !buscarTelefono(tabla, telefono.getText()) && !buscarCorreo(tabla, correo.getText())) {//verifica si la curp y el telefono ingresados ya fueron agregados
-                                System.out.println("            ");
-                                System.out.println("            ");
-                                System.out.println("            ");
-                                System.out.println("Enviando correo");
-                                if (enviarCorreo(correo.getText())) {
-                                    ArrayList<String> apellidosS = separarApellidos(apellidos.getText());//Ejecuta un metodo para separar apellidos y los almacena en un array
-                                    usuario.registrar(correo.getText(), nombre.getText(), apellidosS.get(0), apellidosS.get(1), telefono.getText(), contraseña.getText(), combo.getSelectedItem().toString());
-                                    empleado.registrarEmpleado(nombre.getText(), apellidosS.get(0), apellidosS.get(1), curp.getText(), direccion.getText());
-                                    limpiarEmpleado(correo, nombre, apellidos, curp, telefono, direccion, contraseña);
-                                }
+                                ArrayList<String> apellidosS = separarApellidos(apellidos.getText());//Ejecuta un metodo para separar apellidos y los almacena en un array
+                                usuario.registrar(correo.getText(), nombre.getText(), apellidosS.get(0), apellidosS.get(1), telefono.getText(), contraseña.getText(), combo.getSelectedItem().toString());
+                                empleado.registrarEmpleado(nombre.getText(), apellidosS.get(0), apellidosS.get(1), curp.getText(), direccion.getText());
+                                limpiarEmpleado(correo, nombre, apellidos, curp, telefono, direccion, contraseña);
                             }
                         } else {
                             JOptionPane.showMessageDialog(null, "Los campos estan vacios");
@@ -483,7 +471,7 @@ public class metodos {
         vencimiento.setDate(fechaDate);//Establece la fecha de vencimiento en el JDateChooser
     }
 
-    public void clickTablaEmpleados(JTable tabla, JTextField correo, JTextField nombre, JTextField apellidos, JTextField curp, JTextField tel, JTextField dir, JComboBox<String> combo) {
+    public void clickTablaEmpleados(JTable tabla, JPasswordField pass, JTextField correo, JTextField nombre, JTextField apellidos, JTextField curp, JTextField tel, JTextField dir, JComboBox<String> combo) {
         int fila = tabla.getSelectedRow();
         correo.setText(tabla.getValueAt(fila, 6).toString());
         nombre.setText(tabla.getValueAt(fila, 2).toString());
@@ -491,6 +479,9 @@ public class metodos {
         dir.setText(tabla.getValueAt(fila, 3).toString());
         tel.setText(tabla.getValueAt(fila, 4).toString());
         combo.setSelectedItem(tabla.getValueAt(fila, 5).toString());
+        pass.setText("");
+        pass.setEnabled(false);
+        correo.setEnabled(false);
     }
 
     //llean los comboBox que hay en la interfaz
@@ -516,29 +507,25 @@ public class metodos {
             items.add(model.getElementAt(i));
         }
         Collections.sort(items);
-
 // Establecer el modelo ordenado en el JComboBox
         combo.setModel(new DefaultComboBoxModel<String>(items.toArray(new String[0])));
-
         // Obtener el modelo del JComboBox
         DefaultComboBoxModel<String> model2 = (DefaultComboBoxModel<String>) combo2.getModel();
-
         // Ordenar los elementos del modelo
         List<String> items2 = new ArrayList<String>();
         for (int i = 0; i < model2.getSize(); i++) {
             items2.add(model2.getElementAt(i));
         }
         Collections.sort(items2);
-
 // Establecer el modelo ordenado en el JComboBox
         combo2.setModel(new DefaultComboBoxModel<String>(items2.toArray(new String[0])));
-
     }
 
     private boolean enviarCorreo(String correo) throws MessagingException {
         System.out.println("hola");
-        EnviarCorreo enviar = new EnviarCorreo("guzman.loredo.18259@itsmante.edu.mx","linkzelda");
-        String codigo = "";enviar.enviar(correo, "bienvenida", "bievnevido pa");
+        EnviarCorreo enviar = new EnviarCorreo("guzman.loredo.18259@itsmante.edu.mx", "linkzelda");
+        String codigo = "";
+        enviar.enviar(correo, "bienvenida", "bievnevido pa");
         String mensaje = "Hemos envíado un código de confirmación a tu correo electrónico, digítalo aquí para continuar:";
         String confirmacion;
         do {
@@ -822,7 +809,7 @@ public class metodos {
                 presente = false;
             }
         }
-        System.out.println("resultado: "+presente);
+        System.out.println("resultado: " + presente);
         return presente;
     }
 
