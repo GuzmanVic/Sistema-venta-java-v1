@@ -70,6 +70,7 @@ public class metodos {
     //Estas variables serán utilizadas para almacenar los datos del producto que se busque en la base de datos
     String nombre = "";
     int stock = 0;
+    String correo = "";
     double precio = 0.0;
 //Estos métodos limpian los campos en los distintos paneles del sistema
 
@@ -225,7 +226,9 @@ public class metodos {
                 if (caso) {//Si CASO es true, significa que debe registrar un cliente
                     //Verifica que la curp, telefono o correo electronico no hayan sido agregados antes.
                     if (!buscarCURP(tabla, txtCurpCliente.getText()) && !buscarTelefono(tabla, txtTelefonoCliente.getText()) && !buscarCorreo(tabla, correo.getText())) {//verifica si la curp y el telefono ingresados ya fue agregada
-                        client.RegistrarCliente(txtNombreCliente.getText(), apellidos.get(0), apellidos.get(1), txtCurpCliente.getText(), txtTelefonoCliente.getText(), txtDireccionCliente.getText(), correo.getText());
+                        if (enviarCorreo(correo.getText())) {
+                            client.RegistrarCliente(txtNombreCliente.getText(), apellidos.get(0), apellidos.get(1), txtCurpCliente.getText(), txtTelefonoCliente.getText(), txtDireccionCliente.getText(), correo.getText());
+                        }
                     }
                 } else {//si CASO es false entonces deberá actualizar un cliente
                     int seleccionado = Integer.parseInt(tabla.getValueAt(tabla.getSelectedRow(), 0).toString());//Obtiene el id del cliente en cuestion
@@ -296,9 +299,11 @@ public class metodos {
                             if (!buscarCURP(tabla, curp.getText()) && !buscarTelefono(tabla, telefono.getText()) && !buscarCorreo(tabla, correo.getText())) {//verifica si la curp y el telefono ingresados ya fueron agregados
                                 if (enviarCorreo(correo.getText())) {
                                     usuario.registrar(correo.getText(), nombre.getText(), apellidosS.get(0), apellidosS.get(1), telefono.getText(), contraseña.getText(), combo.getSelectedItem().toString());
-                                    limpiarEmpleado(correo, nombre, apellidos, curp, telefono, direccion, contraseña);
+                                    empleado.registrarEmpleado(nombre.getText(), apellidosS.get(0), apellidosS.get(1), curp.getText(), direccion.getText());
                                     EnviarCorreo enviar = new EnviarCorreo();
                                     enviar.enviar(correo.getText(), "Bienvenida", new File(""));
+                                    limpiarEmpleado(correo, nombre, apellidos, curp, telefono, direccion, contraseña);
+                                    JOptionPane.showMessageDialog(null, "EL EMPLEADO HA SIDO REGISTRADO.");
                                 }
                             }
                         } else {
@@ -673,11 +678,11 @@ public class metodos {
         } // Se crea un objeto Document que representa el documento PDF
         Desktop.getDesktop().open(file);//Se abre el documento automaticamente
         if (!nombreC.isEmpty()) {
-            rs = client.Buscarcliente(curp);//busca el cliente en la base de datos
-            if (rs.next()) {
-                EnviarCorreo enviar = new EnviarCorreo();
-                enviar.enviar(rs.getString("correo"), "ticket", file);//envia un correo con el ticket al usuario que hizo la compra
-            }
+            System.out.println("EL NOMBRE ESTÁ PRESENTE");
+            System.out.println(curp + " esta es la curp");
+            System.out.println(" ESTE ES EL CORREO: " + correo);
+            EnviarCorreo enviar = new EnviarCorreo();
+            enviar.enviar(correo, "ticket", file);//envia un correo con el ticket al usuario que hizo la compra
         }
 
         //Elimina todas las filas de la tabla venta
@@ -728,6 +733,7 @@ public class metodos {
             ResultSet rs = client.Buscarcliente(curp);//Busca el cliente en cuestion
             if (rs.next()) {//Si lo encuentra, escribe el nombre en el campo de nombrey obtiene el idCliente
                 nombre.setText(rs.getString("nombre") + " " + rs.getString("apellido_P") + " " + rs.getString("apellido_M"));
+                correo = rs.getString("correo");
                 return rs.getInt("idCliente");
             } else {//Si no lo encuentra avisa al usuario y devuelve 0
                 JOptionPane.showMessageDialog(null, "No se ha encontrado un cliente con esta curp");

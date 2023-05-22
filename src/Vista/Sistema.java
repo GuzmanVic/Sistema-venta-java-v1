@@ -1538,10 +1538,8 @@ public final class Sistema extends javax.swing.JFrame {
         } else {
             try {
                 method.addUpdClientes(tablaClientes, txtCurpCliente, txtNombreCliente, txtApellidosCliente, txtTelefonoCliente, txtDireccionCliente, txtCorreoCliente, false);
-
             } catch (SQLException ex) {
                 Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
-
             } catch (MessagingException ex) {
                 Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1553,14 +1551,12 @@ public final class Sistema extends javax.swing.JFrame {
             method.addUpdClientes(tablaClientes, txtCurpCliente, txtNombreCliente, txtApellidosCliente, txtTelefonoCliente, txtDireccionCliente, txtCorreoCliente, true);
         } catch (SQLException ex) {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
-
         } catch (MessagingException ex) {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnGuardarClienteActionPerformed
 
     private void txtCurpClienteKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCurpClienteKeyTyped
-
     }//GEN-LAST:event_txtCurpClienteKeyTyped
 //Al hacer click en un elemento de la tabla clientes extrae sus datos y los pone en los campos de texto en el panel clientes
     private void tablaClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaClientesMouseClicked
@@ -1573,11 +1569,9 @@ public final class Sistema extends javax.swing.JFrame {
             method.generarVenta(TablaVenta, LabelTotal, idEmpleado, idCliente);
             if (method.ventaAutorizada) {
                 method.pdf(TablaVenta, txtNombreInfo.getText(), txtDireccionInfo.getText(), txtNombreClienteventa.getText(), txtTelefonoInfo.getText(), log.getNombre(), txtCurpCliente.getText());
-
             }
         } catch (SQLException | DocumentException | IOException ex) {
-            Logger.getLogger(Sistema.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnGenerarVentaActionPerformed
     //elimina un prducto de la tabla de venta
@@ -1585,7 +1579,6 @@ public final class Sistema extends javax.swing.JFrame {
         try {
             method.eliminarProdVenta(TablaVenta);
             method.TotalPagar(TablaVenta, LabelTotal);
-
         } catch (SQLException ex) {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1644,17 +1637,14 @@ public final class Sistema extends javax.swing.JFrame {
     private void btnEliminarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarEmpleadoActionPerformed
         try {
             method.eliminar(TablaEmpleados);
-
         } catch (SQLException ex) {
-            Logger.getLogger(Sistema.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnEliminarEmpleadoActionPerformed
 
     private void txtCurpVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCurpVentaActionPerformed
         try {
             idCliente = method.buscarCliente(txtCurpVenta.getText(), txtNombreClienteventa);
-
         } catch (SQLException ex) {
             Logger.getLogger(Sistema.class
                     .getName()).log(Level.SEVERE, null, ex);

@@ -56,7 +56,7 @@ public class EnviarCorreo {
                     // Crea el mensaje de correo electrónico
                     message.setSubject("Bienvenido a CommerceManager.");
                     retorno = String.valueOf(aleatorio());
-                    message.setText("AHORA ERES UN CLIENTE DE COMMERCEMANAGER.");
+                    message.setText("AHORA ERES PARTE DE COMMERCEMANAGER.");
                     break;
                 case "ticket":
                     // Crea el mensaje de correo electrónico
@@ -69,7 +69,7 @@ public class EnviarCorreo {
                     MimeBodyPart textPart = new MimeBodyPart();
                     textPart.setText("Gracias por tu compra c:");
                     multipart.addBodyPart(textPart);
-
+                    System.out.println("se envia e ticket");
                     // Crear un objeto MimeBodyPart para el archivo adjunto
                     MimeBodyPart filePart = new MimeBodyPart();
                     FileDataSource dataSource = new FileDataSource(file);
