@@ -23,6 +23,11 @@ public class ConfigDao {
         cstmt.setString(5, correo);
         cstmt.execute();
         con.close();
+        System.out.println(nombre);
+        System.out.println(direccion);
+        System.out.println(web);
+        System.out.println(telefono);
+        System.out.println(correo);
     }
 
     public ResultSet listarInfo() throws SQLException {

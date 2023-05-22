@@ -12,7 +12,6 @@ public class ProductosDao {
     Connection con;
     Conexion cn = new Conexion();
     PreparedStatement ps;
-    ResultSet rs;
 
     public void RegistrarProductos(String codigo, String nombre, String proveedor, Date vencimiento, double compra, double venta, int cantidad, String categoria) throws SQLException {
         Connection con = cn.getConnection();
@@ -59,19 +58,6 @@ public class ProductosDao {
         con.close();
     }
 
-    public ResultSet BuscarProd(String parametro, String busqueda) throws SQLException {
-        con = cn.getConnection();
-        CallableStatement cstmt = null;
-        if (parametro.equalsIgnoreCase("codigos")) {
-            cstmt = con.prepareCall("{ CALL buscarProdID(?) }");
-        } else {
-            cstmt = con.prepareCall("{ CALL buscarProdNombre(?) }");
-        }
-        cstmt.setString(1, busqueda);
-        ResultSet rs = cstmt.executeQuery(); // ejecutar el procedimiento almacenado
-        return rs;
-    }
-
     public ResultSet BuscarProdID(String busqueda) throws SQLException {
         con = cn.getConnection();
         CallableStatement cstmt = null;
@@ -79,34 +65,6 @@ public class ProductosDao {
         cstmt.setString(1, busqueda);
         ResultSet rs = cstmt.executeQuery(); // ejecutar el procedimiento almacenado
         return rs;
-    }
-
-    public void BuscarId(int id) {
-        String sql = "SELECT pr.id AS id_proveedor, pr.nombre AS nombre_proveedor, p.* FROM proveedor pr INNER JOIN productos p ON p.proveedor = pr.id WHERE p.id = ?";
-        try {
-            con = cn.getConnection();
-            ps = con.prepareStatement(sql);
-            ps.setInt(1, id);
-            rs = ps.executeQuery();
-            if (rs.next()) {
-            }
-        } catch (SQLException e) {
-            System.out.println(e.toString());
-        }
-    }
-
-    public void BuscarProveedor(String nombre) {
-        String sql = "SELECT * FROM proveedor WHERE nombre = ?";
-        try {
-            con = cn.getConnection();
-            ps = con.prepareStatement(sql);
-            ps.setString(1, nombre);
-            rs = ps.executeQuery();
-            if (rs.next()) {
-            }
-        } catch (SQLException e) {
-            System.out.println(e.toString());
-        }
     }
 
     public void addProdVenta(String codigo, int cantidad) throws SQLException {
@@ -140,5 +98,4 @@ public class ProductosDao {
             System.out.println(e.toString());
         }
     }
-
 }

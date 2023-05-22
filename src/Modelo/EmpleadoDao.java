@@ -2,18 +2,13 @@ package Modelo;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
 
 public class EmpleadoDao {
 
     Connection con;
     Conexion cn = new Conexion();
-    PreparedStatement ps;
-    ResultSet rs;
 
     public ResultSet listarEmpleados() throws SQLException {
         con = cn.getConnection();
@@ -41,13 +36,17 @@ public class EmpleadoDao {
         con.close();
     }
 
-    public void modificar(int id, String curp, String telefono, String direccion) throws SQLException {
+    public void modificar(int id, String nombre, String apellidoP, String apellidoM, String curp, String tel, String direccion, String rol) throws SQLException {
         Connection con = cn.getConnection();
-        CallableStatement cstmt = con.prepareCall("{CALL actualizarEmpleado(?, ?, ?, ?)}");
+        CallableStatement cstmt = con.prepareCall("{CALL actualizarEmpleado(?, ?, ?, ?, ?, ?, ?, ?)}");
         cstmt.setInt(1, id);
-        cstmt.setString(2, curp);
-        cstmt.setString(3, telefono);
-        cstmt.setString(4, direccion);
+        cstmt.setString(2, nombre);
+        cstmt.setString(3, apellidoP);
+        cstmt.setString(4, apellidoM);
+        cstmt.setString(5, curp);
+        cstmt.setString(6, tel);
+        cstmt.setString(7, direccion);
+        cstmt.setString(8, rol);
         cstmt.execute();
         con.close();
     }

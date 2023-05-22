@@ -15,7 +15,6 @@ public class VentaDao {
 
     public void RegistrarVenta(double subtotal, double total, int cliente, int vendedor) throws SQLException {
         Connection con = cn.getConnection();
-        System.out.println(vendedor +" empleado");
         CallableStatement cstmt = con.prepareCall("{CALL insertar_venta(?, ?, ?, ?)}");
         cstmt.setDouble(1, subtotal);
         cstmt.setDouble(2, total);
@@ -41,22 +40,6 @@ public class VentaDao {
         CallableStatement cstmt = con.prepareCall("{ CALL listarVentas() }");
         ResultSet rs = cstmt.executeQuery();
         return rs;
-    }
-
-    public int IdVenta() {
-        int id = 0;
-        String sql = "SELECT MAX(id) FROM ventas";
-        try {
-            con = cn.getConnection();
-            ps = con.prepareStatement(sql);
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                id = rs.getInt(1);
-            }
-        } catch (SQLException e) {
-            System.out.println(e.toString());
-        }
-        return id;
     }
 
     public ResultSet obtenerUltimaVenta() throws SQLException {

@@ -2,7 +2,6 @@ package Controlador;
 
 import Modelo.EmpleadoDao;
 import Modelo.LoginDAO;
-import Modelo.LoginDAO;
 import Vista.Login;
 import Vista.Sistema;
 import java.sql.ResultSet;

@@ -212,7 +212,7 @@ public final class Sistema extends javax.swing.JFrame {
         btnNuevaVenta.setForeground(new java.awt.Color(255, 255, 255));
         btnNuevaVenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/Nventa.png"))); // NOI18N
         btnNuevaVenta.setText("Nueva Venta");
-        btnNuevaVenta.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnNuevaVenta.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnNuevaVenta.setFocusable(false);
         btnNuevaVenta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -224,7 +224,7 @@ public final class Sistema extends javax.swing.JFrame {
         btnClientes.setForeground(new java.awt.Color(255, 255, 255));
         btnClientes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/Clientes.png"))); // NOI18N
         btnClientes.setText("Clientes");
-        btnClientes.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnClientes.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnClientes.setFocusable(false);
         btnClientes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -236,7 +236,7 @@ public final class Sistema extends javax.swing.JFrame {
         btnProveedor.setForeground(new java.awt.Color(255, 255, 255));
         btnProveedor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/proveedor.png"))); // NOI18N
         btnProveedor.setText("Proveedor");
-        btnProveedor.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnProveedor.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnProveedor.setFocusable(false);
         btnProveedor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -248,7 +248,7 @@ public final class Sistema extends javax.swing.JFrame {
         btnProductos.setForeground(new java.awt.Color(255, 255, 255));
         btnProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/producto.png"))); // NOI18N
         btnProductos.setText("Productos");
-        btnProductos.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnProductos.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnProductos.setFocusable(false);
         btnProductos.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -265,7 +265,7 @@ public final class Sistema extends javax.swing.JFrame {
         btnVentas.setForeground(new java.awt.Color(255, 255, 255));
         btnVentas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/compras.png"))); // NOI18N
         btnVentas.setText("Ventas");
-        btnVentas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnVentas.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnVentas.setFocusable(false);
         btnVentas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -277,7 +277,7 @@ public final class Sistema extends javax.swing.JFrame {
         btnConfig.setForeground(new java.awt.Color(255, 255, 255));
         btnConfig.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/config.png"))); // NOI18N
         btnConfig.setText("Config");
-        btnConfig.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnConfig.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnConfig.setFocusable(false);
         btnConfig.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -290,7 +290,7 @@ public final class Sistema extends javax.swing.JFrame {
         btnEmpleados.setBackground(new java.awt.Color(153, 153, 153));
         btnEmpleados.setForeground(new java.awt.Color(255, 255, 255));
         btnEmpleados.setText("Empleados");
-        btnEmpleados.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnEmpleados.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnEmpleados.setFocusable(false);
         btnEmpleados.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -508,7 +508,7 @@ public final class Sistema extends javax.swing.JFrame {
         jLabel15.setText("Dirección:");
 
         btnGuardarCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/GuardarTodo.png"))); // NOI18N
-        btnGuardarCliente.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnGuardarCliente.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnGuardarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnGuardarClienteActionPerformed(evt);
@@ -516,7 +516,7 @@ public final class Sistema extends javax.swing.JFrame {
         });
 
         btnEditarCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/Actualizar (2).png"))); // NOI18N
-        btnEditarCliente.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnEditarCliente.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnEditarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEditarClienteActionPerformed(evt);
@@ -524,7 +524,7 @@ public final class Sistema extends javax.swing.JFrame {
         });
 
         btnEliminarCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/eliminar.png"))); // NOI18N
-        btnEliminarCliente.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnEliminarCliente.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnEliminarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEliminarClienteActionPerformed(evt);
@@ -532,7 +532,7 @@ public final class Sistema extends javax.swing.JFrame {
         });
 
         btnNuevoCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/nuevo.png"))); // NOI18N
-        btnNuevoCliente.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnNuevoCliente.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnNuevoCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNuevoClienteActionPerformed(evt);
@@ -1327,7 +1327,7 @@ public final class Sistema extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "CURP", "NOMBRE", "DIRECCIÓN", "TELEFONO", "ACCESO", "CORREO"
+                "ID", "CURP", "NOMBRE", "APELLIDOS", "DIRECCIÓN", "TELEFONO", "ACCESO", "CORREO"
             }
         ));
         TablaEmpleados.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1367,10 +1367,10 @@ public final class Sistema extends javax.swing.JFrame {
     private void btnProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductosActionPerformed
         try {
             method.listarTablas(TablaProductos);
-            pane.setSelectedComponent(panelProductos);
         } catch (SQLException ex) {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
+        pane.setSelectedComponent(panelProductos);
     }//GEN-LAST:event_btnProductosActionPerformed
 //Abre el panel de venta
     private void btnNuevaVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaVentaActionPerformed
@@ -1398,11 +1398,11 @@ public final class Sistema extends javax.swing.JFrame {
 //Abre el panel de usuarios y actualiza la tabla
     private void btnEmpleadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmpleadosActionPerformed
         try {
-            pane.setSelectedComponent(panelEmpleados);
             method.listarTablas(TablaEmpleados);
         } catch (SQLException ex) {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
+        pane.setSelectedComponent(panelEmpleados);
     }//GEN-LAST:event_btnEmpleadosActionPerformed
 
     private void btnProductosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnProductosMouseClicked
@@ -1417,11 +1417,7 @@ public final class Sistema extends javax.swing.JFrame {
     }//GEN-LAST:event_btnActualizarConfigActionPerformed
 
     private void btnPdfVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPdfVentasActionPerformed
-        try {
-            method.abrirPDF(TablaVentas);
-        } catch (IOException ex) {
-            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        method.abrirPDF(TablaVentas);
     }//GEN-LAST:event_btnPdfVentasActionPerformed
 
     private void TablaVentasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaVentasMouseClicked
@@ -1435,16 +1431,20 @@ public final class Sistema extends javax.swing.JFrame {
     private void btnEliminarProActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarProActionPerformed
         try {
             method.eliminar(TablaProductos);
+
         } catch (SQLException ex) {
-            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sistema.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnEliminarProActionPerformed
 //Actualiza un producto en la base de datos
     private void btnEditarproActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarproActionPerformed
         try {
             method.addUpdProd(TablaProductos, vencimiento, txtCodProd, txtNombreProd, txtCantProd, txtPrecioCompra, txtPrecioVentaProd, comboProveedor, comboCategoria, false);
+
         } catch (SQLException ex) {
-            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sistema.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnEditarproActionPerformed
 //Guarda el producto ingresado en la base de datos
@@ -1453,8 +1453,10 @@ public final class Sistema extends javax.swing.JFrame {
             method.addUpdProd(TablaProductos, vencimiento, txtCodProd, txtNombreProd, txtCantProd, txtPrecioCompra, txtPrecioVentaProd, comboProveedor, comboCategoria, true);
         } catch (SQLIntegrityConstraintViolationException e) {
             JOptionPane.showMessageDialog(null, "Este producto ya ha sido agregado", "Error", JOptionPane.ERROR_MESSAGE);
+
         } catch (SQLException ex) {
-            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sistema.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnGuardarproActionPerformed
 
@@ -1471,16 +1473,20 @@ public final class Sistema extends javax.swing.JFrame {
     private void TablaProductosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaProductosMouseClicked
         try {
             method.clickTablaProd(TablaProductos, vencimiento, txtCodProd, txtNombreProd, txtCantProd, txtPrecioCompra, txtPrecioVentaProd, comboProveedor, comboCategoria);
+
         } catch (ParseException ex) {
-            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sistema.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_TablaProductosMouseClicked
 //Elimina un proveedor
     private void btnEliminarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarProveedorActionPerformed
         try {
             method.eliminar(TablaProveedores);
+
         } catch (SQLException ex) {
-            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sistema.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnEliminarProveedorActionPerformed
 //Limpia los campos de texto en el panel proveedor
@@ -1491,8 +1497,10 @@ public final class Sistema extends javax.swing.JFrame {
     private void btnEditarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarProveedorActionPerformed
         try {
             method.addUpdProveedor(TablaProveedores, txtNombreproveedor, txtTelefonoProveedor, txtDireccionProveedor, false);
+
         } catch (SQLException ex) {
-            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sistema.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnEditarProveedorActionPerformed
 //Guardará un nuevo proveedor en la base de datos
@@ -1500,8 +1508,10 @@ public final class Sistema extends javax.swing.JFrame {
         try {
             method.addUpdProveedor(TablaProveedores, txtNombreproveedor, txtTelefonoProveedor, txtDireccionProveedor, true);
             method.llenarCombos(comboProveedor, comboCategoria);
+
         } catch (SQLException ex) {
-            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sistema.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnguardarProveedorActionPerformed
 //Extrae los datos del proveedor seleccionado en la tabla
@@ -1510,12 +1520,13 @@ public final class Sistema extends javax.swing.JFrame {
     }//GEN-LAST:event_TablaProveedoresMouseClicked
 //Limpia los campos del panel clientes
     private void btnNuevoClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoClienteActionPerformed
-        method.limpiarCliente(txtCurpCliente, txtNombreCliente, txtApellidosCliente, txtTelefonoCliente, txtDireccionCliente,txtCorreoCliente);
+        method.limpiarCliente(txtCurpCliente, txtNombreCliente, txtApellidosCliente, txtTelefonoCliente, txtDireccionCliente, txtCorreoCliente);
     }//GEN-LAST:event_btnNuevoClienteActionPerformed
 //Elimina un cliente de la  base de datos
     private void btnEliminarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarClienteActionPerformed
         try {
             method.eliminar(tablaClientes);
+
         } catch (SQLException ex) {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1527,8 +1538,10 @@ public final class Sistema extends javax.swing.JFrame {
         } else {
             try {
                 method.addUpdClientes(tablaClientes, txtCurpCliente, txtNombreCliente, txtApellidosCliente, txtTelefonoCliente, txtDireccionCliente, txtCorreoCliente, false);
+
             } catch (SQLException ex) {
                 Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
+
             } catch (MessagingException ex) {
                 Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1540,6 +1553,7 @@ public final class Sistema extends javax.swing.JFrame {
             method.addUpdClientes(tablaClientes, txtCurpCliente, txtNombreCliente, txtApellidosCliente, txtTelefonoCliente, txtDireccionCliente, txtCorreoCliente, true);
         } catch (SQLException ex) {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
+
         } catch (MessagingException ex) {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1559,9 +1573,11 @@ public final class Sistema extends javax.swing.JFrame {
             method.generarVenta(TablaVenta, LabelTotal, idEmpleado, idCliente);
             if (method.ventaAutorizada) {
                 method.pdf(TablaVenta, txtNombreInfo.getText(), txtDireccionInfo.getText(), txtNombreClienteventa.getText(), txtTelefonoInfo.getText(), log.getNombre(), txtCurpCliente.getText());
+
             }
         } catch (SQLException | DocumentException | IOException ex) {
-            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sistema.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnGenerarVentaActionPerformed
     //elimina un prducto de la tabla de venta
@@ -1569,6 +1585,7 @@ public final class Sistema extends javax.swing.JFrame {
         try {
             method.eliminarProdVenta(TablaVenta);
             method.TotalPagar(TablaVenta, LabelTotal);
+
         } catch (SQLException ex) {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1589,15 +1606,17 @@ public final class Sistema extends javax.swing.JFrame {
     private void btnguardarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnguardarEmpleadoActionPerformed
         try {
             method.addUpdEmpleado(TablaEmpleados, txtCorreoEmpleado, txtNombreEmpleado, txtApellidosEmpleado, txtCurpEmpleado, txtTelefonoEmpledo, txtDireccionEmpleado, txtPassEmpleado, comboRol, true);
+
         } catch (SQLException ex) {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
+
         } catch (MessagingException ex) {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnguardarEmpleadoActionPerformed
 //Extrae los datos del elemento seleccionado la tabla empleados
     private void TablaEmpleadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaEmpleadosMouseClicked
-        method.clickTablaEmpleados(TablaEmpleados,txtPassEmpleado, txtCorreoEmpleado, txtNombreEmpleado, txtApellidosEmpleado, txtCurpEmpleado, txtTelefonoEmpledo, txtDireccionEmpleado, comboRol);
+        method.clickTablaEmpleados(TablaEmpleados, txtPassEmpleado, txtCorreoEmpleado, txtNombreEmpleado, txtApellidosEmpleado, txtCurpEmpleado, txtTelefonoEmpledo, txtDireccionEmpleado, comboRol);
     }//GEN-LAST:event_TablaEmpleadosMouseClicked
 //Limpia los campos del panel empleados
     private void btnNuevoEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoEmpleadoActionPerformed
@@ -1607,10 +1626,14 @@ public final class Sistema extends javax.swing.JFrame {
     private void btnEditarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarEmpleadoActionPerformed
         try {
             method.addUpdEmpleado(TablaEmpleados, txtCorreoEmpleado, txtNombreEmpleado, txtApellidosEmpleado, txtCurpEmpleado, txtTelefonoEmpledo, txtDireccionEmpleado, txtPassEmpleado, comboRol, false);
+
         } catch (SQLException ex) {
-            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sistema.class
+                    .getName()).log(Level.SEVERE, null, ex);
+
         } catch (MessagingException ex) {
-            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sistema.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnEditarEmpleadoActionPerformed
 //Agrega un producto a la tabla ventas
@@ -1621,16 +1644,20 @@ public final class Sistema extends javax.swing.JFrame {
     private void btnEliminarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarEmpleadoActionPerformed
         try {
             method.eliminar(TablaEmpleados);
+
         } catch (SQLException ex) {
-            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sistema.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnEliminarEmpleadoActionPerformed
 
     private void txtCurpVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCurpVentaActionPerformed
         try {
             idCliente = method.buscarCliente(txtCurpVenta.getText(), txtNombreClienteventa);
+
         } catch (SQLException ex) {
-            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sistema.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_txtCurpVentaActionPerformed
 
@@ -1669,8 +1696,10 @@ public final class Sistema extends javax.swing.JFrame {
             try {
                 method.addProdVenta(TablaVenta, txtCantidadVenta, codigo, LabelTotal);
                 codigosB.setText("");
+
             } catch (SQLException ex) {
-                Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Sistema.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_codigosBKeyTyped
@@ -1683,8 +1712,10 @@ public final class Sistema extends javax.swing.JFrame {
         String codigo = method.keyTyped(evt, event, txtCodProd.getText());
         try {//Busca si ya hay un producto con ese código registrado en la base de datos
             method.buscarProd(TablaProductos, codigo, vencimiento, txtCodProd, txtNombreProd, txtCantProd, txtPrecioCompra, txtPrecioVentaProd, comboProveedor, comboCategoria);
+
         } catch (ParseException ex) {
-            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sistema.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_txtCodProdKeyTyped
 
@@ -1702,6 +1733,7 @@ public final class Sistema extends javax.swing.JFrame {
             public void run() {
                 try {
                     new Sistema(log).setVisible(true);
+
                 } catch (SQLException ex) {
                     Logger.getLogger(Sistema.class
                             .getName()).log(Level.SEVERE, null, ex);

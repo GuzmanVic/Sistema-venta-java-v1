@@ -1,21 +1,12 @@
 package Controlador;
 
-import Controlador.EnviarCorreo;
-import Modelo.ClienteDao;
 import Modelo.ClienteDao;
 import Modelo.ConfigDao;
-import Modelo.ConfigDao;
-import Modelo.EmpleadoDao;
 import Modelo.EmpleadoDao;
 import Modelo.ProductosDao;
-import Modelo.ProductosDao;
-import Modelo.ProveedorDao;
 import Modelo.ProveedorDao;
 import Modelo.UsuarioDao;
-import Modelo.UsuarioDao;
 import Modelo.VentaDao;
-import Modelo.VentaDao;
-import Vista.Sistema;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
@@ -29,10 +20,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.toedter.calendar.JDateChooser;
-import java.awt.Component;
 import java.awt.Desktop;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -41,7 +29,6 @@ import java.io.IOException;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -62,9 +49,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
 
 public class metodos {
 
@@ -196,16 +181,17 @@ public class metodos {
                 break;
             case "Empleados":
                 rs = empleado.listarEmpleados();
-                fila = new Object[7];
+                fila = new Object[8];
                 while (rs.next()) {
-                    String nombre = rs.getString("nombre") + " " + rs.getString("apellidoP") + " " + rs.getString("apellidoM");;
+                    String apellidos = rs.getString("apellidoP") + " " + rs.getString("apellidoM");;
                     fila[0] = rs.getString("idEmpleado");
                     fila[1] = rs.getString("curp");
-                    fila[2] = nombre;
-                    fila[3] = rs.getString("direccion");
-                    fila[4] = rs.getString("telefono");
-                    fila[5] = rs.getString("acceso");
-                    fila[6] = rs.getString("correo");
+                    fila[2] = rs.getString("nombre");
+                    fila[3] = apellidos;
+                    fila[4] = rs.getString("direccion");
+                    fila[5] = rs.getString("telefono");
+                    fila[6] = rs.getString("acceso");
+                    fila[7] = rs.getString("correo");
                     modelo.addRow(fila);
                 }
                 break;
@@ -301,28 +287,32 @@ public class metodos {
         if (curp.getText().isEmpty() || telefono.getText().isEmpty() || direccion.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Los campos estan vacios");
         } else {
+            ArrayList<String> apellidosS = separarApellidos(apellidos.getText());//Ejecuta un metodo para separar apellidos y los almacena en un array
             if (validarCurp(curp.getText()) && validarTelefono(telefono.getText()) && validarDireccion(direccion.getText())) {//Valida que el telefono sea de 10 digitos y la curp valida
-                if (validarContraseña(contraseña.getText())) {
-                    if (caso) {
+                if (caso) {
+                    if (validarContraseña(contraseña.getText())) {
                         if (!correo.getText().isEmpty() || !nombre.getText().isEmpty() || !apellidos.getText().isEmpty() || !contraseña.getText().isEmpty()) {
                             //Verifica que el correo, telefono o curp no haya sido agregado previamente
                             if (!buscarCURP(tabla, curp.getText()) && !buscarTelefono(tabla, telefono.getText()) && !buscarCorreo(tabla, correo.getText())) {//verifica si la curp y el telefono ingresados ya fueron agregados
-                                ArrayList<String> apellidosS = separarApellidos(apellidos.getText());//Ejecuta un metodo para separar apellidos y los almacena en un array
-                                usuario.registrar(correo.getText(), nombre.getText(), apellidosS.get(0), apellidosS.get(1), telefono.getText(), contraseña.getText(), combo.getSelectedItem().toString());
-                                empleado.registrarEmpleado(nombre.getText(), apellidosS.get(0), apellidosS.get(1), curp.getText(), direccion.getText());
-                                limpiarEmpleado(correo, nombre, apellidos, curp, telefono, direccion, contraseña);
+                                if (enviarCorreo(correo.getText())) {
+                                    usuario.registrar(correo.getText(), nombre.getText(), apellidosS.get(0), apellidosS.get(1), telefono.getText(), contraseña.getText(), combo.getSelectedItem().toString());
+                                    limpiarEmpleado(correo, nombre, apellidos, curp, telefono, direccion, contraseña);
+                                    EnviarCorreo enviar = new EnviarCorreo();
+                                    enviar.enviar(correo.getText(), "Bienvenida", new File(""));
+                                }
                             }
                         } else {
                             JOptionPane.showMessageDialog(null, "Los campos estan vacios");
                         }
-                    } else {
-                        int id = Integer.parseInt(tabla.getValueAt(tabla.getSelectedRow(), 0).toString());
-                        empleado.modificar(id, curp.getText(), telefono.getText(), direccion.getText());
-                        limpiarEmpleado(correo, nombre, apellidos, curp, telefono, direccion, contraseña);
                     }
                     listarTablas(tabla);
+                } else {
+                    int id = Integer.parseInt(tabla.getValueAt(tabla.getSelectedRow(), 0).toString());
+                    String rol = combo.getSelectedItem().toString();
+                    empleado.modificar(id, nombre.getText(), apellidosS.get(0), apellidosS.get(1), curp.getText(), telefono.getText(), direccion.getText(), rol);
                 }
             }
+            listarTablas(tabla);//Actualiza la tabla en el sistema
         }
     }
 
@@ -381,9 +371,12 @@ public class metodos {
 //Actualiza o añade la información de la empresa
     public void actualizarInfo(JTextField txtNombreInfo, JTextField txtCorreoInfo, JTextField txtDireccionInfo, JTextField txtTelefonoInfo,
             JTextField txtWebInfo) throws SQLException {
-        if (txtNombreInfo.getText().isEmpty() || txtCorreoInfo.getText().isEmpty() || txtDireccionInfo.getText().isEmpty()
-                || txtTelefonoInfo.getText().isEmpty() || txtWebInfo.getText().isEmpty()) {//Verifica que los campos estén vacíos
+        if (txtNombreInfo.getText().isEmpty() || txtDireccionInfo.getText().isEmpty()
+                || txtTelefonoInfo.getText().isEmpty()) {//Verifica que los campos estén vacíos
+            JOptionPane.showMessageDialog(renderer, "Algunos campos obligatorios están vacíos.");
+        } else {
             info.addUpdInfo(txtNombreInfo.getText(), txtCorreoInfo.getText(), txtDireccionInfo.getText(), txtTelefonoInfo.getText(), txtWebInfo.getText());
+            JOptionPane.showMessageDialog(null, "Se han guardado los cambios.");
         }
     }
 
@@ -473,12 +466,13 @@ public class metodos {
 
     public void clickTablaEmpleados(JTable tabla, JPasswordField pass, JTextField correo, JTextField nombre, JTextField apellidos, JTextField curp, JTextField tel, JTextField dir, JComboBox<String> combo) {
         int fila = tabla.getSelectedRow();
-        correo.setText(tabla.getValueAt(fila, 6).toString());
+        correo.setText(tabla.getValueAt(fila, 7).toString());
         nombre.setText(tabla.getValueAt(fila, 2).toString());
+        apellidos.setText(tabla.getValueAt(fila, 3).toString());
         curp.setText(tabla.getValueAt(fila, 1).toString());
-        dir.setText(tabla.getValueAt(fila, 3).toString());
-        tel.setText(tabla.getValueAt(fila, 4).toString());
-        combo.setSelectedItem(tabla.getValueAt(fila, 5).toString());
+        dir.setText(tabla.getValueAt(fila, 4).toString());
+        tel.setText(tabla.getValueAt(fila, 5).toString());
+        combo.setSelectedItem(tabla.getValueAt(fila, 6).toString());
         pass.setText("");
         pass.setEnabled(false);
         correo.setEnabled(false);
@@ -521,11 +515,9 @@ public class metodos {
         combo2.setModel(new DefaultComboBoxModel<String>(items2.toArray(new String[0])));
     }
 
-    private boolean enviarCorreo(String correo) throws MessagingException {
-        System.out.println("hola");
-        EnviarCorreo enviar = new EnviarCorreo("guzman.loredo.18259@itsmante.edu.mx", "linkzelda");
-        String codigo = "";
-        enviar.enviar(correo, "bienvenida", "bievnevido pa");
+    private boolean enviarCorreo(String correo) {
+        EnviarCorreo enviar = new EnviarCorreo();
+        String codigo = enviar.enviar(correo, "confirmacion", new File(""));
         String mensaje = "Hemos envíado un código de confirmación a tu correo electrónico, digítalo aquí para continuar:";
         String confirmacion;
         do {
@@ -536,7 +528,7 @@ public class metodos {
                 mensaje = "El código ingresado es incorrecto. Inténtalo de nuevo o haz clic en \"Reenviar código\" para solicitar uno nuevo:";
                 int opcion = JOptionPane.showOptionDialog(null, mensaje, "Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[]{"Reenviar código", "Cancelar"}, "Reenviar código");
                 if (opcion == 0) {
-//                    codigo = enviar.enviar(correo, "confirmacion", new File(""));
+                    codigo = enviar.enviar(correo, "confirmacion", new File(""));
                     mensaje = "Hemos envíado un nuevo código de confirmación a tu correo electrónico, digítalo aquí para continuar:";
                 } else {
                     return false; // El usuario canceló la operación
@@ -680,14 +672,14 @@ public class metodos {
             doc.close();//Se cierra el documento, indicando que ya se dejo de escribir en el
         } // Se crea un objeto Document que representa el documento PDF
         Desktop.getDesktop().open(file);//Se abre el documento automaticamente
-/*        if (!nombreC.isEmpty()) {
+        if (!nombreC.isEmpty()) {
             rs = client.Buscarcliente(curp);//busca el cliente en la base de datos
             if (rs.next()) {
                 EnviarCorreo enviar = new EnviarCorreo();
-                enviar.enviar(rs.getString("correo"), "ticket", file);//envia un correo con el ticket al usuario que hizo la omra
+                enviar.enviar(rs.getString("correo"), "ticket", file);//envia un correo con el ticket al usuario que hizo la compra
             }
         }
-         */
+
         //Elimina todas las filas de la tabla venta
         modelo = (DefaultTableModel) TablaVenta.getModel();
         modelo.setRowCount(0);
@@ -747,13 +739,22 @@ public class metodos {
     }
 
     //Abre un documento pdf seleccionado por el usuario
-    public void abrirPDF(JTable tabla) throws IOException {
-        if (tabla.getRowCount() >= 0) {//Verifica que haya una fila seleccionada
-            String id = tabla.getValueAt(tabla.getSelectedRow(), 0).toString();//Obtiee el id de la venta
-            File file = new File("src/pdf/venta " + id + ".pdf");// Se crea un objeto File con la ruta y nombre del archivo PDF que se va a abrir
-            Desktop.getDesktop().open(file);//Se abre el documento
+    public void abrirPDF(JTable tabla) {
+        if (tabla.getSelectedRow() >= 0) {
+            String id = tabla.getValueAt(tabla.getSelectedRow(), 0).toString();
+            File file = new File("src/pdf/venta " + id + ".pdf");
+            if (file.exists()) { // Verifica si el archivo existe antes de abrirlo
+                try {
+                    Desktop.getDesktop().open(file);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "No se pudo abrir el archivo PDF.");
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "El ticket de venta ha sido eliminado o no se encuentra en la ruta especificada.");
+            }
         } else {
-            JOptionPane.showMessageDialog(null, "No se ha seleccionado un elemento");
+            JOptionPane.showMessageDialog(null, "No se ha seleccionado un elemento.");
         }
     }
 
@@ -801,15 +802,12 @@ public class metodos {
             telTabla = tabla.getValueAt(i, columna).toString();//Obtiene el telefono de la tabla
             if (telTabla.equals(tel)) {//Si el telefono ya está en la tabla, rompe el cico y devuelve TRUE
                 JOptionPane.showMessageDialog(null, "Este teléfono ya está registrado.");
-                System.out.println("Ingresado" + tel);
                 presente = true;
                 break;
             } else {
-                System.out.println("NO ENCONTRADO");
                 presente = false;
             }
         }
-        System.out.println("resultado: " + presente);
         return presente;
     }
 
@@ -857,7 +855,6 @@ public class metodos {
             nombre = rs.getString("nombre");
             precio = rs.getDouble("precioVenta");//Cambia el precio del producto en la interfas
             stock = rs.getInt("cantidad");//Cambia el stock en la interfaz
-            System.out.println("Se encontró el producto " + nombre + " con precio " + precio + " y cantidad " + stock + "\n");
             return true;
         } else {
             JOptionPane.showMessageDialog(null, "No existe este producto.");

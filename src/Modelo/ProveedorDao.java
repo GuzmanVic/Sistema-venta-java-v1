@@ -2,18 +2,13 @@ package Modelo;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ProveedorDao {
 
     Connection con;
     Conexion cn = new Conexion();
-    PreparedStatement ps;
-    ResultSet rs;
 
     public void RegistrarProveedor(String nombre, String telefono, String direccion) throws SQLException {
         Connection con = cn.getConnection();
