@@ -1327,7 +1327,7 @@ public final class Sistema extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "CURP", "NOMBRE", "APELLIDOS", "DIRECCIÓN", "TELEFONO", "ACCESO", "CORREO"
+                "ID", "CURP", "NOMBRE", "APELLIDOS", "DIRECCIÓN", "TELEFONO", "CORREO", "ACCESO"
             }
         ));
         TablaEmpleados.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1599,7 +1599,6 @@ public final class Sistema extends javax.swing.JFrame {
     private void btnguardarEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnguardarEmpleadoActionPerformed
         try {
             method.addUpdEmpleado(TablaEmpleados, txtCorreoEmpleado, txtNombreEmpleado, txtApellidosEmpleado, txtCurpEmpleado, txtTelefonoEmpledo, txtDireccionEmpleado, txtPassEmpleado, comboRol, true);
-
         } catch (SQLException ex) {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
 

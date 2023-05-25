@@ -191,8 +191,8 @@ public class metodos {
                     fila[3] = apellidos;
                     fila[4] = rs.getString("direccion");
                     fila[5] = rs.getString("telefono");
-                    fila[6] = rs.getString("acceso");
-                    fila[7] = rs.getString("correo");
+                    fila[6] = rs.getString("correo");
+                    fila[7] = rs.getString("acceso");
                     modelo.addRow(fila);
                 }
                 break;
@@ -574,14 +574,15 @@ public class metodos {
         if (rs.next()) {
             idVenta = rs.getInt("idVentas");
         }
-        File file = new File("src/pdf/venta " + idVenta + ".pdf");// Se crea un objeto File con la ruta y nombre del archivo PDF que se va a generar
+        String imagePath = System.getProperty("user.dir") + "/src/img/logo.png";
+        File file = new File("C:/Users/victo/OneDrive/Documentos/tickets de venta/venta " + idVenta + ".pdf");// Se crea un objeto File con la ruta y nombre del archivo PDF que se va a generar
 //Se crean los objetos necesarios para generar el documento del ticket de venta
         try (FileOutputStream archivo = new FileOutputStream(file) // Se crea un objeto FileOutputStream con el archivo anteriormente creado para escribir en él
                 ) {
             Document doc = new Document();// Se crea un objeto Document que representa el documento PDF
             PdfWriter.getInstance(doc, archivo);// Se crea un objeto PdfWriter con el Document y el FileOutputStream para escribir en el documento PDF
             doc.open();//Se abre el documento para empezar a escribir en el
-            Image img = Image.getInstance("src/img/logo.png");//Se agarra una imagen
+            Image img = Image.getInstance(imagePath); // Se carga la imagen
             img.scaleAbsolute(100, 100);//escala la imagen
             img.setAlignment(Element.ALIGN_CENTER);//alinea la imagen al centro
             Font negrita = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD, BaseColor.BLACK);//Se establece una fuente en negrita
@@ -678,9 +679,6 @@ public class metodos {
         } // Se crea un objeto Document que representa el documento PDF
         Desktop.getDesktop().open(file);//Se abre el documento automaticamente
         if (!nombreC.isEmpty()) {
-            System.out.println("EL NOMBRE ESTÁ PRESENTE");
-            System.out.println(curp + " esta es la curp");
-            System.out.println(" ESTE ES EL CORREO: " + correo);
             EnviarCorreo enviar = new EnviarCorreo();
             enviar.enviar(correo, "ticket", file);//envia un correo con el ticket al usuario que hizo la compra
         }
@@ -748,7 +746,7 @@ public class metodos {
     public void abrirPDF(JTable tabla) {
         if (tabla.getSelectedRow() >= 0) {
             String id = tabla.getValueAt(tabla.getSelectedRow(), 0).toString();
-            File file = new File("src/pdf/venta " + id + ".pdf");
+            File file = new File("C:/Users/victo/OneDrive/Documentos/tickets de venta/venta " + id + ".pdf");
             if (file.exists()) { // Verifica si el archivo existe antes de abrirlo
                 try {
                     Desktop.getDesktop().open(file);
