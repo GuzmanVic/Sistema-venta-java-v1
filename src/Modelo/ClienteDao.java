@@ -12,13 +12,14 @@ public class ClienteDao {
 
     public void RegistrarCliente(String nombre, String apellidoP, String apellidoM, String curp, String telefono, String direccion, String correo) throws SQLException {
         Connection con = cn.getConnection();
-        CallableStatement cstmt = con.prepareCall("{CALL insertar_cliente(?, ?, ?, ?, ?, ?)}");
+        CallableStatement cstmt = con.prepareCall("{CALL insertar_cliente(?, ?, ?, ?, ?, ?,?)}");
         cstmt.setString(1, nombre);
         cstmt.setString(2, apellidoP);
         cstmt.setString(3, apellidoM);
         cstmt.setString(4, curp);
         cstmt.setString(5, telefono);
         cstmt.setString(6, direccion);
+        cstmt.setString(7, correo);
         cstmt.execute();
         con.close();
     }

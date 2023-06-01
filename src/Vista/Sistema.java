@@ -24,6 +24,8 @@ public final class Sistema extends javax.swing.JFrame {
     public Sistema(logeado log) throws SQLException {
         initComponents();
         controlarAcceso(log);
+        this.setLocationRelativeTo(null);
+        this.setResizable(false);
     }
 
     public void controlarAcceso(logeado log) throws SQLException {
@@ -1433,8 +1435,7 @@ public final class Sistema extends javax.swing.JFrame {
             method.eliminar(TablaProductos);
 
         } catch (SQLException ex) {
-            Logger.getLogger(Sistema.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnEliminarProActionPerformed
 //Actualiza un producto en la base de datos
@@ -1443,8 +1444,7 @@ public final class Sistema extends javax.swing.JFrame {
             method.addUpdProd(TablaProductos, vencimiento, txtCodProd, txtNombreProd, txtCantProd, txtPrecioCompra, txtPrecioVentaProd, comboProveedor, comboCategoria, false);
 
         } catch (SQLException ex) {
-            Logger.getLogger(Sistema.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnEditarproActionPerformed
 //Guarda el producto ingresado en la base de datos
@@ -1453,10 +1453,8 @@ public final class Sistema extends javax.swing.JFrame {
             method.addUpdProd(TablaProductos, vencimiento, txtCodProd, txtNombreProd, txtCantProd, txtPrecioCompra, txtPrecioVentaProd, comboProveedor, comboCategoria, true);
         } catch (SQLIntegrityConstraintViolationException e) {
             JOptionPane.showMessageDialog(null, "Este producto ya ha sido agregado", "Error", JOptionPane.ERROR_MESSAGE);
-
         } catch (SQLException ex) {
-            Logger.getLogger(Sistema.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnGuardarproActionPerformed
 
@@ -1475,8 +1473,7 @@ public final class Sistema extends javax.swing.JFrame {
             method.clickTablaProd(TablaProductos, vencimiento, txtCodProd, txtNombreProd, txtCantProd, txtPrecioCompra, txtPrecioVentaProd, comboProveedor, comboCategoria);
 
         } catch (ParseException ex) {
-            Logger.getLogger(Sistema.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_TablaProductosMouseClicked
 //Elimina un proveedor
@@ -1485,8 +1482,7 @@ public final class Sistema extends javax.swing.JFrame {
             method.eliminar(TablaProveedores);
 
         } catch (SQLException ex) {
-            Logger.getLogger(Sistema.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnEliminarProveedorActionPerformed
 //Limpia los campos de texto en el panel proveedor
@@ -1499,8 +1495,7 @@ public final class Sistema extends javax.swing.JFrame {
             method.addUpdProveedor(TablaProveedores, txtNombreproveedor, txtTelefonoProveedor, txtDireccionProveedor, false);
 
         } catch (SQLException ex) {
-            Logger.getLogger(Sistema.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnEditarProveedorActionPerformed
 //Guardará un nuevo proveedor en la base de datos
@@ -1510,8 +1505,7 @@ public final class Sistema extends javax.swing.JFrame {
             method.llenarCombos(comboProveedor, comboCategoria);
 
         } catch (SQLException ex) {
-            Logger.getLogger(Sistema.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnguardarProveedorActionPerformed
 //Extrae los datos del proveedor seleccionado en la tabla
@@ -1526,7 +1520,6 @@ public final class Sistema extends javax.swing.JFrame {
     private void btnEliminarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarClienteActionPerformed
         try {
             method.eliminar(tablaClientes);
-
         } catch (SQLException ex) {
             Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1645,8 +1638,7 @@ public final class Sistema extends javax.swing.JFrame {
         try {
             idCliente = method.buscarCliente(txtCurpVenta.getText(), txtNombreClienteventa);
         } catch (SQLException ex) {
-            Logger.getLogger(Sistema.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_txtCurpVentaActionPerformed
 
@@ -1687,8 +1679,7 @@ public final class Sistema extends javax.swing.JFrame {
                 codigosB.setText("");
 
             } catch (SQLException ex) {
-                Logger.getLogger(Sistema.class
-                        .getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_codigosBKeyTyped
@@ -1703,8 +1694,7 @@ public final class Sistema extends javax.swing.JFrame {
             method.buscarProd(TablaProductos, codigo, vencimiento, txtCodProd, txtNombreProd, txtCantProd, txtPrecioCompra, txtPrecioVentaProd, comboProveedor, comboCategoria);
 
         } catch (ParseException ex) {
-            Logger.getLogger(Sistema.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_txtCodProdKeyTyped
 
@@ -1722,10 +1712,8 @@ public final class Sistema extends javax.swing.JFrame {
             public void run() {
                 try {
                     new Sistema(log).setVisible(true);
-
                 } catch (SQLException ex) {
-                    Logger.getLogger(Sistema.class
-                            .getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Sistema.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });

@@ -274,9 +274,15 @@ public class metodos {
             String fechaString = new SimpleDateFormat("yyyy-MM-dd").format(vencimiento.getDate());//Convierte la fecha a string y al formato necesario
             Date fechaDate = Date.valueOf(fechaString);//Convierte el string a Date para poder insertarlo en la base de datos
             double precioC = Double.parseDouble(txtPrecioCompra.getText()), precioV = Double.parseDouble(txtPrecioVentaProd.getText());
-            if (caso) {//Si CASO es true, significa que debe registrar
+            boolean aprobado = true;
+            if (precioV <= precioC) {
+                JOptionPane.showMessageDialog(null, "El precio de venta tiene que ser mayor al precio de compra");
+                aprobado = false;
+            }
+            System.out.println(aprobado);
+            if (caso && aprobado) {//Si CASO es true, significa que debe registrar
                 prod.RegistrarProductos(codigo, nombre, proveedor, fechaDate, precioC, precioV, cantidad, categoria);
-            } else {//si CASO es false entonces deberá actualizar
+            } else if (!caso && aprobado) {//si CASO es false entonces deberá actualizar
                 prod.ModificarProductos(codigo, nombre, proveedor, fechaDate, precioC, precioV, cantidad, categoria);
             }
             listarTablas(tabla);//Actualiza la tabla en el sistema
@@ -301,7 +307,7 @@ public class metodos {
                                     usuario.registrar(correo.getText(), nombre.getText(), apellidosS.get(0), apellidosS.get(1), telefono.getText(), contraseña.getText(), combo.getSelectedItem().toString());
                                     empleado.registrarEmpleado(nombre.getText(), apellidosS.get(0), apellidosS.get(1), curp.getText(), direccion.getText());
                                     EnviarCorreo enviar = new EnviarCorreo();
-                                    enviar.enviar(correo.getText(), "Bienvenida", new File(""));
+//                                    enviar.enviar(correo.getText(), "Bienvenida", new File(""));
                                     limpiarEmpleado(correo, nombre, apellidos, curp, telefono, direccion, contraseña);
                                     JOptionPane.showMessageDialog(null, "EL EMPLEADO HA SIDO REGISTRADO.");
                                 }
@@ -521,6 +527,7 @@ public class metodos {
     }
 
     private boolean enviarCorreo(String correo) {
+        /*
         EnviarCorreo enviar = new EnviarCorreo();
         String codigo = enviar.enviar(correo, "confirmacion", new File(""));
         String mensaje = "Hemos envíado un código de confirmación a tu correo electrónico, digítalo aquí para continuar:";
@@ -540,6 +547,7 @@ public class metodos {
                 }
             }
         } while (!confirmacion.equals(codigo));
+         */
         return true;
     }
 
@@ -680,7 +688,7 @@ public class metodos {
         Desktop.getDesktop().open(file);//Se abre el documento automaticamente
         if (!nombreC.isEmpty()) {
             EnviarCorreo enviar = new EnviarCorreo();
-            enviar.enviar(correo, "ticket", file);//envia un correo con el ticket al usuario que hizo la compra
+//            enviar.enviar(correo, "ticket", file);//envia un correo con el ticket al usuario que hizo la compra
         }
 
         //Elimina todas las filas de la tabla venta
